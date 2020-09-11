@@ -25,67 +25,40 @@ use WPPluginCore\Service\Wordpress\Ressource\Implementation\Metabox as MetaboxRe
  *
  * @author Niklas Lakner niklas.lakner@gmail.com
  */
-class App 
+class PluginBuilder 
 {
     public const KEY_FILE = 'file';
     public const KEY_URL = 'url';
     public const KEY_IS_DEBUG = 'is_debug';
 
-    private static string $slug;
-
     private array $services;
     private array $endpoints;
+
+    private string $file;
+    private string $url;
+    private string $slug;
+    private bool $isDebug;
 
     private EntityFactory $entityFactory;
 
     public function __construct(string $file, string $url, string $slug, bool $isDebug) 
     {
-        self::$slug = $slug;
-        define(self::buildKey(self::KEY_FILE), $file);
-        define(self::buildKey(self::KEY_URL), $url);
-        define(self::buildKey(self::KEY_IS_DEBUG), $isDebug);
-
         $this->services = array();
         $this->endpoints = array();
+
+        $this->file = $file;
+        $this->url = $url;
+        $this->slug = $slug;
+        $this->isDebug = $isDebug;
+        
         $this->entityFactory = EntityFactory::getInstance();
-
-        $this
-            ->addService(Date::class)
-            ->addService(Metabox::class)
-            ->addService(PostTypeRegistration::class)
-            ->addService(Save::class)
-            ->addService(JSONAttribute::class)
-            ->addService(MetaboxRessource::class);
     }
 
-    final public static function buildKey(string $key) : string
-    {
-        return self::$slug. '-' . $key;
-    }
+    
 
-    final public function run() : void
+    final public function build() : Plugin
     {
-        Logger::registerMe();
-        $this->register($this->services);
-        DBInit::getInstance()->initDB();
-        $this->register($this->endpoints);
-    }
-
-    public static function getSlug() : string
-    {
-        return self::$slug;
-    }
-
-
-    private function register(array $classes)
-    {
-        foreach ($classes as $class) {
-            if (is_subclass_of($class, IRegisterable::class)) {
-                $class::registerMe();
-            } else {
-                throw new IllegalStateException('The class shoul be of registable but the class istn`t: ' . $class);
-            }   
-        }
+        return new Plugin($this->file, $this->url, $this->slug, $this->isDebug, $this->services, $this->endpoints);
     }
 
     public function addService(string $class) : self
