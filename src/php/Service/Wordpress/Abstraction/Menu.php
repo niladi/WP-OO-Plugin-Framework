@@ -70,7 +70,7 @@ abstract class Menu extends Service
 
     public function addSubMenuEntry(string $name, string $slug, string $viewClass)
     {
-        if (!is_suclass_of($viewClass, View::class) ) {
+        if (!is_subclass_of($viewClass, View::class) ) {
             throw new IllegalArgumentException('$viewClass has to be of type ' . View::class . ' is actually: ' . $viewClass);
         }
         array_push($this->subMenuEntries, array(self::SUB_NAME  => $name, self::SUB_SLUG => $slug, self::SUB_VIEW_CLASS => $viewClass));
