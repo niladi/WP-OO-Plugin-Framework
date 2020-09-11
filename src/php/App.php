@@ -12,6 +12,7 @@ use WPPluginCore\Service\Wordpress\Entity\Metaboxes;
 use WPPluginCore\Service\Wordpress\Entity\PostTypeRegistration;
 use WPPluginCore\Service\Wordpress\Entity\Save;
 use WPPluginCore\Service\Wordpress\Menu;
+use WPPluginCore\Web\Abstraction\Endpoint;
 
 /**
  * The main WPPluginCore class
@@ -93,7 +94,7 @@ class App
 
     public function addEndpoint(string $class) : self
     {
-        if (is_subclass_of($class, Service::class)) {
+        if (is_subclass_of($class, Endpoint::class)) {
             array_push($this->services,$class );
         } else {
             throw new IllegalStateException('The class shoul be of type Service but the class istn`t: ' . $class);
