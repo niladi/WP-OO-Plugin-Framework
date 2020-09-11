@@ -2,17 +2,20 @@
 namespace WPPluginCore;
 
 use WPPluginCore\DBInit;
+use WPPluginCore\Logger;
+use WPPluginCore\Service\Wordpress\Menu;
+use WPPluginCore\Service\Wordpress\Assets;
+use WPPluginCore\Web\Abstraction\Endpoint;
 use WPPluginCore\Abstraction\IRegisterable;
-use WPPluginCore\Exception\IllegalStateException;
 use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Service\Implementation\Date;
-use WPPluginCore\Logger;
-use WPPluginCore\Service\Wordpress\Assets;
+use WPPluginCore\Service\Wordpress\Entity\Save;
+use WPPluginCore\Exception\IllegalStateException;
+use WPPluginCore\Service\Wordpress\Entity\Metabox;
 use WPPluginCore\Service\Wordpress\Entity\Metaboxes;
 use WPPluginCore\Service\Wordpress\Entity\PostTypeRegistration;
-use WPPluginCore\Service\Wordpress\Entity\Save;
-use WPPluginCore\Service\Wordpress\Menu;
-use WPPluginCore\Web\Abstraction\Endpoint;
+use WPPluginCore\Service\Wordpress\Ressource\Implementation\JSONAttribute;
+use WPPluginCore\Service\Wordpress\Ressource\Implementation\Metabox as MetaboxRessource;
 
 /**
  * The main WPPluginCore class
@@ -42,9 +45,11 @@ class App
 
         $this
             ->addService(Date::class)
-            ->addService(Metaboxes::class)
+            ->addService(Metabox::class)
             ->addService(PostTypeRegistration::class)
-            ->addService(Save::class);
+            ->addService(Save::class)
+            ->addService(JSONAttribute::class)
+            ->addService(MetaboxRessource::class);
     }
 
     final public static function buildKey(string $key) : string

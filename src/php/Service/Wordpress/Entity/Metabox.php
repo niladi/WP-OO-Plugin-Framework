@@ -7,6 +7,7 @@ use WP_Post;
 use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Exception\IllegalArgumentException;
+use WPPluginCore\Exception\IllegalStateException;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\ApplicationEntity;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\PayoutEntity;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\WPEntity;
@@ -16,17 +17,29 @@ use WPPluginCore\Persistence\Domain\Entity\Implementation\AffiliateApplication;
 use WPPluginCore\Logger;
 use WPPluginCore\Service\Wordpress\Assets\Implementation\PDF;
 use WPPluginCore\View\Implementation\AjaxButton;
-use WPPluginCore\View\Implementation\Metabox;
+use WPPluginCore\View\Implementation\Metabox as MetaboxView;
 use WPPluginCore\View\Implementation\PDFButton;
 
-class Metaboxes extends Service
+class Metabox extends Service
 {
     private array $customContent = array();
 
 
-    public function addCustomContent(string $slug, callable $callback)
+    /**
+     * Void adds the custom content functions to the metaboxes
+     *
+     * @param string $class the class of the WPEntity
+     * @param callable $callback the callback function of the which echos which 
+     * @return self for better methode chaining
+     * @author Niklas Lakner niklas.lakner@gmail.com
+     */
+    public function addCustomContent(string $class, callable $callback) : self
     {
-        $this->customContent[$slug] = $callback;
+        if (!is_subclass_of($class, WPEntity::class)) {
+            throw new IllegalStateException('The class shoudl be of type: ' . WPEntity::class);
+        }
+        $this->customContent[$class] = $callback;
+        return $this;
     }
 
     /**
@@ -43,7 +56,7 @@ class Metaboxes extends Service
         foreach ($entity->getAttributes() as $key => $value) {
             $output .= $value->getAdminHTML();
         }
-        Metabox::show(array(Metabox::SLUG => $entity::getSlug(), Metabox::HTML => $output));
+        MetaboxView::show(array(MetaboxView::SLUG => $entity::getSlug(), MetaboxView::HTML => $output));
     }
 
     /**
@@ -94,35 +107,5 @@ class Metaboxes extends Service
             $entity =  $factory->newEntity($dao, (array(WPEntity::KEY_WP_POST_ID => $post->ID)));
         }
         $this->editor($entity);
-    }
-
-    /**
-     * Custom editor for an payout
-     *
-     * @param WPEntity $payout
-     * @return void
-     * @author Niklas Lakner niklas.lakner@gmail.com
-     */
-    public function editorPayout(PayoutEntity $payout): void
-    {
-        PDFButton::show(array(PDFButton::PAYOUT_ID => $payout->ID));
-    }
-
-    /**
-     * custom additonal fields got applications
-     *
-     * @param WPEntity $application
-     * @return void
-     * @author Niklas Lakner niklas.lakner@gmail.com
-     */
-    public function editorApplication(ApplicationEntity $application): void
-    {
-        $state = $application->getAttributeValue($application::KEY_STATE);
-        if ($state == $application::STATE_OPEN) {
-            AjaxButton::show(array(AjaxButton::KEY_FUNCTION => 'accept_application', AjaxButton::KEY_LABEL => __('Akzeptiere Bewerbung', 'wp-plugin-core')));
-            AjaxButton::show(array(AjaxButton::KEY_FUNCTION => 'decline_application', AjaxButton::KEY_LABEL =>__('Lehne Bewerbung ab', 'wp-plugin-core')));
-        } elseif ($application->getAttributeValue($application::KEY_STATE) == $application::STATE_ACCEPTED) {
-            AjaxButton::show(array(AjaxButton::KEY_FUNCTION => 'disaccept_application', AjaxButton::KEY_LABEL =>__('Bewerbung wieder öffnen', 'wp-plugin-core')));
-        }
     }
 }

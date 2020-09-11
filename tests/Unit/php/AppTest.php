@@ -4,12 +4,11 @@ namespace WPPluginCoreTest\Unit;
 
 use Mockery;
 use WPPluginCore\App;
-use WPPluginCore\Service\Date;
 use WPPluginCore\Logger;
+use WPPluginCore\Service\Date;
 use WPPluginCore\Service\UserPage;
 use WPPluginCore\Web\Endpoints\Ajax;
 use WPPluginCore\Service\Application;
-use WPPluginCore\Service\Implementation\Date as ImplementationDate;
 use WPPluginCore\Web\Endpoints\Token;
 use WPPluginCore\Service\LicenceUpload;
 use WPPluginCore\Service\Wordpress\CF7;
@@ -25,15 +24,16 @@ use WPPluginCore\Service\Wordpress\JWTAdapter;
 use WPPluginCoreTest\Unit\TestHelper\TestCase;
 use WPPluginCore\Service\Wordpress\Entity\Save;
 use WPPluginCore\Service\Wordpress\Subscription;
+use WPPluginCore\Service\Wordpress\Entity\Metabox;
 use WPPluginCore\Service\Wordpress\Entity\WPEntity;
 use WPPluginCore\Service\Wordpress\Entity\Metaboxes;
 use WPPluginCore\Service\Wordpress\Assets\Implementation\PDF;
 use WPPluginCore\Service\Wordpress\Entity\PostTypeRegistration;
+use WPPluginCore\Service\Implementation\Date as ImplementationDate;
 use WPPluginCore\Service\Wordpress\Assets\Implementation\Papaparse;
 use WPPluginCore\Service\Wordpress\Dashboard as WordpressDashboard;
 use WPPluginCore\Service\Wordpress\Assets\Implementation\CustomAjax;
 use WPPluginCore\Service\Wordpress\Assets\Implementation\CustomAdmin;
-use WPPluginCore\Service\Wordpress\Assets\Implementation\CustomMetabox;
 use WPPluginCore\Service\Wordpress\Assets\Implementation\JSONAttribute;
 use WPPluginCore\Service\Wordpress\Assets\Implementation\Dashboard as DashboardRessource;
 /**
@@ -81,13 +81,13 @@ class AppTest extends TestCase
     {      
 
         $classes = array(
-            Metaboxes::class,
+            Metabox::class,
             Save::class,
             PostTypeRegistration::class,
             ImplementationDate::class,
 /*            CustomAdmin::class,
             CustomAjax::class,
-            CustomMetabox::class,
+            Metabox::class,
             DashboardRessource::class,
             JSONAttribute::class,
             Papaparse::class*/
