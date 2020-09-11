@@ -2,7 +2,7 @@
 
 namespace WPPluginCoreTest\Unit\Persistence\DAO\Abstraction;
 
-use WPPluginCore\App;
+use WPPluginCore\Plugin;
 use WPPluginCoreTest\Unit\TestHelper\TestCase;
 use WPPluginCore\Persistence\DAO\Abstraction\DAO;
 

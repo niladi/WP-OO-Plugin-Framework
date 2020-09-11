@@ -4,7 +4,7 @@ namespace WPPluginCoreTest\Unit\Service;
 
 use Mockery;
 use ReflectionClass;
-use WPPluginCore\App;
+use WPPluginCore\Plugin;
 use Logger as LoggerAlias;
 use WPPluginCore\Logger;
 use function PHPUnit\Framework\assertNull;
@@ -30,8 +30,8 @@ class LoggerTest extends TestCase
      */
     public static function setUpBeforeClass() : void
     {
-        if (!defined(App::KEY_FILE)) {
-            define(App::KEY_FILE, __FILE__);
+        if (!defined(Plugin::KEY_FILE)) {
+            define(Plugin::KEY_FILE, __FILE__);
         }
 
         if (!Logger::isRegistered()) {

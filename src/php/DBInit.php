@@ -3,7 +3,7 @@
 
 namespace WPPluginCore;
 
-use WPPluginCore\App;
+use WPPluginCore\Plugin;
 use WPPluginCore\Exception\QueryException;
 use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Exception\IllegalKeyException;
@@ -167,11 +167,11 @@ class DBInit extends RegisterableFactory
      */
     public static function registerMe() : void
     {
-        if (!defined(App::KEY_FILE)) {
+        if (!defined(Plugin::KEY_FILE)) {
             throw new IllegalStateException('registerMe should not get called, withot the file constant is settet');
         }
         
-        register_activation_hook(constant(App::KEY_FILE), array(self::getInstance() , 'initDB'));
+        register_activation_hook(constant(Plugin::KEY_FILE), array(self::getInstance() , 'initDB'));
 
         parent::registerMe();
     }

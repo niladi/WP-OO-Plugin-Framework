@@ -4,7 +4,7 @@
 namespace WPPluginCore;
 
 use Monolog\Handler\ChromePHPHandler;
-use WPPluginCore\App;
+use WPPluginCore\Plugin;
 use PhpConsole\Connector;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as MonologLogger;
@@ -44,7 +44,7 @@ class Logger extends RegisterableFactory
 
     protected function __construct()
     {
-        $keyFile = App::buildKey(App::KEY_FILE);
+        $keyFile = Plugin::buildKey(Plugin::KEY_FILE);
         if (!defined($keyFile)) {
             throw new IllegalStateException('registerMe should not get called, withot the file constant is settet');
         }
@@ -52,7 +52,7 @@ class Logger extends RegisterableFactory
 
         $this->logger = new MonologLogger('licence_sales_logger');
 
-        $this->isDebug = constant(App::buildKey(App::KEY_IS_DEBUG));
+        $this->isDebug = constant(Plugin::buildKey(Plugin::KEY_IS_DEBUG));
 
         if ($this->isDebug) {
             $chromeconsole = new ChromePHPHandler(MonologLogger::DEBUG);

@@ -2,7 +2,7 @@
 
 namespace WPPluginCoreTest\Unit;
 
-use WPPluginCore\App;
+use WPPluginCore\Plugin;
 use WPPluginCore\DBInit;
 use WPPluginCoreTest\Unit\TestHelper\TestCase;
 use WPPluginCore\Exception\QueryException;
@@ -79,15 +79,15 @@ class DBInitTest extends TestCase
      */
     public function testRegisterMe(): void
     {
-        if (!defined(App::KEY_FILE)) {
-            define(App::KEY_FILE, 'test_filename');
+        if (!defined(Plugin::KEY_FILE)) {
+            define(Plugin::KEY_FILE, 'test_filename');
         }
 
         if (!DBInit::isRegistered()) {
             DBInit::registerMe();
         }
         
-        self::assertNotNull($this->getActiviationHook(constant(App::KEY_FILE)));
+        self::assertNotNull($this->getActiviationHook(constant(Plugin::KEY_FILE)));
         self::assertTrue(DBInit::isRegistered());
     }
 

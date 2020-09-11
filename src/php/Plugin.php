@@ -31,7 +31,7 @@ class Plugin
     public const KEY_URL = 'url';
     public const KEY_IS_DEBUG = 'is_debug';
 
-    private static string $slug;
+    private static string $slug = 'test-slug';
 
     private array $services;
     private array $endpoints;

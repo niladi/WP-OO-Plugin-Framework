@@ -3,7 +3,7 @@
 
 namespace WPPluginCore\Service\Wordpress\Abstraction;
 defined('ABSPATH') || exit;
-use WPPluginCore\App;
+use WPPluginCore\Plugin;
 use WPPluginCore\Exception\IllegalArgumentException;
 use WPPluginCore\View\MainView;
 use WPPluginCore\Service\Abstraction\Service;
@@ -59,7 +59,7 @@ abstract class Menu extends Service
 
     public static function getSlug() : string 
     {
-        return App::getSlug() . '-' . 'main-menu';
+        return Plugin::getSlug() . '-' . 'main-menu';
     }
 
     abstract static function getMainView() : string;

@@ -3,7 +3,7 @@ namespace WPPluginCoreTest\Unit\TestHelper;
 
 
 use WPPluginCore\DBInit;
-use WPPluginCoreTest\Unit\TestCase;
+use WPPluginCoreTest\Unit\TestHelper\TestCase;
 
 
 class TestCaseWithDB extends TestCase {

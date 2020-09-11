@@ -3,7 +3,7 @@
 namespace WPPluginCore\Service\Wordpress\Ressource\Abstraction;
 
 defined('ABSPATH') || exit;
-use WPPluginCore\App;
+use WPPluginCore\Plugin;
 use WPPluginCore\Exception\IllegalStateException;
 use WPPluginCore\Service\Abstraction\Service;
 
@@ -19,10 +19,10 @@ abstract class Ressource extends Service
     public function __construct()
     {
         parent::__construct();
-        if (!defined(App::buildKey(App::KEY_URL))) {
+        if (!defined(Plugin::buildKey(Plugin::KEY_URL))) {
             throw new IllegalStateException('The file path is not set');
         }
-        $this->assetsPath =  constant(App::buildKey(App::KEY_URL)) . '/src/ressource';
+        $this->assetsPath =  constant(Plugin::buildKey(Plugin::KEY_URL)) . '/src/ressource';
     }
 
     /**

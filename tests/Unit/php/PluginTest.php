@@ -3,7 +3,7 @@
 namespace WPPluginCoreTest\Unit;
 
 use Mockery;
-use WPPluginCore\App;
+use WPPluginCore\Plugin;
 use WPPluginCore\Logger;
 use WPPluginCore\Service\Date;
 use WPPluginCore\Service\UserPage;
@@ -41,12 +41,12 @@ use WPPluginCore\Service\Wordpress\Assets\Implementation\Dashboard as DashboardR
  *
  * @author Niklas Lakner niklas.lakner@gmail.com
  *
- * @covers \WPPluginCore\App
+ * @covers \WPPluginCore\Plugin
  */
 class AppTest extends TestCase
 {
     /**
-     * @var App
+     * @var Plugin
      */
     protected $app;
 
@@ -63,7 +63,7 @@ class AppTest extends TestCase
         parent::setUp();
 
         $this->file = __FILE__;
-        $this->app = new App($this->file, $this->file, 'wp-test', true);
+        $this->app = new Plugin($this->file, $this->file, 'wp-test', true, array(), array());
     }
 
     /**
@@ -84,13 +84,7 @@ class AppTest extends TestCase
             Metabox::class,
             Save::class,
             PostTypeRegistration::class,
-            ImplementationDate::class,
-/*            CustomAdmin::class,
-            CustomAjax::class,
-            Metabox::class,
-            DashboardRessource::class,
-            JSONAttribute::class,
-            Papaparse::class*/
+            ImplementationDate::class
         );
         
         foreach ($classes as $class) {

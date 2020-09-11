@@ -3,10 +3,10 @@ namespace WPPluginCoreTest\Unit\TestHelper;
 
 use Mockery;
 use Brain\Monkey;
-use WPPluginCore\App;
+use WPPluginCore\Plugin;
 use PHPUnit\Framework;
 use WPPluginCore\Service\DBInit;
-use WPPluginCoreTest\Unit\TestException;
+use WPPluginCoreTest\Unit\TestHelper\TestException;
 
 if (isset($_ENV['DB_HOST'])) {
     define('DB_HOST', $_ENV['DB_HOST']);
@@ -34,7 +34,6 @@ class TestCase extends Framework\TestCase {
     {
         parent::setUp();
         Monkey\setUp();
-
         Monkey\Functions\stubs([
             '__' =>  function ($arg1, $arg2 = 'default') 
             {
@@ -72,8 +71,8 @@ class TestCase extends Framework\TestCase {
             }
         ]);
 
-        if (!defined(App::KEY_IS_DEBUG)) {
-            define(App::KEY_IS_DEBUG, true);
+        if (!defined(Plugin::buildKey(Plugin::KEY_IS_DEBUG))) {
+            define(Plugin::buildKey(Plugin::KEY_IS_DEBUG), true);
         }
 
         $mock = Mockery::namedMock('WP_REST_Server', ClassConstantWPRESTStub::class);
@@ -110,3 +109,4 @@ class TestCase extends Framework\TestCase {
 class ClassConstantWPRESTStub {
     const READABLE = 'GET';
 }
+

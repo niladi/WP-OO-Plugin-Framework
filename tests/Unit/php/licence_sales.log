@@ -78,3 +78,7 @@
 [2020-09-11T17:40:47.500313+00:00] licence_sales_logger.INFO: test info [] []
 [2020-09-11T17:42:03.167730+00:00] licence_sales_logger.ERROR: test error [] []
 [2020-09-11T17:42:03.211909+00:00] licence_sales_logger.INFO: test info [] []
+[2020-09-11T19:00:32.792812+00:00] licence_sales_logger.ERROR: test error [] []
+[2020-09-11T19:00:32.825664+00:00] licence_sales_logger.INFO: test info [] []
+[2020-09-11T19:01:42.565009+00:00] licence_sales_logger.ERROR: test error [] []
+[2020-09-11T19:01:42.598037+00:00] licence_sales_logger.INFO: test info [] []
