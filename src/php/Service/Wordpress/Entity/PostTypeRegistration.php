@@ -7,14 +7,15 @@ defined('ABSPATH') || exit;
 use WP_Post;
 use WPPluginCore\Persistence\DAO;
 use WPPluginCore\Persistence\Domain;
-use WPPluginCore\Service\Wordpress\Menu;
 use WPPluginCore\Exception\WPDAOException;
 use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Exception\AttributeException;
 use WPPluginCore\Exception\IllegalKeyException;
 use WPPluginCore\Service\Wordpress\Entity\Save;
+use WPPluginCore\Service\Wordpress\Entity\Metabox;
 use WPPluginCore\Exception\IllegalArgumentException;
+use WPPluginCore\Service\Wordpress\Abstraction\Menu;
 use WPPluginCore\Service\Wordpress\Entity\Metaboxes;
 
 class PostTypeRegistration extends Service
@@ -65,10 +66,10 @@ class PostTypeRegistration extends Service
             'has_archive'         => true,
             'exclude_from_search' => false,
             'capability_type'     => 'post',
-            'show_in_menu'        => Menu::MAIN_MENU
+            'show_in_menu'        => Menu::getSlug()
         );
         register_post_type($slug, $args);
-        Metaboxes::getInstance()->registerDefaultMetaBox($slug);
+        Metabox::getInstance()->registerDefaultMetaBox($slug);
     }
 
     /**
