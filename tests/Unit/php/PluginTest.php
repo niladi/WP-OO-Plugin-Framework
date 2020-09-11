@@ -4,38 +4,13 @@ namespace WPPluginCoreTest\Unit;
 
 use Mockery;
 use WPPluginCore\Plugin;
-use WPPluginCore\Logger;
-use WPPluginCore\Service\Date;
-use WPPluginCore\Service\UserPage;
-use WPPluginCore\Web\Endpoints\Ajax;
-use WPPluginCore\Service\Application;
-use WPPluginCore\Web\Endpoints\Token;
-use WPPluginCore\Service\LicenceUpload;
-use WPPluginCore\Service\Wordpress\CF7;
-use WPPluginCore\Service\Wordpress\Menu;
-use WPPluginCore\Service\Wordpress\User;
-use WPPluginCore\Service\Wordpress\Order;
-use WPPluginCore\Web\Endpoints\Dashboard;
-use WPPluginCore\Web\Endpoints\Userpages;
-use WPPluginCore\Service\Wordpress\Assets;
-use WPPluginCore\Service\JWTImplementation;
-use WPPluginCore\Service\Wordpress\Settings;
-use WPPluginCore\Service\Wordpress\JWTAdapter;
+
 use WPPluginCoreTest\Unit\TestHelper\TestCase;
 use WPPluginCore\Service\Wordpress\Entity\Save;
-use WPPluginCore\Service\Wordpress\Subscription;
 use WPPluginCore\Service\Wordpress\Entity\Metabox;
-use WPPluginCore\Service\Wordpress\Entity\WPEntity;
-use WPPluginCore\Service\Wordpress\Entity\Metaboxes;
-use WPPluginCore\Service\Wordpress\Assets\Implementation\PDF;
 use WPPluginCore\Service\Wordpress\Entity\PostTypeRegistration;
 use WPPluginCore\Service\Implementation\Date as ImplementationDate;
-use WPPluginCore\Service\Wordpress\Assets\Implementation\Papaparse;
-use WPPluginCore\Service\Wordpress\Dashboard as WordpressDashboard;
-use WPPluginCore\Service\Wordpress\Assets\Implementation\CustomAjax;
-use WPPluginCore\Service\Wordpress\Assets\Implementation\CustomAdmin;
-use WPPluginCore\Service\Wordpress\Assets\Implementation\JSONAttribute;
-use WPPluginCore\Service\Wordpress\Assets\Implementation\Dashboard as DashboardRessource;
+
 /**
  * Class AppTest.
  *
@@ -43,7 +18,7 @@ use WPPluginCore\Service\Wordpress\Assets\Implementation\Dashboard as DashboardR
  *
  * @covers \WPPluginCore\Plugin
  */
-class AppTest extends TestCase
+class PluginTest extends TestCase
 {
     /**
      * @var Plugin

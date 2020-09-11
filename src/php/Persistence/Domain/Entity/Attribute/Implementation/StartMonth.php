@@ -3,13 +3,15 @@
 
 namespace WPPluginCore\Persistence\Domain\Entity\Attribute\Implementation;
 
+use \DateTime;
+use WPPluginCore\Service\Implementation\Date;
+
 use WPPluginCore\Exception\AttributeException;
 use WPPluginCore\Persistence\Domain\Entity\Attribute\Abstraction\Attribute;
-
-use \DateTime;
+use WPPluginCore\Persistence\Domain\Entity\Attribute\Implementation\Date as DateAttribute;
 defined('ABSPATH') || exit;
 
-class StartMonth extends Date
+class StartMonth extends DateAttribute
 {
 
     /**
@@ -17,7 +19,7 @@ class StartMonth extends Date
      */
     public function __construct(string $key, string $label)
     {
-        parent::__construct($key, $label, \WPPluginCore\Service\Date::DATE_MONTH);
+        parent::__construct($key, $label, Date::DATE_MONTH);
     }
 
     /**
@@ -36,7 +38,7 @@ class StartMonth extends Date
      */
     public function getDefault()
     {
-        return \WPPluginCore\Service\Date::getInstance()->getFirstOfCurrentMonth();
+        return Date::getInstance()->getFirstOfCurrentMonth();
     }
 
     /**
