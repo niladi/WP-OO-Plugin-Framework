@@ -36,6 +36,8 @@ class App
     private array $services;
     private array $endpoints;
 
+    private EntityFactory $entityFactory;
+
     public function __construct(string $file, string $url, string $slug, bool $isDebug) 
     {
         self::$slug = $slug;
@@ -45,6 +47,7 @@ class App
 
         $this->services = array();
         $this->endpoints = array();
+        $this->entityFactory = EntityFactory::getInstance();
 
         $this
             ->addService(Date::class)
@@ -97,7 +100,7 @@ class App
 
     public function addEntity(string $entityClass, Entity $entityDAO) : self
     {
-        EntityFactory::getInstance()->addEntity($entityClass, $entityDAO);
+        $this->entityFactory->addEntity($entityClass, $entityDAO);
         return $this;
     }
 
