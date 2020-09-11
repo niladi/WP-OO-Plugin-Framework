@@ -3,12 +3,22 @@ cache:
   paths:
     - vendor/
 
+stages:
+  - test
+  - deploy
+
 before_script:
   - composer install
 
-test:app:
+test:
+  stage: test
   script:
     - vendor/bin/phpunit tests/Unit/php
+
+deploy:
+  stage: deploy
+  script:
+    - 'curl --header "Job-Token: $CI_JOB_TOKEN" --data tag=<tag> "https://git.tonisoftware.de/api/v4/projects/$CI_PROJECT_ID/packages/composer"'
 
 services:
   - mysql:latest
