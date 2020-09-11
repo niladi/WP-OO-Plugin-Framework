@@ -1,0 +1,6 @@
+{
+    "baseNamespace": "WPPluginCore",
+    "baseTestNamespace" : "WPPluginCore\\Unit",
+    "testCase" : "WPPluginCore\\Unit\\TestHelper\\TestCase",
+    "phpDoc": ["@author Niklas Lakner niklas.lakner@gmail.com"]
+}

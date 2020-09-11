@@ -1,0 +1,34 @@
+{
+    "name": "green-everest/wp-plugin-core",
+    "description": "description_text",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "type": "plugin",
+   "authors": [
+      {
+        "name": "Niklas Lakner",
+        "email": "niklas.lakner@gmail.com"
+      }
+    ],
+    "autoload": {
+      "psr-4": {
+        "WPPluginCore\\":"src/php/",
+        "WPPluginCoreTest\\Unit\\":"tests/Unit/php/"
+      }
+    },
+    "require": {
+      "ext-json": "*",
+      "ext-pdo": "*",
+      "ext-mbstring": "*",
+      "monolog/monolog": "^2.1"
+    },
+    "require-dev": {
+      "squizlabs/php_codesniffer": "2.2.*",
+      "phpunit/phpunit": "^9",
+      "brain/monkey": "2.*",
+      "mockery/mockery": ">=0.7.2",
+      "phpunitgen/console": "^1.2",
+      "php-stubs/woocommerce-stubs": "^4.4",
+      "php-stubs/wordpress-stubs": "^5.5"
+    }
+}

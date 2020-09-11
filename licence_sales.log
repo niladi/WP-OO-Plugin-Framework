@@ -1,0 +1,4 @@
+[2020-09-11T14:42:07.167138+00:00] licence_sales_logger.ERROR: test error [] []
+[2020-09-11T14:42:07.209444+00:00] licence_sales_logger.INFO: test info [] []
+[2020-09-11T14:44:46.834297+00:00] licence_sales_logger.ERROR: test error [] []
+[2020-09-11T14:44:46.868693+00:00] licence_sales_logger.INFO: test info [] []

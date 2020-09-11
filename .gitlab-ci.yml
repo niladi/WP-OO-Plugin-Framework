@@ -1,0 +1,23 @@
+image: $CI_REGISTRY/green-everest/system/php:master
+cache:
+  paths:
+    - vendor/
+
+before_script:
+  - composer install
+
+test:app:
+  script:
+    - vendor/bin/phpunit tests/Unit/php
+
+services:
+  - mysql:latest
+
+variables:
+  # Configure mysql environment variables (https://hub.docker.com/_/mysql/)
+  MYSQL_RANDOM_ROOT_PASSWORD: 1
+  MYSQL_DATABASE: "lstest"
+  MYSQL_USER: "lsuser"
+  MYSQL_PASSWORD: "secret"
+  DB_HOST: 'mysql:3306'
+

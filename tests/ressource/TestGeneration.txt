@@ -1,0 +1,4 @@
+Im "src" Ordner  ausführen
+
+z.B:
+vendor/bin/phpunitgen main/php/Web/Abstraction/API.php --config tests/ressource/phpunitgen.json 
