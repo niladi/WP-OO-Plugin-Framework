@@ -11,6 +11,9 @@ use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Service\Implementation\Date;
 use WPPluginCore\Service\Wordpress\Entity\Save;
 use WPPluginCore\Exception\IllegalStateException;
+use WPPluginCore\Persistence\DAO\Abstraction\DAO;
+use WPPluginCore\Persistence\DAO\Entity\Abstraction\Entity;
+use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Service\Wordpress\Entity\Metabox;
 use WPPluginCore\Service\Wordpress\Entity\Metaboxes;
 use WPPluginCore\Service\Wordpress\Entity\PostTypeRegistration;
@@ -89,6 +92,12 @@ class App
         } else {
             throw new IllegalStateException('The class shoul be of type Service but the class istn`t: ' . $class);
         }   
+        return $this;
+    }
+
+    public function addEntity(string $entityClass, Entity $entityDAO) : self
+    {
+        EntityFactory::getInstance()->addEntity($entityClass, $entityDAO);
         return $this;
     }
 
