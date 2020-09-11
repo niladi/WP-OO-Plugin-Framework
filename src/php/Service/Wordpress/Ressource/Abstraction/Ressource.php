@@ -13,6 +13,8 @@ abstract class Ressource extends Service
     protected const TYPE_ADMIN = 2;
     protected const TYPE_LOAD = 4;
 
+    private static array $ressources = array();
+
     protected string $assetsPath;
     private bool $ressourceRegistered = false;
 
@@ -60,25 +62,31 @@ abstract class Ressource extends Service
         $this->load();
     }
 
-    abstract protected function load()  : void;
+    abstract protected function load()  : void; 
 
     abstract static protected function getType() : int;
 
     public static function registerMe() : void
     {
         parent::registerMe(); 
-        $type = static::getType();
-        $callback = array( static::getInstance(), 'registerRessource' );
-        if ($type >= 4) {
-            add_action('wp_enqueue_scripts', $callback);
-        } elseif ($type >= 2) {
-            add_action('admin_enqueue_scripts', $callback);
-        } elseif ($type >= 1) {
-            add_action('add_meta_boxes', $callback);
-        }  else {
-            throw new IllegalStateException('no valid type for ressource');
+        array_push(self::$ressources, static::getInstance());
+        add_action('wp_enqueue_scripts', array(self::class, 'registerRessources'));
+    }
+
+    public static function registerRessources() : void
+    {
+        foreach (self::$ressources as $ressource) {
+            $ressource->registerRessource();
         }
     }
+
+    /*
+    * Todo workarround
+    *add_action('wp_enqueue_scripts', $callback);
+    *add_action('admin_enqueue_scripts', $callback);
+    *add_action('add_meta_boxes', $callback);
+    */
+
 
 
 }

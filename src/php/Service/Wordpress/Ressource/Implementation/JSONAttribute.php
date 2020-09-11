@@ -16,7 +16,7 @@ class JSONAttribute extends Ressource
      */
     protected static function getType() : int
     {
-        return static::TYPE_LOAD;
+        return static::TYPE_LOAD | static::TYPE_META_BOX;
     }
 
     /**
