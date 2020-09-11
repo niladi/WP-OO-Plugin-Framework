@@ -15,10 +15,10 @@ abstract class View
      * @return void
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    static function show(array $params = array()) : void
+    static function show() : void
     {
         static::loadAssets();
-        static::showMe($params);
+        static::showMe();
     }
 
     /**
@@ -28,7 +28,7 @@ abstract class View
      * @return void
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    abstract static protected function showMe(array $params = array()) : void;
+    abstract static protected function showMe() : void;
 
 
     /**

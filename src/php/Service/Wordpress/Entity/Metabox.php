@@ -56,7 +56,10 @@ class Metabox extends Service
         foreach ($entity->getAttributes() as $key => $value) {
             $output .= $value->getAdminHTML();
         }
-        MetaboxView::show(array(MetaboxView::SLUG => $entity::getSlug(), MetaboxView::HTML => $output));
+
+        global $viewParams; // todo cleaner
+        $viewParams = array(MetaboxView::SLUG => $entity::getSlug(), MetaboxView::HTML => $output);
+        MetaboxView::show();
     }
 
     /**

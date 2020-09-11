@@ -23,9 +23,10 @@ class Metabox extends View
         JSONAttribute::getInstance()->loadRessource();
     }
 
-    protected static function showMe(array $params = array()) : void
+    protected static function showMe() : void
     {
-        wp_nonce_field( $params[self::SLUG] . '_save_meta_box_data', $params[self::SLUG] . '_meta_box_nonce');
-        echo '<table class="form-table"><tbody>' . $params[self::HTML] . '</tbody></table>';
+        global $viewParams; // todo cleaner 
+        wp_nonce_field( $viewParams[self::SLUG] . '_save_meta_box_data', $viewParams[self::SLUG] . '_meta_box_nonce');
+        echo '<table class="form-table"><tbody>' . $viewParams[self::HTML] . '</tbody></table>';
     }
 } 
