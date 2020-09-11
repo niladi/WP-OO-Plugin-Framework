@@ -33,9 +33,9 @@ class App
     public function __construct(string $file, string $url, string $slug, bool $isDebug) 
     {
         self::$slug = $slug;
-        define(self::$slug. '-'. self::KEY_FILE, $file);
-        define(self::$slug. '-'. self::KEY_URL, $url);
-        define(self::$slug. '-'.self::KEY_IS_DEBUG, $isDebug);
+        define(self::buildKey(self::KEY_FILE), $file);
+        define(self::buildKey(self::KEY_URL), $url);
+        define(self::buildKey(self::KEY_IS_DEBUG), $isDebug);
 
         $this->services = array();
         $this->endpoints = array();
@@ -47,14 +47,9 @@ class App
             ->addService(Save::class);
     }
 
-    final public static function getConstant(string $key)
+    final public static function buildKey(string $key) : string
     {
-        return constant(self::$slug. '-' . $key);
-    }
-
-    final public static function getDefined(string $key) : bool
-    {
-        return defined(self::$slug. '-' . $key);
+        return self::$slug. '-' . $key;
     }
 
     final public function run() : void

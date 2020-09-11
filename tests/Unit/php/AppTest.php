@@ -85,12 +85,12 @@ class AppTest extends TestCase
             Save::class,
             PostTypeRegistration::class,
             ImplementationDate::class,
-            CustomAdmin::class,
+/*            CustomAdmin::class,
             CustomAjax::class,
             CustomMetabox::class,
             DashboardRessource::class,
             JSONAttribute::class,
-            Papaparse::class
+            Papaparse::class*/
         );
         
         foreach ($classes as $class) {
