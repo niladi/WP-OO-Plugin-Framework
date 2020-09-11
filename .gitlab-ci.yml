@@ -9,7 +9,6 @@ stages:
 
 before_script:
   - composer install
-  - curl --help
 
 test:
   stage: test
@@ -19,7 +18,7 @@ test:
 deploy:
   stage: deploy
   script:
-    - 'curl --header "Job-Token: $CI_JOB_TOKEN" --data tag=<tag> "https://git.tonisoftware.de/api/v4/projects/$CI_PROJECT_ID/packages/composer"'
+    - 'curl --header "Job-Token: $CI_JOB_TOKEN" --data branch=$CI_COMMIT_REF_SLUG "https://git.tonisoftware.de/api/v4/projects/$CI_PROJECT_ID/packages/composer"'
 
 services:
   - mysql:latest
