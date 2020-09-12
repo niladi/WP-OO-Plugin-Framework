@@ -56,10 +56,6 @@ abstract class Ressource extends Service
      */
     public function loadRessource()  : void
     {
-        if ($this->ressourceRegistered === false) {
-            throw new IllegalStateException('Can\'t load ressource before register it');
-        }
-
         $this->load();
     }
 
