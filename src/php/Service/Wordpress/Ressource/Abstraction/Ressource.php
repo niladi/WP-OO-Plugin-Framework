@@ -37,6 +37,7 @@ abstract class Ressource extends Service
      */
     public function registerRessource() : void
     {
+        Logger::debug('ressource registered: ' . static::class);
         if ($this->ressourceRegistered) {
             throw new IllegalStateException('the reossource is already registered');
         }
