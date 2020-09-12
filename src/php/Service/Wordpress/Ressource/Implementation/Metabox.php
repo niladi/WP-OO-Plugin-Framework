@@ -2,6 +2,7 @@
 
 namespace WPPluginCore\Service\Wordpress\Ressource\Implementation;
 
+use WPPluginCore\Plugin;
 use WPPluginCore\Service\Wordpress\Ressource\Abstraction\Ressource;
 
 defined('ABSPATH') || exit;
@@ -24,7 +25,7 @@ class Metabox extends Ressource
      */
     protected function register() : void 
     {
-        wp_register_style(self::KEY_CUSTOM_METABOX,plugin_dir_url( __FILE__ ) . 'vendor/green-everest/wp-plugin-core/src/ressource/css/metabox.css');
+        wp_register_style(self::KEY_CUSTOM_METABOX, Plugin::getURL() . '/vendor/green-everest/wp-plugin-core/src/ressource/css/metabox.css');
     }
 
     /**

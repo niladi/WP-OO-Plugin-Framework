@@ -79,15 +79,11 @@ class DBInitTest extends TestCase
      */
     public function testRegisterMe(): void
     {
-        if (!defined(Plugin::KEY_FILE)) {
-            define(Plugin::KEY_FILE, 'test_filename');
-        }
-
         if (!DBInit::isRegistered()) {
             DBInit::registerMe();
         }
         
-        self::assertNotNull($this->getActiviationHook(constant(Plugin::KEY_FILE)));
+        self::assertNotNull($this->getActiviationHook(Plugin::getFile()));
         self::assertTrue(DBInit::isRegistered());
     }
 

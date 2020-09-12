@@ -27,9 +27,6 @@ use WPPluginCore\Service\Wordpress\Ressource\Implementation\Metabox as MetaboxRe
  */
 class PluginBuilder 
 {
-    public const KEY_FILE = 'file';
-    public const KEY_URL = 'url';
-    public const KEY_IS_DEBUG = 'is_debug';
 
     private array $services;
     private array $endpoints;

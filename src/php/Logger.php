@@ -44,15 +44,14 @@ class Logger extends RegisterableFactory
 
     protected function __construct()
     {
-        $keyFile = Plugin::buildKey(Plugin::KEY_FILE);
-        if (!defined($keyFile)) {
+        if (Plugin::getFile()) {
             throw new IllegalStateException('registerMe should not get called, withot the file constant is settet');
         }
-        static::$file = dirname(constant($keyFile));
+        static::$file = dirname(Plugin::getFile());
 
         $this->logger = new MonologLogger('licence_sales_logger');
 
-        $this->isDebug = constant(Plugin::buildKey(Plugin::KEY_IS_DEBUG));
+        $this->isDebug = Plugin::isDebug();
 
         if ($this->isDebug) {
             $chromeconsole = new ChromePHPHandler(MonologLogger::DEBUG);

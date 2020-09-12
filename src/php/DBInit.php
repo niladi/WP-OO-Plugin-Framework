@@ -167,11 +167,8 @@ class DBInit extends RegisterableFactory
      */
     public static function registerMe() : void
     {
-        if (!defined(Plugin::KEY_FILE)) {
-            throw new IllegalStateException('registerMe should not get called, withot the file constant is settet');
-        }
-        
-        register_activation_hook(constant(Plugin::KEY_FILE), array(self::getInstance() , 'initDB'));
+
+        register_activation_hook(Plugin::getFile(), array(self::getInstance() , 'initDB'));
 
         parent::registerMe();
     }

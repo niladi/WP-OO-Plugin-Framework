@@ -22,10 +22,7 @@ abstract class Ressource extends Service
     public function __construct()
     {
         parent::__construct();
-        if (!defined(Plugin::buildKey(Plugin::KEY_URL))) {
-            throw new IllegalStateException('The file path is not set');
-        }
-        $this->assetsPath =  constant(Plugin::buildKey(Plugin::KEY_URL)) . '/src/ressource';
+        $this->assetsPath =  Plugin::getURL() . '/src/ressource';
     }
 
     /**

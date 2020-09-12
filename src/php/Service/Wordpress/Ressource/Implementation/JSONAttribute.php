@@ -2,6 +2,7 @@
 
 namespace WPPluginCore\Service\Wordpress\Ressource\Implementation;
 
+use WPPluginCore\Plugin;
 use WPPluginCore\Service\Wordpress\Ressource\Abstraction\Ressource;
 
 defined('ABSPATH') || exit;
@@ -24,7 +25,7 @@ class JSONAttribute extends Ressource
      */
     protected function register() : void 
     {
-        wp_register_script(self::KEY_JSON_ATTRIBUTE, plugin_dir_url( __FILE__ ) . 'vendor/green-everest/wp-plugin-core/src/ressource/js/json-attribute.js', array( 'jquery' ));
+        wp_register_script(self::KEY_JSON_ATTRIBUTE, Plugin::getURL() . '/vendor/green-everest/wp-plugin-core/src/ressource/js/json-attribute.js', array( 'jquery' ));
         wp_localize_script(self::KEY_JSON_ATTRIBUTE, 'acme_ajax_object', array(
             'ajaxurl'  => admin_url('admin-ajax.php'),
             'security' => wp_create_nonce('acme-security-nonce')

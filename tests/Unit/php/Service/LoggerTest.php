@@ -30,10 +30,6 @@ class LoggerTest extends TestCase
      */
     public static function setUpBeforeClass() : void
     {
-        if (!defined(Plugin::KEY_FILE)) {
-            define(Plugin::KEY_FILE, __FILE__);
-        }
-
         if (!Logger::isRegistered()) {
             Logger::registerMe();
         }

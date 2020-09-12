@@ -71,10 +71,6 @@ class TestCase extends Framework\TestCase {
             }
         ]);
 
-        if (!defined(Plugin::buildKey(Plugin::KEY_IS_DEBUG))) {
-            define(Plugin::buildKey(Plugin::KEY_IS_DEBUG), true);
-        }
-
         $mock = Mockery::namedMock('WP_REST_Server', ClassConstantWPRESTStub::class);
 
     }

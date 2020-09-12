@@ -27,11 +27,11 @@ use WPPluginCore\Service\Wordpress\Ressource\Implementation\Metabox as MetaboxRe
  */
 class Plugin 
 {
-    public const KEY_FILE = 'file';
-    public const KEY_URL = 'url';
-    public const KEY_IS_DEBUG = 'is_debug';
 
     private static string $slug = 'test-slug';
+    private static string $url = __FILE__;
+    private static string $file = __FILE__;
+    private static bool $isDebug = false;
 
     private array $services;
     private array $endpoints;
@@ -40,9 +40,9 @@ class Plugin
     public function __construct(string $file, string $url, string $slug, bool $isDebug, array $services, array $endpoints) 
     {
         self::$slug = $slug;
-        define(self::buildKey(self::KEY_FILE), $file);
-        define(self::buildKey(self::KEY_URL), $url);
-        define(self::buildKey(self::KEY_IS_DEBUG), $isDebug);
+        self::$file = $file;
+        self::$url = $url;
+        self::$isDebug = $isDebug;
 
         $this->services = array(
             Date::class,
@@ -72,6 +72,21 @@ class Plugin
     public static function getSlug() : string
     {
         return self::$slug;
+    }
+
+    public static function getFile() : string 
+    {
+        return self::$file;
+    }
+
+    public static function isDebug() : bool
+    {
+        return self::$isDebug;
+    }
+
+    public static function getURL() : string
+    {
+        return self::$url;
     }
 
 
