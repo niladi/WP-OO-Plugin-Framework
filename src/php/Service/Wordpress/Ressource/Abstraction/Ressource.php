@@ -5,6 +5,7 @@ namespace WPPluginCore\Service\Wordpress\Ressource\Abstraction;
 defined('ABSPATH') || exit;
 use WPPluginCore\Plugin;
 use WPPluginCore\Exception\IllegalStateException;
+use WPPluginCore\Logger;
 use WPPluginCore\Service\Abstraction\Service;
 
 abstract class Ressource extends Service
@@ -75,6 +76,7 @@ abstract class Ressource extends Service
 
     public static function registerRessources() : void
     {
+        Logger::debug('Ressources: ', self::$ressources);
         foreach (self::$ressources as $ressource) {
             $ressource->registerRessource();
         }
