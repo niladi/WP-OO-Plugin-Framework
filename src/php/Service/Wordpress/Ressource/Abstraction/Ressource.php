@@ -37,7 +37,6 @@ abstract class Ressource extends Service
      */
     public function registerRessource() : void
     {
-        Logger::debug('ressource registered: ' . static::class);
         if ($this->ressourceRegistered) {
             throw new IllegalStateException('the reossource is already registered');
         }
@@ -70,6 +69,7 @@ abstract class Ressource extends Service
 
     public static function registerMe() : void
     {
+        Logger::debug('ressource registered: ' . static::class);
         parent::registerMe(); 
         array_push(self::$ressources, static::getInstance());
         add_action('wp_enqueue_scripts', array(self::class, 'registerRessources'));
