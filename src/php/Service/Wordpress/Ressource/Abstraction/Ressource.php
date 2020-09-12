@@ -10,11 +10,14 @@ use WPPluginCore\Service\Abstraction\Service;
 
 abstract class Ressource extends Service
 {
-    protected const TYPE_META_BOX = 1;
-    protected const TYPE_ADMIN = 2;
-    protected const TYPE_LOAD = 4;
+    // protected const TYPE_META_BOX = 1;
+    protected const TYPE_ADMIN = 1;
+    protected const TYPE_LOAD = 2;
 
-    private static array $ressources = array();
+
+
+    private static array $adminRessources = array();
+    private static array $frontRessources = array();
 
     protected string $assetsPath;
     private bool $ressourceRegistered = false;
@@ -66,17 +69,32 @@ abstract class Ressource extends Service
 
     public static function registerMe() : void
     {
-        Logger::debug('ressource registered: ' . static::class);
         parent::registerMe(); 
-        array_push(self::$ressources, static::getInstance());
-        add_action('wp_enqueue_scripts', array(self::class, 'registerRessources'));
+        if (static::getType() | self::TYPE_ADMIN) {
+            array_push(self::$adminRessources, static::getInstance());
+        }
+        if (static::getType() | self::TYPE_LOAD) {
+            array_push(self::$frontRessources, static::getInstance());
+        }
+        
+        add_action('wp_enqueue_scripts', array(self::class, 'registerFrontRessources'));
+        add_action('admin_enqueue_scripts', array(self::class, 'registerAdminRessources'));
     }
 
-    public static function registerRessources() : void
+    public static function registerFrontRessources() : void
     {
-        Logger::debug('Ressources: ', self::$ressources);
-        foreach (self::$ressources as $ressource) {
-            $ressource->registerRessource();
+        self::registerArray(self::$frontRessources);
+    }
+
+    public static function registerAdminRessources(): void
+    {
+        self::registerArray(self::$adminRessources);
+    }
+
+    private static function registerArray(array $arr) : void
+    {
+        foreach ($arr as $ressource) {
+            $ressource->register();
         }
     }
 

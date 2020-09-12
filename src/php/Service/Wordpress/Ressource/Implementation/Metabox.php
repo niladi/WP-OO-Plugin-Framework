@@ -2,6 +2,7 @@
 
 namespace WPPluginCore\Service\Wordpress\Ressource\Implementation;
 
+use WPPluginCore\Logger;
 use WPPluginCore\Plugin;
 use WPPluginCore\Service\Wordpress\Ressource\Abstraction\Ressource;
 
@@ -17,7 +18,7 @@ class Metabox extends Ressource
      */
     protected static function getType() : int
     {
-        return static::TYPE_META_BOX;
+        return static::TYPE_ADMIN;
     }
 
     /**
