@@ -56,6 +56,10 @@ abstract class Ressource extends Service
      */
     public function loadRessource()  : void
     {
+        if ($this->ressourceRegistered === false) {
+            Logger::error('Didn\'t register the ressource');
+        }
+
         $this->load();
     }
 
