@@ -88,3 +88,7 @@
 [2020-09-11T19:46:17.013510+00:00] licence_sales_logger.INFO: test info [] []
 [2020-09-11T20:29:00.113626+00:00] licence_sales_logger.ERROR: test error [] []
 [2020-09-11T20:29:00.170451+00:00] licence_sales_logger.INFO: test info [] []
+[2020-09-12T09:16:16.039437+00:00] licence_sales_logger.DEBUG: ressource registered: WPPluginCore\Service\Wordpress\Ressource\Implementation\JSONAttribute [] []
+[2020-09-12T09:16:16.067104+00:00] licence_sales_logger.DEBUG: ressource registered: WPPluginCore\Service\Wordpress\Ressource\Implementation\Metabox [] []
+[2020-09-12T09:16:16.071339+00:00] licence_sales_logger.ERROR: test error [] []
+[2020-09-12T09:16:16.073149+00:00] licence_sales_logger.INFO: test info [] []

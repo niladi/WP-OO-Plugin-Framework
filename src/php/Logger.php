@@ -44,9 +44,6 @@ class Logger extends RegisterableFactory
 
     protected function __construct()
     {
-        if (Plugin::getFile()) {
-            throw new IllegalStateException('registerMe should not get called, withot the file constant is settet');
-        }
         static::$file = dirname(Plugin::getFile());
 
         $this->logger = new MonologLogger('licence_sales_logger');
