@@ -4,8 +4,9 @@
 namespace WPPluginCore\Web\Abstraction;
 
 use Closure;
-use ReflectionFunction;
 use WP_REST_Request;
+use ReflectionFunction;
+use WPPluginCore\Plugin;
 use WPPluginCore\Exception\IllegalArgumentException;
 
 defined('ABSPATH') || exit;
