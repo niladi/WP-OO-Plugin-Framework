@@ -56,7 +56,9 @@ class PluginBuilder
 
     final public function build() : Plugin
     {
-        return new Plugin($this->file, $this->url, $this->slug, $this->services, $this->endpoints);
+        $plugin = new Plugin($this->file, $this->url, $this->slug, $this->services, $this->endpoints);
+        Plugin::add($plugin);
+        return $plugin;
     }
 
     public function addService(string $class) : self

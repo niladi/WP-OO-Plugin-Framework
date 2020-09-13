@@ -4,3 +4,5 @@
 [2020-09-13T05:08:17.834784+00:00] wp_plugin_core_logger.INFO: test info [] []
 [2020-09-13T05:09:03.347277+00:00] wp_plugin_core_logger.ERROR: test error [] []
 [2020-09-13T05:09:03.384543+00:00] wp_plugin_core_logger.INFO: test info [] []
+[2020-09-13T05:55:32.376805+00:00] wp_plugin_core_logger.ERROR: test error [] []
+[2020-09-13T05:55:32.409207+00:00] wp_plugin_core_logger.INFO: test info [] []
