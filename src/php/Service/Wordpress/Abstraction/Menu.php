@@ -39,7 +39,7 @@ abstract class Menu extends Service
             static::getLabel(),
             static::getLabel(),
             'manage_options',
-            static::getSlug(),
+            static::getPlugin()->buildKey('main-menu'),
             array(static::getMainView(), 'show'),
             "",
             20
@@ -47,7 +47,7 @@ abstract class Menu extends Service
 
         foreach ($this->subMenuEntries as $subMenuEntry) {
             add_submenu_page(
-                static::getPluginSlug(),
+                static::getPlugin()->getSlug(),
                 $subMenuEntry[self::SUB_NAME],
                 $subMenuEntry[self::SUB_NAME],
                 'manage_options',
@@ -56,9 +56,8 @@ abstract class Menu extends Service
             );
         }
     }
-    abstract public static function getPluginSlug() : string;
 
-    abstract public static function getSlug() : string;
+    abstract public static function getPlugin() : Plugin;
 
     abstract static function getMainView() : string;
 
