@@ -107,5 +107,5 @@ abstract class WPEntity extends Entity
         }
     }
 
-    abstract public function getMenuSlug() : string;
+    abstract static public function getMenuSlug() : string;
 }

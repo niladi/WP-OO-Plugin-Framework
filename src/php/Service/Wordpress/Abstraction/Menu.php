@@ -5,6 +5,7 @@ namespace WPPluginCore\Service\Wordpress\Abstraction;
 defined('ABSPATH') || exit;
 use WPPluginCore\Plugin;
 use WPPluginCore\Exception\IllegalArgumentException;
+use WPPluginCore\Exception\IllegalStateException;
 use WPPluginCore\View\MainView;
 use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\View\Abstraction\View;
@@ -17,7 +18,11 @@ abstract class Menu extends Service
     private const SUB_VIEW_CLASS = 'view_class';
 
     private array $subMenuEntries;
+    private Plugin $plugin;
 
+    /**
+     * @var Menu[]
+     */
     private static array $menus  = array();
 
     protected function __construct()
@@ -26,20 +31,38 @@ abstract class Menu extends Service
         $this->addSubMenuEntries();
     }
 
+    private function setPlugin(Plugin $plugin)
+    {
+        if (isset($this->plugin)) {
+            throw new IllegalStateException('the plugin is already setted');
+        }
+        $this->plugin = $plugin;
+    }
+
+    private function getPlugin()
+    {
+        if (!isset($this->plugin)) {
+            $this->setPlugin(Plugin::getFirst());
+        }
+        return $this->plugin;
+    }
+
     /**
      * @inheritDoc
      */
     static public function registerMe(Plugin $plugin): void 
     {
         parent::registerMe($plugin);
-        self::$menus[$plugin->getSlug()] = static::getInstance();
+        $instance = static::getInstance();
+        $instance->setPlugin($plugin);
+        array_push(self::$menus, $instance);
         add_action('admin_menu', array(static::class, 'addMainMenus'));
     }
 
     public static function addMainMenu()
     {
-        foreach (self::$menus as $slug => $menu) {
-            $menuSlug =  Plugin::get($slug)->buildKey('main-menu');
+        foreach (self::$menus as $menu) {
+            $menuSlug =  $menu->getSlug();
             add_menu_page(
                 static::getLabel(),
                 static::getLabel(),
@@ -56,11 +79,16 @@ abstract class Menu extends Service
                     $subMenuEntry[self::SUB_NAME],
                     $subMenuEntry[self::SUB_NAME],
                     'manage_options',
-                    $subMenuEntry[self::SUB_SLUG],
+                    $menu->getPlugin()->buildKey('menu-' . $subMenuEntry[self::SUB_SLUG]),
                     array($subMenuEntry[self::SUB_VIEW_CLASS], 'show')
                 );
             }
         }
+    }
+
+    public function getSlug() : string
+    {
+        return $this->getPlugin()->buildKey('main-menu');
     }
 
     abstract static function getMainView() : string;
