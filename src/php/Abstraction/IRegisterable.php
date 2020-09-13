@@ -1,6 +1,7 @@
 <?php
 namespace WPPluginCore\Abstraction;
 
+use WPPluginCore\Plugin;
 use WPPluginCore\Exception\IllegalStateException;
 
 defined('ABSPATH') || exit;
@@ -15,7 +16,7 @@ interface IRegisterable
      * 
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    public static function registerMe() : void ;
+    static public function registerMe(Plugin $plugin): void  ;
 
     /**
      * Gets the value of the registered state

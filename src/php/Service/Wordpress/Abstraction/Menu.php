@@ -18,6 +18,8 @@ abstract class Menu extends Service
 
     private array $subMenuEntries;
 
+    private static array $menus  = array();
+
     protected function __construct()
     {
         $this->subMenuEntries = array();
@@ -27,37 +29,39 @@ abstract class Menu extends Service
     /**
      * @inheritDoc
      */
-    public static function registerMe() : void
+    static public function registerMe(Plugin $plugin): void 
     {
-        parent::registerMe();
-        add_action('admin_menu', array(static::getInstance(), 'addMainMenu'));
+        parent::registerMe($plugin);
+        self::$menus[$plugin->getSlug()] = static::getInstance();
+        add_action('admin_menu', array(static::class, 'addMainMenus'));
     }
 
-    public function addMainMenu()
+    public static function addMainMenu()
     {
-        add_menu_page(
-            static::getLabel(),
-            static::getLabel(),
-            'manage_options',
-            static::getPlugin()->buildKey('main-menu'),
-            array(static::getMainView(), 'show'),
-            "",
-            20
-        );
-
-        foreach ($this->subMenuEntries as $subMenuEntry) {
-            add_submenu_page(
-                static::getPlugin()->getSlug(),
-                $subMenuEntry[self::SUB_NAME],
-                $subMenuEntry[self::SUB_NAME],
+        foreach (self::$menus as $slug => $menu) {
+            $menuSlug =  Plugin::get($slug)->buildKey('main-menu');
+            add_menu_page(
+                static::getLabel(),
+                static::getLabel(),
                 'manage_options',
-                $subMenuEntry[self::SUB_SLUG],
-                array($subMenuEntry[self::SUB_VIEW_CLASS], 'show')
+                $menuSlug,
+                array(static::getMainView(), 'show'),
+                "",
+                20
             );
+    
+            foreach ($menu->subMenuEntries as $subMenuEntry) {
+                add_submenu_page(
+                    $menuSlug,
+                    $subMenuEntry[self::SUB_NAME],
+                    $subMenuEntry[self::SUB_NAME],
+                    'manage_options',
+                    $subMenuEntry[self::SUB_SLUG],
+                    array($subMenuEntry[self::SUB_VIEW_CLASS], 'show')
+                );
+            }
         }
     }
-
-    abstract public static function getPlugin() : Plugin;
 
     abstract static function getMainView() : string;
 

@@ -79,7 +79,8 @@ class DBInitTest extends TestCase
      */
     public function testRegisterMe(): void
     {
-        DBInit::registerMe(__FILE__);
+        $plugin = new Plugin(__FILE__, __FILE__, 'tes-plugin', [], []);
+        DBInit::registerMe($plugin);
         self::assertNotNull($this->getActiviationHook(__FILE__));
     }
 

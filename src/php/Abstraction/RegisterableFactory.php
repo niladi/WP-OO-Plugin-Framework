@@ -23,7 +23,7 @@ abstract class RegisterableFactory implements IRegisterable, IBaseFactory
     /**
      * @inheritDoc
      */
-    public static function registerMe() : void
+    static public function registerMe(Plugin $plugin): void 
     {
         if (static::getInstance()->registered) {
             throw new IllegalStateException('Register me should not called twice: ' . static::class);

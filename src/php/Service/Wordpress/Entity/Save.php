@@ -4,6 +4,7 @@
 namespace WPPluginCore\Service\Wordpress\Entity;
 
 use WPPluginCore\Logger;
+use WPPluginCore\Plugin;
 use WPPluginCore\Persistence\Domain;
 use WPPluginCore\Exception\WPDAOException;
 use WPPluginCore\Persistence\EntityFactory;
@@ -110,9 +111,9 @@ class Save extends Service
     /**
      * @inheritDoc
      */
-    public static function registerMe(): void
+    static public function registerMe(Plugin $plugin): void 
     {
-        parent::registerMe();
+        parent::registerMe($plugin);
         self::getInstance()->addSaveAction();
     }
 }

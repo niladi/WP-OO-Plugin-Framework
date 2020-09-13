@@ -106,4 +106,6 @@ abstract class WPEntity extends Entity
             exit;
         }
     }
+
+    abstract public function getMenuSlug() : string;
 }

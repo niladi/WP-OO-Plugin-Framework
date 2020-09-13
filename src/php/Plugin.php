@@ -122,10 +122,10 @@ class Plugin
         return self::$mode === self::MODE_DEBUG;
     }
 
-    private static function registerCore() : void
+    private function registerCore() : void
     {
         if (! self::$coreRegistered) {
-            self::register(array (
+            $this->register(array (
                 Logger::class,
                 Date::class,
                 Metabox::class,
@@ -133,16 +133,17 @@ class Plugin
                 Save::class,
                 JSONAttribute::class,
                 MetaboxRessource::class,
+                DBInit::class
             ));
             self::$coreRegistered = true;
         }
     }
 
-    private static function register(array $classes)
+    private function register(array $classes)
     {
         foreach ($classes as $class) {
             if (is_subclass_of($class, IRegisterable::class)) {
-                $class::registerMe();
+                $class::registerMe($this);
             } else {
                 throw new IllegalStateException('The class shoul be of registable but the class istn`t: ' . $class);
             }   
@@ -176,9 +177,9 @@ class Plugin
      */
     public function __construct(string $file, string $url, string $slug, array $services, array $endpoints) 
     {
-        $this->$slug = $slug;
-        $this->$file = $file;
-        $this->$url = $url;
+        $this->slug = $slug;
+        $this->file = $file;
+        $this->url = $url;
 
         $this->services = array(
             ...$services
@@ -206,10 +207,9 @@ class Plugin
      */
     final public function run() : void
     {
-        self::registerCore();
-        self::register($this->services);
-        DBInit::registerMe($this->file);
-        self::register($this->endpoints);
+        $this->registerCore();
+        $this->register($this->services);
+        $this->register($this->endpoints);
     }
 
     /**

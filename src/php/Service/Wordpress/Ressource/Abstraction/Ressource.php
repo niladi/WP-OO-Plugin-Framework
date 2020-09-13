@@ -57,9 +57,9 @@ abstract class Ressource extends Service
 
     abstract static protected function getType() : int;
 
-    public static function registerMe() : void
+    static public function registerMe(Plugin $plugin): void 
     {
-        parent::registerMe(); 
+        parent::registerMe($plugin); 
         if (static::getType() | self::TYPE_ADMIN) {
             array_push(self::$adminRessources, static::getInstance());
         }

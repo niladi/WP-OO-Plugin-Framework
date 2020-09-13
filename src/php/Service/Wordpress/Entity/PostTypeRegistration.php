@@ -5,6 +5,7 @@ namespace WPPluginCore\Service\Wordpress\Entity;
 defined('ABSPATH') || exit;
 
 use WP_Post;
+use WPPluginCore\Plugin;
 use WPPluginCore\Persistence\DAO;
 use WPPluginCore\Persistence\Domain;
 use WPPluginCore\Exception\WPDAOException;
@@ -49,10 +50,13 @@ class PostTypeRegistration extends Service
      * Register the Post type
      *
      * @param $labels array the Labels for menu etc
-     * @param string $slug the slug of the postType
+     * @param string $class the slug of the postType
      */
-    final private static function register(array $labels, string $slug) : void
+    final private static function register(string $class) : void
     {
+        $labels = $class::getLabels();
+        $slug = $class::getSlug();
+
         $args = array(
             'label'               => $labels['name'],
             'labels'              => $labels,
@@ -66,8 +70,9 @@ class PostTypeRegistration extends Service
             'has_archive'         => true,
             'exclude_from_search' => false,
             'capability_type'     => 'post',
-            'show_in_menu'        => Menu::getSlug()
+            'show_in_menu'        => $class::getMenuSlug()
         );
+
         register_post_type($slug, $args);
         Metabox::getInstance()->registerDefaultMetaBox($slug);
     }
@@ -75,9 +80,9 @@ class PostTypeRegistration extends Service
     /**
      * @inheritDoc
      */
-    public static function registerMe(): void
+    static public function registerMe(Plugin $plugin): void 
     {
-        parent::registerMe();
+        parent::registerMe($plugin);
         add_action('init', array(self::getInstance(), 'registerPostTypes'));
 
     }
@@ -91,7 +96,7 @@ class PostTypeRegistration extends Service
     public function registerPostTypes() : void
     {
         foreach (EntityFactory::getInstance()->getWPEntites() as $class) {
-            self::register($class::getLabels(), $class::getSlug());
+            self::register($class);
         }
     }
 }

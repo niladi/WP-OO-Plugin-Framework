@@ -31,7 +31,7 @@ class LoggerTest extends TestCase
     public static function setUpBeforeClass() : void
     {
         if (!Logger::isRegistered()) {
-            Logger::registerMe();
+            Logger::registerMe('test-slug');
         }
         
     }

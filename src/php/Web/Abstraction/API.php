@@ -29,9 +29,9 @@ abstract class API extends Endpoint
     /**
      * @inheritDoc
      */
-    public static function registerMe() : void
+    static public function registerMe(Plugin $plugin): void 
     {
-        parent::registerMe();
+        parent::registerMe($plugin);
         add_action('rest_api_init', array(static::getInstance(), 'registerEndpoints'));
     }
 
