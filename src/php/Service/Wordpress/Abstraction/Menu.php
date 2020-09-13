@@ -47,7 +47,7 @@ abstract class Menu extends Service
 
         foreach ($this->subMenuEntries as $subMenuEntry) {
             add_submenu_page(
-                static::getSlug(),
+                static::getPluginSlug(),
                 $subMenuEntry[self::SUB_NAME],
                 $subMenuEntry[self::SUB_NAME],
                 'manage_options',
@@ -56,11 +56,9 @@ abstract class Menu extends Service
             );
         }
     }
+    abstract public static function getPluginSlug() : string;
 
-    public static function getSlug() : string 
-    {
-        return Plugin::getSlug() . '-' . 'main-menu';
-    }
+    abstract public static function getSlug() : string;
 
     abstract static function getMainView() : string;
 

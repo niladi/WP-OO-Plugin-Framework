@@ -14,19 +14,9 @@ abstract class Ressource extends Service
     protected const TYPE_ADMIN = 1;
     protected const TYPE_LOAD = 2;
 
-
-
     private static array $adminRessources = array();
     private static array $frontRessources = array();
-
-    protected string $assetsPath;
     private bool $ressourceRegistered = false;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->assetsPath =  Plugin::getURL() . '/src/ressource';
-    }
 
     /**
      * Register the ressource
@@ -96,6 +86,11 @@ abstract class Ressource extends Service
         foreach ($arr as $ressource) {
             $ressource->register();
         }
+    }
+
+    public static function getRessourceURLPath(string $file = __FILE__)
+    {
+        return plugins_url( '../../../../../ressource/', $file );
     }
 
     /*

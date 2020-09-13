@@ -44,18 +44,18 @@ class Logger extends RegisterableFactory
 
     protected function __construct()
     {
-        static::$file = dirname(Plugin::getFile());
+        static::$file =  ABSPATH . 'wp-content/plugins/wp-plugin-core.log';
 
-        $this->logger = new MonologLogger('licence_sales_logger');
+        $this->logger = new MonologLogger('wp_plugin_core_logger');
 
         $this->isDebug = Plugin::isDebug();
 
         if ($this->isDebug) {
             $chromeconsole = new ChromePHPHandler(MonologLogger::DEBUG);
             $this->logger->pushHandler($chromeconsole);
-            $stream = new StreamHandler(static::$file . '/licence_sales.log', MonologLogger::DEBUG);
+            $stream = new StreamHandler(static::$file, MonologLogger::DEBUG);
         } else {
-            $stream = new StreamHandler(static::$file . '/licence_sales.log', MonologLogger::INFO);
+            $stream = new StreamHandler(static::$file, MonologLogger::INFO);
         }
         
         $this->logger->pushHandler($stream);

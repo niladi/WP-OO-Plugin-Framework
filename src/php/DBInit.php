@@ -21,7 +21,7 @@ defined('ABSPATH') || exit;
  *
  * @author Niklas Lakner niklas.lakner@gmail.com
  */
-class DBInit extends RegisterableFactory
+class DBInit
 {
     /**
      * if inti db already executed
@@ -165,12 +165,9 @@ class DBInit extends RegisterableFactory
     /**
      * @inheritDoc
      */
-    public static function registerMe() : void
+    public static function registerMe(string $file) : void
     {
-
-        register_activation_hook(Plugin::getFile(), array(self::getInstance() , 'initDB'));
-
-        parent::registerMe();
+        register_activation_hook($file, array(self::getInstance() , 'initDB'));
     }
 
     /**

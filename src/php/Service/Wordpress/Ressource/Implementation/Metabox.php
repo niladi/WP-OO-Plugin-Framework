@@ -26,7 +26,7 @@ class Metabox extends Ressource
      */
     protected function register() : void 
     {
-        wp_register_style(self::KEY_CUSTOM_METABOX, Plugin::getURL() . '/vendor/green-everest/wp-plugin-core/src/ressource/css/metabox.css');
+        wp_register_style(self::KEY_CUSTOM_METABOX, static::getRessourceURLPath() . 'css/metabox.css');
     }
 
     /**

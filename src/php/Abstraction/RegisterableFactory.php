@@ -25,9 +25,6 @@ abstract class RegisterableFactory implements IRegisterable, IBaseFactory
      */
     public static function registerMe() : void
     {
-        if (static::class == Logger::class) {
-            Logger::debug(Plugin::getURL());
-        }
         if (static::getInstance()->registered) {
             throw new IllegalStateException('Register me should not called twice: ' . static::class);
         }

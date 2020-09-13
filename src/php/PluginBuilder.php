@@ -1,6 +1,8 @@
 <?php
 namespace WPPluginCore;
 
+defined('ABSPATH') || exit;
+
 use WPPluginCore\DBInit;
 use WPPluginCore\Logger;
 use WPPluginCore\Service\Wordpress\Menu;
@@ -38,7 +40,7 @@ class PluginBuilder
 
     private EntityFactory $entityFactory;
 
-    public function __construct(string $file, string $url, string $slug, bool $isDebug) 
+    public function __construct(string $file, string $url, string $slug) 
     {
         $this->services = array();
         $this->endpoints = array();
@@ -46,7 +48,6 @@ class PluginBuilder
         $this->file = $file;
         $this->url = $url;
         $this->slug = $slug;
-        $this->isDebug = $isDebug;
         
         $this->entityFactory = EntityFactory::getInstance();
     }
@@ -55,7 +56,7 @@ class PluginBuilder
 
     final public function build() : Plugin
     {
-        return new Plugin($this->file, $this->url, $this->slug, $this->isDebug, $this->services, $this->endpoints);
+        return new Plugin($this->file, $this->url, $this->slug, $this->services, $this->endpoints);
     }
 
     public function addService(string $class) : self
