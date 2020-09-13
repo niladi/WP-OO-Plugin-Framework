@@ -3,6 +3,8 @@
 
 namespace WPPluginCore\Abstraction;
 
+use WPPluginCore\Logger;
+use WPPluginCore\Plugin;
 use WPPluginCore\Exception\IllegalStateException;
 
 defined('ABSPATH') || exit;
@@ -23,8 +25,11 @@ abstract class RegisterableFactory implements IRegisterable, IBaseFactory
      */
     public static function registerMe() : void
     {
+        if (static::class == Logger::class) {
+            Logger::debug(Plugin::getURL());
+        }
         if (static::getInstance()->registered) {
-            throw new IllegalStateException('Register me should not called twice');
+            throw new IllegalStateException('Register me should not called twice: ' . static::class);
         }
         static::getInstance()->registered = true;
     }
