@@ -38,7 +38,7 @@ class PluginTest extends TestCase
         parent::setUp();
 
         $this->file = __FILE__;
-        $this->app = new Plugin($this->file, $this->file, 'wp-test', true, array(), array());
+        $this->app = new Plugin($this->file, $this->file, 'wp-test', array(), array());
     }
 
     /**

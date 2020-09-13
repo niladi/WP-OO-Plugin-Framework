@@ -79,12 +79,8 @@ class DBInitTest extends TestCase
      */
     public function testRegisterMe(): void
     {
-        if (!DBInit::isRegistered()) {
-            DBInit::registerMe();
-        }
-        
-        self::assertNotNull($this->getActiviationHook(Plugin::getFirst()->getFile()));
-        self::assertTrue(DBInit::isRegistered());
+        DBInit::registerMe(__FILE__);
+        self::assertNotNull($this->getActiviationHook(__FILE__));
     }
 
     /**
