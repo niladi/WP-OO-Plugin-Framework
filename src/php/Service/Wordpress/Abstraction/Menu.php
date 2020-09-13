@@ -59,7 +59,7 @@ abstract class Menu extends Service
         add_action('admin_menu', array(static::class, 'addMainMenus'));
     }
 
-    public static function addMainMenu()
+    public static function addMainMenus()
     {
         foreach (self::$menus as $menu) {
             $menuSlug =  $menu->getSlug();
