@@ -64,11 +64,11 @@ abstract class Menu extends Service
         foreach (self::$menus as $menu) {
             $menuSlug =  $menu->getSlug();
             add_menu_page(
-                static::getLabel(),
-                static::getLabel(),
+                $menu::getLabel(),
+                $menu::getLabel(),
                 'manage_options',
                 $menuSlug,
-                array(static::getMainView(), 'show'),
+                array($menu::getMainView(), 'show'),
                 "",
                 20
             );
