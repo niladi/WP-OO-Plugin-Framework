@@ -56,7 +56,7 @@ abstract class Menu extends Service
         $instance = static::getInstance();
         $instance->setPlugin($plugin);
         array_push(self::$menus, $instance);
-        add_action('admin_menu', array(static::class, 'addMainMenus'));
+        add_action('admin_menu', array(self::class, 'addMainMenus'));
     }
 
     public static function addMainMenus()
