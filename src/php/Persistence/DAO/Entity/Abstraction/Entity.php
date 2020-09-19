@@ -75,12 +75,7 @@ abstract class Entity {
         unset($arr[DomainEntity::KEY_ID]);
         try {
             $this->getConnector()->exec(
-                sprintf(
-                    "INSERT INTO %s (%s) VALUES (%s)",
-                    $entity::getTable(),
-                    implode(', ', array_keys($arr)),
-                    implode(', ', array_values($arr))
-                )
+                "INSERT INTO {$entity::getTable()} ({implode(', ', array_keys($arr))}) VALUES ({implode(', ', array_values($arr))}})",
             );
         } catch (QueryException $exception) {
             Logger::error('Can\'t create an entity: Error Message: ' . $exception->getMessage(), $arr);
@@ -137,11 +132,7 @@ abstract class Entity {
      */
     public function readSingleByEntityKeys(DomainEntity $entity, array $keys) : ?DomainEntity
     {
-        return $this->querySingle(sprintf(
-            "SELECT * FROM %s WHERE %s",
-            $entity::getTable(),
-            $entity->attributesForDB($keys, '=', ' AND ')
-        ));
+        return $this->querySingle("SELECT * FROM {$entity::getTable()} WHERE {$entity->attributesForDB($keys, '=', ' AND ')}");
     }
 
     /**
@@ -182,11 +173,8 @@ abstract class Entity {
      */
     public function readMultipleByEntityKeys(DomainEntity $entity, array $keys) : array
     {
-        return $this->queryMultiple(sprintf(
-            "SELECT * FROM %s WHERE %s",
-            $entity::getTable(),
-            $entity->attributesForDB($keys, '=', ' AND ')
-        ));
+        return $this->queryMultiple(
+            "SELECT * FROM {$entity::getTable()} WHERE { $entity->attributesForDB($keys, '=', ' AND ')}");
     }
 
     /**
@@ -233,7 +221,7 @@ abstract class Entity {
         }
         $entity->validate();
         try {
-            $this->getConnector()->exec(sprintf("UPDATE %s SET %s WHERE id=%d", $entity::getTable(), $query, $entity->getID()), false);
+        $this->getConnector()->exec("UPDATE {$entity::getTable()} SET {$query} WHERE id={$entity->getID()}", false);
         } catch (QueryException $ex) {
             throw new IllegalArgumentException("Watchout: beforeSave was executed \n" . $ex->getMessage());
         }
@@ -251,7 +239,7 @@ abstract class Entity {
         try {
             $this->crudValidation($entity->getID())
                  ->getConnector()
-                 ->exec(sprintf("DELETE FROM %s WHERE id=%s", $entity::getTable(), $entity->getID()));
+        ->exec("DELETE FROM {$entity::getTable()} WHERE id={$entity->getID()}");
         } catch (NegativIdException $e) {
         } catch (QueryException $e) {
         }

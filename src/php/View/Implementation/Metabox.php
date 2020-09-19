@@ -26,7 +26,13 @@ class Metabox extends View
     protected static function showMe() : void
     {
         global $viewParams; // todo cleaner 
-        wp_nonce_field( $viewParams[self::SLUG] . '_save_meta_box_data', $viewParams[self::SLUG] . '_meta_box_nonce');
-        echo '<table class="form-table"><tbody>' . $viewParams[self::HTML] . '</tbody></table>';
+        wp_nonce_field( "{$viewParams[self::SLUG]}_save_meta_box_data", "{$viewParams[self::SLUG]}_meta_box_nonce");
+        echo "<table class='form-table'><tbody>{$viewParams[self::HTML]}</tbody></table>";
+    }
+
+    protected static function validateParams(): bool
+    {
+        global $viewParams;
+        return isset($viewParams[self::SLUG]) && isset($viewParams[self::HTML]);
     }
 } 

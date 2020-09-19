@@ -2,6 +2,8 @@
 
 namespace WPPluginCore\View\Abstraction;
 
+use WPPluginCore\Exception\IllegalStateException;
+
 defined('ABSPATH') || exit;
 
 abstract class View 
@@ -17,8 +19,12 @@ abstract class View
      */
     static function show() : void
     {
-        static::loadAssets();
-        static::showMe();
+        if (static::validateParams()) {
+            static::loadAssets();
+            static::showMe();
+        } else {
+            throw new IllegalStateException("Not all params are set");
+        }
     }
 
     /**
@@ -37,5 +43,19 @@ abstract class View
      * @return void
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    abstract static protected function loadAssets() : void;
+    static protected function loadAssets() : void
+    {
+        // playholder if there are needed any assets
+    }
+
+    /**
+     * Validates the view params
+     *
+     * @return boolean
+     * @author Niklas Lakner niklas.lakner@gmail.com
+     */
+    static protected function validateParams() : bool
+    {
+        return true;
+    }
 }

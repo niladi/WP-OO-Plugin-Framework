@@ -20,10 +20,10 @@ class EmailState extends Text
         $user   = get_user_by('email', $this->getValue());
         $output = '<input type="email" name="' . $this->getKey() . '" value="' . $this->getValue() . '"/><span style="display: block">';
         $output .= __('Nutzer Status:', 'wp-plugin-core') . ' ';
-        if ($user) {
+        if (!$user) {
             $output .= __('Kein Nutzer', 'wp-plugin-core');
         } else {
-            $output .= in_array($this->role, $user->roles)
+            $output .=  in_array($this->role, $user->roles)
                 ? translate_user_role($this->role)
                 : __('Normaler Nutzer', 'wp-plugin-core');
         }
