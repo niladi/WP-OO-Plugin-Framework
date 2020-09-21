@@ -87,7 +87,7 @@ class Save extends Service
     {
         $slug = get_post_type( $post_id );
         if ($this->checkPostValidMetaSave($post_id, $slug)) {
-            Logger::debug('Trying to save');
+            $this->logger->debug('Trying to save');
             $dao = $this->wpEntityContainer->get($slug);
             $entity = $dao->getEntityFactory()->entity();
             foreach ($entity->getAttributes() as $attribute) {
@@ -99,7 +99,7 @@ class Save extends Service
             }
             if ($entity->getID() == -1) {
                 if ($dao->create($entity) === false) {
-                    Logger::error('Can\t save the post: ', (array) $entity);
+                    $this->logger->error('Can\t save the post: ', (array) $entity);
                 }
             } else {
                 $dao->update($entity);
