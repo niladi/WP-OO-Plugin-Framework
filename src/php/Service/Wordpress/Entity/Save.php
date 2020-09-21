@@ -5,15 +5,26 @@ namespace WPPluginCore\Service\Wordpress\Entity;
 
 use WPPluginCore\Logger;
 use WPPluginCore\Plugin;
+use Psr\Log\LoggerInterface;
 use WPPluginCore\Persistence\Domain;
 use WPPluginCore\Exception\WPDAOException;
 use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Exception\AttributeException;
+use WPPluginCore\Persistence\DAO\Entity\WPEntityContainer;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\WPEntity;
 
 class Save extends Service
 {
+
+    private WPEntityContainer $wpEntityContainer;
+
+    public function __construct(LoggerInterface $logger, WPEntityContainer $wpEntityContainer)
+    {
+        parent::__construct($logger);
+        $this->wpEntityContainer = $wpEntityContainer;
+    }
+
     /**
      * Helper function to update the wordpress title / name of the post
      *
@@ -77,9 +88,8 @@ class Save extends Service
         $slug = get_post_type( $post_id );
         if ($this->checkPostValidMetaSave($post_id, $slug)) {
             Logger::debug('Trying to save');
-            $factory = EntityFactory::getInstance();
-            $dao = $factory->getWPEntityDAOInstanceBySlug($slug);
-            $entity = $factory->newEntity($dao);
+            $dao = $this->wpEntityContainer->get($slug);
+            $entity = $dao->getEntityFactory()->entity();
             foreach ($entity->getAttributes() as $attribute) {
                 try {
                     $attribute->loadFromPost();
@@ -111,9 +121,9 @@ class Save extends Service
     /**
      * @inheritDoc
      */
-    static public function registerMe(Plugin $plugin): void 
+    public function registerMe() : void 
     {
-        parent::registerMe($plugin);
-        self::getInstance()->addSaveAction();
+        parent::registerMe();
+        $this->addSaveAction();
     }
 }

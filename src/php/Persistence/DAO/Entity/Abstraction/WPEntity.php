@@ -4,15 +4,17 @@ namespace WPPluginCore\Persistence\DAO\Entity\Abstraction;
 
 defined('ABSPATH') || exit;
 
-
+use Psr\Log\LoggerInterface;
 use WP_Error;
 use WPPluginCore\Logger;
 use WPPluginCore\Exception\ReadException;
 use WPPluginCore\Exception\QueryException;
 use WPPluginCore\Exception\WPDAOException;
 use WPPluginCore\Exception\UpdateException;
+use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Exception\AttributeException;
 use WPPluginCore\Exception\NegativIdException;
+use WPPluginCore\Persistence\DAO\Adapter\DBConnector;
 use WPPluginCore\Service\Wordpress\Entity\Save;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\Entity as DomainEntity;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\WPEntity as DomainWPEntity;
@@ -24,6 +26,13 @@ use WPPluginCore\Persistence\Domain\Entity\Abstraction\WPEntity as DomainWPEntit
  */
 abstract class WPEntity extends Entity
 {
+    protected Save $save;
+
+    public function __construct(EntityFactory $entityFactory,DBConnector $dBConnector, LoggerInterface $logger, Save $save)
+    {
+        parent::__construct($entityFactory, $dBConnector, $logger);
+        $this->save = $save;
+    }
 
     /**
      * @param int $wpPostID
@@ -40,7 +49,7 @@ abstract class WPEntity extends Entity
                                 $wpPostID
                             );
         } catch (NegativIdException | QueryException $ex) {
-            Logger::error('exception od query: '. $ex->getTraceAsString());
+            $this->logger->error('exception od query: '. $ex->getTraceAsString());
             exit;
         }
     }
@@ -76,7 +85,7 @@ abstract class WPEntity extends Entity
                 wp_delete_post($entity->getAttributeValue($keyPostId));
                 return false;
             }
-            Save::getInstance()->updateTitle($entity);
+            $this->save->updateTitle($entity);
             return true;
         }
         return parent::create($entity);
@@ -91,7 +100,7 @@ abstract class WPEntity extends Entity
     {
         parent::update($entity);
         if ($entity instanceof DomainWPEntity ) {
-            Save::getInstance()->updateTitle($entity);
+            $this->save->updateTitle($entity);
         }
     }
 }

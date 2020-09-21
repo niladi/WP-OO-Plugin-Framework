@@ -9,7 +9,7 @@ use WPPluginCoreTest\Unit\TestHelper\TestCase;
 use WPPluginCore\Service\Wordpress\Entity\Save;
 use WPPluginCore\Service\Wordpress\Entity\Metabox;
 use WPPluginCore\Service\Wordpress\Entity\PostTypeRegistration;
-use WPPluginCore\Service\Implementation\Date as ImplementationDate;
+use WPPluginCore\Util\Date as ImplementationDate;
 
 /**
  * Class AppTest.

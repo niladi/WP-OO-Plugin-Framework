@@ -4,6 +4,7 @@
 namespace WPPluginCore\Service\Wordpress\Entity;
 defined('ABSPATH') || exit;
 
+use Psr\Log\LoggerInterface;
 use WP_Post;
 use WPPluginCore\Plugin;
 use WPPluginCore\Persistence\DAO;
@@ -14,13 +15,25 @@ use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Exception\AttributeException;
 use WPPluginCore\Exception\IllegalKeyException;
 use WPPluginCore\Service\Wordpress\Entity\Save;
-use WPPluginCore\Service\Wordpress\Entity\Metabox;
 use WPPluginCore\Exception\IllegalArgumentException;
 use WPPluginCore\Service\Wordpress\Abstraction\Menu;
-use WPPluginCore\Service\Wordpress\Entity\Metaboxes;
+use WPPluginCore\Service\Wordpress\Entity\Metabox;
+use WPPluginCore\Persistence\DAO\Entity\WPEntityContainer;
 
 class PostTypeRegistration extends Service
 {
+
+    private WPEntityContainer $wpEntityContainer;
+    private Metabox $metabox;
+
+    public function __construct(LoggerInterface $logger,WPEntityContainer $wpEntityContainer, Metabox $metabox)
+    {
+        parent::__construct($logger);
+        $this->wpEntityContainer = $wpEntityContainer;
+        $this->metabox = $metabox;
+
+    }
+
     /**
      * Returns the labels for initializing the WPEntity
      *
@@ -52,7 +65,7 @@ class PostTypeRegistration extends Service
      * @param $labels array the Labels for menu etc
      * @param string $class the slug of the postType
      */
-    final private static function register(string $class) : void
+    final private function register(string $class) : void
     {
         $labels = $class::getLabels();
         $slug = $class::getSlug();
@@ -74,16 +87,16 @@ class PostTypeRegistration extends Service
         );
 
         register_post_type($slug, $args);
-        Metabox::getInstance()->registerDefaultMetaBox($slug);
+        $this->metabox->registerDefaultMetaBox($slug);
     }
 
     /**
      * @inheritDoc
      */
-    static public function registerMe(Plugin $plugin): void 
+    public function registerMe() : void 
     {
-        parent::registerMe($plugin);
-        add_action('init', array(self::getInstance(), 'registerPostTypes'));
+        parent::registerMe();
+        add_action('init', array($this, 'registerPostTypes'));
 
     }
 
@@ -95,8 +108,8 @@ class PostTypeRegistration extends Service
      */
     public function registerPostTypes() : void
     {
-        foreach (EntityFactory::getInstance()->getWPEntites() as $class) {
-            self::register($class);
+        foreach ($this->wpEntityContainer->getAll() as $dao) {
+            $this->register($dao->getEntityFactory()->getEntityClass());
         }
     }
 }

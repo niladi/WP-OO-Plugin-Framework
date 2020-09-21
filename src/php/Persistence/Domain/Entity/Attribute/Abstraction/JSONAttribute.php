@@ -17,11 +17,7 @@ abstract class JSONAttribute extends Attribute
      */
     public function getAdminHTML(): string
     {
-        return $this->createTableInput(sprintf(
-            '<input type="hidden" class="json-attribute-display" name="%s" value=\'%s\'/>',
-            $this->key,
-            $this->toString()
-        ));
+        return $this->createTableInput("<input type='hidden' class='json-attribute-display' name='$this->key' value='$this'/>");
     }
 
     protected static function parseFromString(string $value)
@@ -40,15 +36,10 @@ abstract class JSONAttribute extends Attribute
      */
     public function getValueForDB() : string
     {
-        try {
-            return "'". $this->toString() ."'";
-        } catch (IllegalStateException $e) {
-            Logger::error($e->getMessage(), $e->getTrace());
-            return "'{}'";
-        }
+        return "'". $this ."'";
     }
 
-    private function toString() : string
+    private function __toString() : string
     {
         $val = $this->getValue();
         try {

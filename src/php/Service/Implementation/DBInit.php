@@ -3,16 +3,18 @@
 
 namespace WPPluginCore;
 
+use Psr\Log\LoggerInterface;
+use WPPluginCore\Logger;
 use WPPluginCore\Plugin;
 use WPPluginCore\Exception\QueryException;
 use WPPluginCore\Persistence\EntityFactory;
+use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Exception\IllegalKeyException;
-use WPPluginCore\Logger;
 use WPPluginCore\Abstraction\RegisterableFactory;
 use WPPluginCore\Exception\IllegalStateException;
 use WPPluginCore\Persistence\DAO\Adapter\DBConnector;
+use WPPluginCore\Persistence\DAO\Entity\EntityContainer;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\Entity;
-
 
 defined('ABSPATH') || exit;
 
@@ -21,7 +23,7 @@ defined('ABSPATH') || exit;
  *
  * @author Niklas Lakner niklas.lakner@gmail.com
  */
-class DBInit extends RegisterableFactory
+class DBInit extends Service
 {
     /**
      * if inti db already executed
@@ -38,8 +40,11 @@ class DBInit extends RegisterableFactory
     private bool $onInit;
 
     
-    private static self $instance; 
+    private string $pluginFile;
 
+    private EntityContainer $entityContainer;
+
+    private DBConnector $dbConnector;
     
 
     /**
@@ -47,19 +52,14 @@ class DBInit extends RegisterableFactory
      * 
      * @author Niklas Lakner <niklas.lakner@gmail.com>
      */
-    protected function __construct()
+    protected function __construct(LoggerInterface $logger, EntityContainer $entityContainer, DBConnector $dbConnector, string $pluginFile)
     {
+        parent::__construct($logger);
         $this->onInit = false;
         $this->initDB = false;
-    }
-
-    private function getEntites() : array
-    {
-        $entities = array();
-        foreach (EntityFactory::getInstance()->getEntities() as $class) {
-            array_push($entities, $class::init());
-        }
-        return $entities;
+        $this->pluginFile = $pluginFile;
+        $this->entityContainer = $entityContainer;
+        $this->dbConnector =  $dbConnector;
     }
 
     /**
@@ -73,12 +73,12 @@ class DBInit extends RegisterableFactory
         $this->onInit = true;
         if (!$this->initDB) {
             try {
-                foreach ($this->getEntites() as $entity) {
-                    $this->createTable($entity);
+                foreach ($this->entityContainer->getAll() as $dao) {
+                    $this->createTable($dao->getEntityFactory()->entity());
                 }
                 $this->initDB = true;
             } catch (QueryException $queryException) {
-                Logger::error('Cant init database', $queryException->getTrace());
+                $this->logger->error('Cant init database', $queryException->getTrace());
                 wp_die( __('Die Website ist wegen technischer schwierigkeiten im Moment nicht erreichbar', 'wp-plugin-core'));
             }
 
@@ -97,7 +97,7 @@ class DBInit extends RegisterableFactory
      */
     private function createTable(Entity $entity) : void
     {
-        $db = DBConnector::getInstance()->getConnection();
+        $db = $this->dbConnector->getConnection();
         $statement = sprintf('CREATE TABLE IF NOT EXISTS %s (%s);', $entity::getTable(), $this->getAttributes($entity));
         $db->exec($statement);
     }
@@ -111,11 +111,11 @@ class DBInit extends RegisterableFactory
     public function dropDB() : bool
     {
         try {
-            foreach ($this->getEntites() as $entity) {
-                $this->dropTable($entity);
+            foreach ($this->entityContainer->getAll() as $entity) {
+                $this->dropTable($entity->getEntityFactory()->entity());
             }
         } catch (QueryException $queryException) {
-            Logger::error('Cant drop database', $queryException->getTrace());
+            $this->logger->error('Cant drop database', $queryException->getTrace());
             return false;
         }
         $this->initDB = false;
@@ -133,7 +133,7 @@ class DBInit extends RegisterableFactory
      */
     private function dropTable(Entity $entity) : void
     {
-        $db = DBConnector::getInstance()->getConnection();
+        $db = $this->dbConnector->getConnection();
         $statement = sprintf('DROP TABLE %s;', $entity::getTable());
         $db->exec($statement);
     }
@@ -152,7 +152,7 @@ class DBInit extends RegisterableFactory
             try {
                 $s .= sprintf('%s %s, ', $key, $entity->getAttribute($key)->getDBSetup());
             } catch (IllegalKeyException $e) {
-                Logger::error('Illegal state occurs in ' . __FILE__ . ' because getAttributesKeys returns an non valid key');
+                $this->logger->error('Illegal state occurs in ' . __FILE__ . ' because getAttributesKeys returns an non valid key');
             }
         }
         $s .= sprintf('PRIMARY KEY (%s), ', $entity->getPrimaryKeysSerialized());
@@ -165,9 +165,9 @@ class DBInit extends RegisterableFactory
     /**
      * @inheritDoc
      */
-    public static function registerMe(Plugin $plugin) : void
+    public function registerMe() : void
     {
-        register_activation_hook($plugin->getFile(), array(self::getInstance() , 'initDB'));
+        register_activation_hook($this->pluginFile, array($this , 'initDB'));
     }
 
     /**
@@ -187,16 +187,5 @@ class DBInit extends RegisterableFactory
     public function isInitialized() : bool 
     {
         return $this->initDB;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function getInstance() : self
-    {
-        if (!isset(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
     }
 }

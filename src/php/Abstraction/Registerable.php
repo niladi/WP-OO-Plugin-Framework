@@ -15,7 +15,7 @@ defined('ABSPATH') || exit;
  *
  * @author Niklas Lakner niklas.lakner@gmail.com
  */
-abstract class RegisterableFactory implements IRegisterable, IBaseFactory
+abstract class Registerable implements IRegisterable
 {
 
     protected bool $registered = false;
@@ -23,24 +23,19 @@ abstract class RegisterableFactory implements IRegisterable, IBaseFactory
     /**
      * @inheritDoc
      */
-    static public function registerMe(Plugin $plugin): void 
+    public function registerMe() : void 
     {
-        if (static::getInstance()->registered) {
+        if ($this->registered) {
             throw new IllegalStateException('Register me should not called twice: ' . static::class);
         }
-        static::getInstance()->registered = true;
+        $this->registered = true;
     }
 
     /**
      * @inheritDoc
      */
-    public static function isRegistered() : bool
+    public function isRegistered() : bool
     {
-        return static::getInstance()->registered;
-    }
-
-    protected function __construct() 
-    {
-        $this->registered = false;
+        return $this->registered;
     }
 }

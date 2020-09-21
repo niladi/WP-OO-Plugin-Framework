@@ -3,11 +3,12 @@
 
 namespace WPPluginCore\Persistence\Domain\Entity\Attribute\Abstraction;
 
+use WPPluginCore\Logger;
+use WPPluginCore\Exception\ParserException;
 use WPPluginCore\Exception\AttributeException;
+use WPPluginCore\Exception\IllegalStateException;
 use WPPluginCore\Exception\IllegalValueException;
 use WPPluginCore\Exception\NotSetInPostException;
-use WPPluginCore\Exception\ParserException;
-use WPPluginCore\Logger;
 
 defined('ABSPATH') || exit;
 
@@ -56,8 +57,7 @@ abstract class Attribute
             try {
                 $this->setValue($this->getDefault());
             } catch (IllegalValueException $exception) {
-                Logger::error('The default value of attribute with key: ' .$this->key . ', is not valid');
-                exit;
+                throw new IllegalStateException('The default value of attribute with key: ' .$this->key . ', is not valid');
             }
         }
         return $this->value;
@@ -139,7 +139,6 @@ abstract class Attribute
         if (isset($_POST[ $this->key ])) {
             $this->setValue($_POST[ $this->key ]);
         } else {
-            Logger::info('The Value of ' . $this->label . ' not set in POST variable. Took the default value');
             $this->setValue($this->getDefault());
         }
     }

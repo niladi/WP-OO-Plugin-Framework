@@ -7,18 +7,29 @@ defined('ABSPATH') || exit;
 
 use PDO;
 use PDOStatement;
+use Psr\Log\LoggerInterface;
 use WPPluginCore\Abstraction\IBaseFactory;
 use WPPluginCore\Exception\QueryException;
 use WPPluginCore\Logger;
 
-class DBConnector implements IBaseFactory
+class DBConnector 
 {
-    /**
-     * @var static the Instance
-     */
-    private static $_instance = null;
 
-    private $connection;
+    private PDO $connection;
+    private LoggerInterface $logger;
+
+    protected function __construct(LoggerInterface $logger)
+    {
+        $this->connection = new PDO(
+            sprintf('mysql:dbname=%s;host=%s', DB_NAME, DB_HOST),
+            DB_USER,
+            DB_PASSWORD
+        );
+        $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
+        $this->logger = $logger;
+    }
 
     /**
      * Returns the PDO
@@ -62,7 +73,7 @@ class DBConnector implements IBaseFactory
             if ($this->getConnection()->errorCode() === "00000") { //todo workarround
                 return array();
             } else {
-                Logger::error("On executing query something went wrong", $this->getConnection()->errorInfo()   );
+                $this->logger->error("On executing query something went wrong", $this->getConnection()->errorInfo()   );
                 throw new QueryException('on fetch something went wrong');
             }
         }
@@ -75,7 +86,7 @@ class DBConnector implements IBaseFactory
         $result = $con->query($sql);
 
         if (! isset($result) || !$result) {
-            Logger::error("On executing query something went wrong: ",  $con->errorInfo());
+            $this->logger->error("On executing query something went wrong: ",  $con->errorInfo());
             throw new QueryException("On executing query something went wrong: \n ". $con->errorInfo());
         }
 
@@ -103,27 +114,5 @@ class DBConnector implements IBaseFactory
             throw new QueryException("Zero Rows affected");
         }
         return $result;
-    }
-
-    protected function __construct()
-    {
-        $this->connection = new PDO(
-            sprintf('mysql:dbname=%s;host=%s', DB_NAME, DB_HOST),
-            DB_USER,
-            DB_PASSWORD
-        );
-        $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function getInstance() : DBConnector
-    {
-        if (!isset(self::$_instance)) {
-            self::$_instance = new self();
-        }
-        return self::$_instance;
     }
 }

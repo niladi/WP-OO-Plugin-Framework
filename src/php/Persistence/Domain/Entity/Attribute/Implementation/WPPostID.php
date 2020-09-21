@@ -24,11 +24,6 @@ class WPPostID extends IDAttribute
      */
     public function __construct(string $key, $label, string $slug)
     {
-        if (!post_type_exists($slug)) {
-            if (! DBInit::getInstance()->onInit()) {
-                    throw new AttributeException('slug is not registred');
-            }
-        }
         parent::__construct($key, $label);
         $this->slug = $slug;
     }

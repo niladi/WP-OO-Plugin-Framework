@@ -16,7 +16,7 @@ interface IRegisterable
      * 
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    static public function registerMe(Plugin $plugin): void  ;
+    public function registerMe() : void  ;
 
     /**
      * Gets the value of the registered state
@@ -24,5 +24,5 @@ interface IRegisterable
      * @return boolean the registered state
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    public static function isRegistered() : bool;
+    public function isRegistered() : bool;
 }

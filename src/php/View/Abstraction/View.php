@@ -17,14 +17,10 @@ abstract class View
      * @return void
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    static function show() : void
+    function show() : void
     {
-        if (static::validateParams()) {
-            static::loadAssets();
-            static::showMe();
-        } else {
-            throw new IllegalStateException("Not all params are set");
-        }
+        $this->loadAssets();
+        $this->showMe();
     }
 
     /**
@@ -43,7 +39,7 @@ abstract class View
      * @return void
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    static protected function loadAssets() : void
+    protected function loadAssets() : void
     {
         // playholder if there are needed any assets
     }

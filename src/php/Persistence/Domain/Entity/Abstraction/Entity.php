@@ -101,8 +101,7 @@ abstract class Entity
         try {
             $this->addAttributes();
         } catch (DuplicateKeyException $exception) {
-            Logger::error('Tried to instanciate attribute with duplicate keys, should be an illegal state and never occurs', $exception->getTrace());
-            exit;
+            throw new IllegalStateException('Tried to instanciate attribute with duplicate keys, should be an illegal state and never occurs', $exception->getTrace());
         }
         foreach ($attributes as $key => $value) {
             $this->setAttributeValue($key, $value);
@@ -163,8 +162,7 @@ abstract class Entity
         try {
             return $this->getAttributeValue(self::KEY_ID);
         } catch (IllegalKeyException $e) {
-            Logger::error('There is no way an illegal key exception is thrown');
-            exit;
+            throw new IllegalStateException('There is no way an illegal key exception is thrown');
         }
     }
 
@@ -180,8 +178,7 @@ abstract class Entity
         try {
             $this->setAttributeValue(self::KEY_ID, $id);
         } catch (IllegalKeyException $e) {
-            Logger::error('There is no way an IllegalKeyException is throwed');
-            exit;
+            throw new IllegalStateException('There is no way an IllegalKeyException is throwed');
         }
     }
 

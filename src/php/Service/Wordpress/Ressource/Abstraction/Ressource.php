@@ -3,10 +3,11 @@
 namespace WPPluginCore\Service\Wordpress\Ressource\Abstraction;
 
 defined('ABSPATH') || exit;
-use WPPluginCore\Plugin;
-use WPPluginCore\Exception\IllegalStateException;
 use WPPluginCore\Logger;
+use WPPluginCore\Plugin;
+use Psr\Log\LoggerInterface;
 use WPPluginCore\Service\Abstraction\Service;
+use WPPluginCore\Exception\IllegalStateException;
 
 abstract class Ressource extends Service
 {
@@ -14,28 +15,16 @@ abstract class Ressource extends Service
     protected const TYPE_ADMIN = 1;
     protected const TYPE_LOAD = 2;
 
-    private static array $adminRessources = array();
-    private static array $frontRessources = array();
-    private bool $ressourceRegistered = false;
+    protected string $pluginURL;
 
-    /**
-     * Register the ressource
-     *
-     * @return void
-     * @throws IllegalStateException if the resource is already registered
-     * @author Niklas Lakner niklas.lakner@gmail.com
-     */
-    public function registerRessource() : void
+    public function __construct(LoggerInterface $logger, string $pluginURL, int $type)
     {
-        if ($this->ressourceRegistered) {
-            throw new IllegalStateException('the reossource is already registered');
-        }
-
-        $this->register();
-        $this->ressourceRegistered = true;
+        parent::__construct($logger);
+        $this->pluginURL = $pluginURL;
+        $this->type = $type;
     }
 
-    abstract protected function register()  : void;
+    abstract protected function register() : void;
 
     /**
      * Enques the ressource for using it
@@ -47,7 +36,7 @@ abstract class Ressource extends Service
     public function loadRessource()  : void
     {
         if ($this->ressourceRegistered === false) {
-            Logger::error('Didn\'t register the ressource');
+            throw new IllegalStateException('Didn\'t register the ressource');
         }
 
         $this->load();
@@ -55,37 +44,16 @@ abstract class Ressource extends Service
 
     abstract protected function load()  : void; 
 
-    abstract static protected function getType() : int;
-
-    static public function registerMe(Plugin $plugin): void 
+    public function registerMe() : void 
     {
-        parent::registerMe($plugin); 
-        if (static::getType() | self::TYPE_ADMIN) {
-            array_push(self::$adminRessources, static::getInstance());
+        parent::registerMe(); 
+        if ($this->type | self::TYPE_ADMIN) {
+            add_action('admin_enqueue_scripts', array($this, 'register'));
         }
-        if (static::getType() | self::TYPE_LOAD) {
-            array_push(self::$frontRessources, static::getInstance());
+        if ($this->type | self::TYPE_LOAD) {
+            add_action('wp_enqueue_scripts', array($this, 'register'));
         }
         
-        add_action('wp_enqueue_scripts', array(self::class, 'registerFrontRessources'));
-        add_action('admin_enqueue_scripts', array(self::class, 'registerAdminRessources'));
-    }
-
-    public static function registerFrontRessources() : void
-    {
-        self::registerArray(self::$frontRessources);
-    }
-
-    public static function registerAdminRessources(): void
-    {
-        self::registerArray(self::$adminRessources);
-    }
-
-    private static function registerArray(array $arr) : void
-    {
-        foreach ($arr as $ressource) {
-            $ressource->register();
-        }
     }
 
     public static function getRessourceURLPath(string $file = __FILE__)

@@ -3,6 +3,7 @@
 
 namespace WPPluginCore\Service\Wordpress\Entity;
 
+use Psr\Log\LoggerInterface;
 use WP_Post;
 use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Service\Abstraction\Service;
@@ -15,14 +16,29 @@ use WPPluginCore\Persistence\Domain\Entity\Implementation\LicencePayout;
 use WPPluginCore\Persistence\Domain\Entity\Implementation\LicenceApplication;
 use WPPluginCore\Persistence\Domain\Entity\Implementation\AffiliateApplication;
 use WPPluginCore\Logger;
+use WPPluginCore\Persistence\DAO\Entity\WPEntityContainer;
 use WPPluginCore\Service\Wordpress\Assets\Implementation\PDF;
 use WPPluginCore\View\Implementation\AjaxButton;
 use WPPluginCore\View\Implementation\Metabox as MetaboxView;
+use WPPluginCore\View\Implementation\MetaboxWrapper;
 use WPPluginCore\View\Implementation\PDFButton;
 
 class Metabox extends Service
 {
     private array $customContent = array();
+
+    private WPEntityContainer $wpEntityContainer;
+    private MetaboxWrapper $metaboxWrapper;
+    private MetaboxView $metaboxView;
+
+
+    public function __construct(LoggerInterface $logger, WPEntityContainer $wpEntityContainer, MetaboxWrapper $metaboxWrapper, MetaboxView $metaboxView)
+    {
+        parent::__construct($logger);
+        $this->wpEntityContainer = $wpEntityContainer;
+        $this->metaboxWrapper = $metaboxWrapper;
+        $this->metaboxView = $metaboxView;
+    }
 
 
     /**
@@ -57,9 +73,9 @@ class Metabox extends Service
             $output .= $value->getAdminHTML();
         }
 
-        global $viewParams; // todo cleaner
-        $viewParams = array(MetaboxView::SLUG => $entity::getSlug(), MetaboxView::HTML => $output);
-        MetaboxView::show();
+        $this->metaboxWrapper->slug = $entity::getSlug();
+        $this->metaboxWrapper->html = $output;
+        $this->metaboxView->show();
     }
 
     /**
@@ -103,11 +119,15 @@ class Metabox extends Service
      */
     public function editorByPost(WP_Post $post) : void
     {
-        $factory = EntityFactory::getInstance();
-        $dao = $factory->getWPEntityDAOInstanceBySlug($post->post_type);
+        $dao = $this->wpEntityContainer->get($post->post_type);
         $entity = $dao->readFromWPPostID($post->ID);
         if (!$entity) {
-            $entity =  $factory->newEntity($dao, (array(WPEntity::KEY_WP_POST_ID => $post->ID)));
+            if ( $dao->createByArray(array(WPEntity::KEY_WP_POST_ID => $post->ID))) {
+                $entity = $dao->readFromWPPostID($post->ID);
+            } else {
+                $this->logger->error('Can`t create database entry');
+                exit;
+            }
         }
         $this->editor($entity);
     }

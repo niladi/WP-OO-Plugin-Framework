@@ -30,10 +30,10 @@ abstract class API extends Endpoint
     /**
      * @inheritDoc
      */
-    static public function registerMe(Plugin $plugin): void 
+    public function registerMe() : void 
     {
-        parent::registerMe($plugin);
-        add_action('rest_api_init', array(static::getInstance(), 'registerEndpoints'));
+        parent::registerMe();
+        add_action('rest_api_init', array($this, 'registerEndpoints'));
     }
 
     /**
@@ -91,9 +91,8 @@ abstract class API extends Endpoint
         return true;
     }
 
-    protected function __construct()
+    public function __construct()
     {
-        parent::__construct();
         $this->endpoints = array();
         $this->addEndpoints();
     }

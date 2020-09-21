@@ -4,7 +4,7 @@
 namespace WPPluginCore\Persistence\Domain\Entity\Attribute\Implementation;
 
 use \DateTime;
-use WPPluginCore\Service\Implementation\Date;
+use WPPluginCore\Util\Date;
 use WPPluginCore\Exception\AttributeException;
 use WPPluginCore\Persistence\Domain\Entity\Attribute\Abstraction\Attribute;
 use WPPluginCore\Persistence\Domain\Entity\Attribute\Implementation\Date as DateAttribute;
@@ -37,7 +37,7 @@ class EndMonth extends DateAttribute
      */
     public function getDefault()
     {
-        return Date::getInstance()->getLastDay();
+        return Date::getLastDay();
     }
 
 

@@ -6,6 +6,7 @@ defined('ABSPATH') || exit;
 
 use WPPluginCore\Logger;
 use WPPluginCore\Exception\IllegalKeyException;
+use WPPluginCore\Exception\IllegalStateException;
 use WPPluginCore\Persistence\Domain\Entity\Attribute\Implementation\WPPostID;
 
 abstract class WPEntity extends Entity
@@ -102,8 +103,7 @@ abstract class WPEntity extends Entity
         try {
             return $this->getAttributeValue(self::KEY_WP_POST_ID);
         } catch (IllegalKeyException $e) {
-            Logger::error('There is no way an IllegalKeyException is throwed');
-            exit;
+            throw new IllegalStateException('There is no way an IllegalKeyException is throwed');
         }
     }
 

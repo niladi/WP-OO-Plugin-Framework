@@ -5,6 +5,8 @@ namespace WPPluginCore\Persistence\DAO\Entity\Abstraction;
 defined('ABSPATH') || exit;
 
 use FactoryClass;
+use Psr\Log\LoggerInterface;
+use ReflectionClass;
 use WPPluginCore\Util\Parser;
 use WPPluginCore\Logger;
 use WPPluginCore\Persistence\Domain;
@@ -28,8 +30,24 @@ use WPPluginCore\Persistence\Domain\Entity\Abstraction\Entity as DomainEntity;
  * 
  * @author
  */
-abstract class Entity {
+abstract class Entity 
+{
 
+    protected EntityFactory $entityFactory;
+    protected DBConnector $dbConnector;
+    protected LoggerInterface $logger;
+
+    public function __construct(EntityFactory $entityFactory, DBConnector $dbConnector, LoggerInterface $logger)
+    {
+        $this->entityFactory = $entityFactory;
+        $this->dbConnector = $dbConnector;
+        $this->logger = $logger;
+    }
+
+    public function getEntityFactory() : EntityFactory 
+    {
+        return $this->entityFactory;
+    }
 
     /**
      * Instanciate from DB (should only executed from database, because no errors are thrown)
@@ -39,25 +57,9 @@ abstract class Entity {
     final private function instanceFromDB(array $metaarr)  : DomainEntity
     {
         try {
-            return (EntityFactory::getInstance()->newEntity($this, $metaarr));
+            return ( $this->entityFactory->entity($metaarr));
         } catch (IllegalArgumentException $e) {
-            Logger::error('Database entry is corrupted: ' . $e->getMessage(), $metaarr);
-        }
-    }
-
-    /**
-     * Gets the the dow of himself. Should only used by concred DAO implementations otherwise the programm will be exitet.
-     *
-     * @return static
-     * @author Niklas Lakner niklas.lakner@gmail.com
-     */
-    final static function getInstance()
-    {
-        try {
-            return EntityFactory::getInstance()->getDAOByClass(static::class);
-        } catch (IllegalArgumentException $exception) {
-            Logger::error('Tried to get instance of non spezicific DAO');
-            exit;
+            $this->logger->error('Database entry is corrupted: ' . $e->getMessage(), $metaarr);
         }
     }
 
@@ -74,19 +76,19 @@ abstract class Entity {
         $arr = $entity->getAttributesValuesAssoc();
         unset($arr[DomainEntity::KEY_ID]);
         try {
-            $this->getConnector()->exec(
+            $this->dbConnector->exec(
                 "INSERT INTO {$entity::getTable()} ({implode(', ', array_keys($arr))}) VALUES ({implode(', ', array_values($arr))}})",
             );
         } catch (QueryException $exception) {
-            Logger::error('Can\'t create an entity: Error Message: ' . $exception->getMessage(), $arr);
+            $this->logger->error('Can\'t create an entity: Error Message: ' . $exception->getMessage(), $arr);
             return false;
         }
 
         try {
-            $id = Parser::strToInt($this->getConnector()->getConnection()->lastInsertId());
+            $id = Parser::strToInt($this->dbConnector->getConnection()->lastInsertId());
             $entity->setID($id);
         } catch (IllegalValueException|ParserException $e) {
-            Logger::error('The Value of the int is corrupted ' . $id, $e->getTrace());
+            $this->logger->error('The Value of the int is corrupted ' . $id, $e->getTrace());
             die;
         }
 
@@ -105,7 +107,7 @@ abstract class Entity {
      */
     public function createByArray(array $metaarr) : bool
     {
-        return $this->create(EntityFactory::getInstance()->newEntity($this, $metaarr));
+        return $this->create($this->entityFactory->entity( $metaarr));
     }
 
     /**
@@ -145,7 +147,7 @@ abstract class Entity {
      */
     public function readSingleByArray(array $arr) : ?DomainEntity
     {
-        return $this->readSingleByEntityKeys(EntityFactory::getInstance()->newEntity($this, $arr), array_keys($arr));
+        return $this->readSingleByEntityKeys($this->entityFactory->entity($arr), array_keys($arr));
     }
 
     /**
@@ -187,7 +189,7 @@ abstract class Entity {
      */
     public function readMultipleByArray(array $arr) : array
     {
-        return $this->readMultipleByEntityKeys(EntityFactory::getInstance()->newEntity($this, $arr), array_keys($arr));
+        return $this->readMultipleByEntityKeys($this->entityFactory->entity($arr), array_keys($arr));
     }
 
     /**
@@ -259,16 +261,6 @@ abstract class Entity {
             throw new NegativIdException('cant execute crud function on id < 0');
         }
         return $this;
-    }
-
-    /**
-     * Returns the instance of an DB connector
-     *
-     * @return DBConnector the DB connector
-     */
-    final protected function getConnector() : DBConnector
-    {
-        return DBConnector::getInstance();
     }
 
     /**

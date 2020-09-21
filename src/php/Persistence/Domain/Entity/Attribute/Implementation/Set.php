@@ -35,7 +35,6 @@ class Set extends Attribute
 
     public function validateValue($value): bool
     {
-        Logger::debug('test', $value);
         if (is_array($value)) {
             foreach ($value as $val) {
                 if (! array_key_exists($val, $this->values)) {

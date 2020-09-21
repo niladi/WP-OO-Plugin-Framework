@@ -20,7 +20,10 @@
       "ext-json": "*",
       "ext-pdo": "*",
       "ext-mbstring": "*",
-      "monolog/monolog": "^2.1"
+      "monolog/monolog": "^2.1",
+        "php-di/php-di": "^6.2",
+        "doctrine/annotations": "^1.10",
+        "ocramius/proxy-manager": "^2.9"
     },
     "require-dev": {
       "squizlabs/php_codesniffer": "2.2.*",

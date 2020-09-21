@@ -16,23 +16,30 @@ class Metabox extends View
     public const SLUG = 'slug';
     public const HTML = 'html';
 
+    private MetaboxRessource $metabox;
+    private JSONAttribute $jSONAttribute;
+    private MetaboxWrapper $metaboxWrapper;
 
-    protected static function loadAssets(): void
+
+    public function __construct(MetaboxRessource $metabox, JSONAttribute $jSONAttribute, MetaboxWrapper $metaboxWrapper)
     {
-        MetaboxRessource::getInstance()->loadRessource();
-        JSONAttribute::getInstance()->loadRessource();
+        $this->metabox = $metabox;
+        $this->jSONAttribute = $jSONAttribute;
+        $this->metaboxWrapper = $metaboxWrapper;
     }
 
-    protected static function showMe() : void
+
+    protected function loadAssets(): void
+    {
+        $this->metabox->loadRessource();
+        $this->jSONAttribute->loadRessource();
+    }
+
+    protected function showMe() : void
     {
         global $viewParams; // todo cleaner 
-        wp_nonce_field( "{$viewParams[self::SLUG]}_save_meta_box_data", "{$viewParams[self::SLUG]}_meta_box_nonce");
-        echo "<table class='form-table'><tbody>{$viewParams[self::HTML]}</tbody></table>";
+        wp_nonce_field( "{$this->metaboxWrapper->slug}_save_meta_box_data", "{$this->metaboxWrapper->slug}_meta_box_nonce");
+        echo "<table class='form-table'><tbody>{$this->metaboxWrapper->html}</tbody></table>";
     }
 
-    protected static function validateParams(): bool
-    {
-        global $viewParams;
-        return isset($viewParams[self::SLUG]) && isset($viewParams[self::HTML]);
-    }
 } 

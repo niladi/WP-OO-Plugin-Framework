@@ -10,10 +10,10 @@ stages:
 before_script:
   - composer install
 
-test:
-  stage: test
-  script:
-    - vendor/bin/phpunit tests/Unit/php
+#test:
+#  stage: test
+#  script:
+#    - vendor/bin/phpunit tests/Unit/php
 
 deploy:
   stage: deploy

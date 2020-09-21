@@ -4,34 +4,19 @@
 namespace WPPluginCore\Service\Abstraction;
 defined('ABSPATH') || exit;
 
+use Psr\Log\LoggerInterface;
 use WPPluginCore\Abstraction\IBaseFactory;
+use WPPluginCore\Abstraction\Registerable;
+use WPPluginCore\Abstraction\IRegisterable;
 use WPPluginCore\Abstraction\RegisterableFactory;
 
-abstract class Service extends RegisterableFactory
-{
-    /**
-     * @var static[] the array of Instances
-     */
-    private static array $_instances = array();
+abstract class Service extends Registerable {
 
-    /**
-     * @inheritDoc
-     * 
-     * @return static
-     */
-    public static function getInstance()
+    protected LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
     {
-        $class = get_called_class();
-        if (!isset(self::$_instances[$class])) {
-            self::$_instances[$class] = new $class();
-        }
-        return self::$_instances[$class];
+        $this->logger = $logger;
     }
-
-    protected function __construct()
-    {
-    }
-
-
 
 }

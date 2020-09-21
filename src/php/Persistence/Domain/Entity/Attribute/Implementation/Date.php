@@ -30,7 +30,7 @@ class Date extends Attribute
     {
         parent::__construct($key, $label);
         $this->format = $format;
-        if ($this->format == \WPPluginCore\Service\Implementation\Date::DATE_MONTH) {
+        if ($this->format == \WPPluginCore\Util\Date::DATE_MONTH) {
             $this->type = 'month';
         } else {
             $this->type = 'date';

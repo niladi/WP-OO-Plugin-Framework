@@ -15,14 +15,6 @@ class JSONAttribute extends Ressource
     /**
      * @inheritDoc
      */
-    protected static function getType() : int
-    {
-        return static::TYPE_LOAD | static::TYPE_ADMIN;
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function register() : void 
     {
         wp_register_script(self::KEY_JSON_ATTRIBUTE, static::getRessourceURLPath() . 'js/json-attribute.js', array( 'jquery' ));
