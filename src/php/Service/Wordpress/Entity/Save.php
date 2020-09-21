@@ -11,8 +11,8 @@ use WPPluginCore\Exception\WPDAOException;
 use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Exception\AttributeException;
-use WPPluginCore\Persistence\DAO\Entity\WPEntityContainer;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\WPEntity;
+use WPPluginCore\Persistence\DAO\Entity\Container\WPEntityContainer;
 
 class Save extends Service
 {

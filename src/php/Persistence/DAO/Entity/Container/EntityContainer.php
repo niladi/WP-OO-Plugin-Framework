@@ -1,9 +1,10 @@
 <?php
 
-namespace WPPluginCore\Persistence\DAO\Entity;
+namespace WPPluginCore\Persistence\DAO\Entity\Container;
 
 use Psr\Container\ContainerInterface;
 use WPPluginCore\Exception\IllegalKeyException;
+use WPPluginCore\Persistence\DAO\Entity\Abstraction\Entity;
 use WPPluginCore\Persistence\DAO\Entity\Abstraction\WPEntity;
 
 defined('ABSPATH') || exit;
@@ -14,12 +15,12 @@ defined('ABSPATH') || exit;
  *
  * @author Niklas Lakner niklas.lakner@gmail.com
  */
-class WPEntityContainer implements ContainerInterface
+class EntityContainer implements ContainerInterface
 {
     /**
-     * @var WPEntity
+     * @var entity
      */
-    private array $wpEnities = array();
+    private array $enities = array();
 
     /**
      * Returns the WPEnity by its slug
@@ -51,24 +52,24 @@ class WPEntityContainer implements ContainerInterface
     /**
      * Sets an entity into the dao contaienr
      *
-     * @param string $slug
-     * @param WPEntity $wpEntity
+     * @param string $tableName
+     * @param Entity $entity
      * @return void
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    public function set(string $slug, WPEntity $wpEntity) 
+    public function set(string $tableName, Entity $entity) 
     {
-        $this->wpEnities[$slug] = $wpEntity;
+        $this->wpEnities[$tableName] = $entity;
     }
 
     /**
-     * Returns all the wpEntites
+     * Returns an array of an entity
      *
-     * @return WPEntity[]
+     * @return Entity[]
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
     public function getAll() : array
     {
-        return array_values($this->wpEnities);
+        return array_values($this->enities);
     }
 }

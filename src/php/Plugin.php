@@ -73,13 +73,14 @@ class Plugin
         return self::$mode === self::MODE_DEBUG;
     }
 
-    private function register(array $classes)
+    private function register(array $definitions)
     {
-        foreach ($classes as $class) {
-            if (is_subclass_of($class, IRegisterable::class)) {
-                $class::registerMe($this);
+        foreach ($definitions as $definition) {
+            $object = $this->container->get($definition);
+            if ($object instanceof IRegisterable) {
+                $object->registerMe();
             } else {
-                throw new IllegalStateException('The class shoul be of registable but the class istn`t: ' . $class);
+                throw new IllegalStateException('The class shoul be of registable but the class istn`t: ' . $object);
             }   
         }
     }
@@ -117,9 +118,7 @@ class Plugin
         $this->file = $file;
         $this->url = $url;
 
-        $this->services = array(
-            ...$services
-        );
+        $this->services = $services;
         $this->endpoints = $endpoints;
     }
 

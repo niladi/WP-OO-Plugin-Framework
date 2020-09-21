@@ -3,10 +3,12 @@
 
 namespace WPPluginCore\Util;
 
-
+use DI\Definition\Helper\FactoryDefinitionHelper;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\ChromePHPHandler;
+
+use function DI\factory;
 
 defined('ABSPATH') || exit;
 
@@ -27,5 +29,10 @@ class LoggerFactory
         $logger->pushHandler($stream);
 
         return $logger;
+    }
+
+    public static function factory(string $file, bool $isDebug, string $name) : FactoryDefinitionHelper
+    {
+        return factory(fn(string $file, bool $isDebug, string $name) => self::create($file, $isDebug, $name));
     }
 }

@@ -23,6 +23,7 @@ use WPPluginCore\Exception\IllegalKeyException;
 use WPPluginCore\Exception\IllegalValueException;
 use WPPluginCore\Exception\IllegalArgumentException;
 use WPPluginCore\Persistence\DAO\Adapter\DBConnector;
+use WPPluginCore\Persistence\DAO\Entity\Container\EntityContainer;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\Entity as DomainEntity;
 
 
@@ -37,11 +38,12 @@ abstract class Entity
     protected DBConnector $dbConnector;
     protected LoggerInterface $logger;
 
-    public function __construct(EntityFactory $entityFactory, DBConnector $dbConnector, LoggerInterface $logger)
+    public function __construct(EntityFactory $entityFactory, EntityContainer $entityContainer, DBConnector $dbConnector, LoggerInterface $logger)
     {
         $this->entityFactory = $entityFactory;
         $this->dbConnector = $dbConnector;
         $this->logger = $logger;
+        $entityContainer->set($entityFactory->getEntityClass()::getTable(), $this);
     }
 
     public function getEntityFactory() : EntityFactory 

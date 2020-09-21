@@ -10,4 +10,5 @@ use WPPluginCore\Service\Abstraction\Service;
 
 class NotificationWrapper extends Service
 {
+    
 }

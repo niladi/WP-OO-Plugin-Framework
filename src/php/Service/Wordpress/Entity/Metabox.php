@@ -3,25 +3,25 @@
 
 namespace WPPluginCore\Service\Wordpress\Entity;
 
-use Psr\Log\LoggerInterface;
 use WP_Post;
+use WPPluginCore\Logger;
+use Psr\Log\LoggerInterface;
 use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Service\Abstraction\Service;
-use WPPluginCore\Exception\IllegalArgumentException;
+use WPPluginCore\View\Implementation\PDFButton;
+use WPPluginCore\View\Implementation\AjaxButton;
 use WPPluginCore\Exception\IllegalStateException;
-use WPPluginCore\Persistence\Domain\Entity\Abstraction\ApplicationEntity;
-use WPPluginCore\Persistence\Domain\Entity\Abstraction\PayoutEntity;
+use WPPluginCore\Exception\IllegalArgumentException;
+use WPPluginCore\View\Implementation\MetaboxWrapper;
+use WPPluginCore\View\Implementation\Metabox as MetaboxView;
+use WPPluginCore\Service\Wordpress\Assets\Implementation\PDF;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\WPEntity;
+use WPPluginCore\Persistence\DAO\Entity\Container\WPEntityContainer;
+use WPPluginCore\Persistence\Domain\Entity\Abstraction\PayoutEntity;
 use WPPluginCore\Persistence\Domain\Entity\Implementation\LicencePayout;
+use WPPluginCore\Persistence\Domain\Entity\Abstraction\ApplicationEntity;
 use WPPluginCore\Persistence\Domain\Entity\Implementation\LicenceApplication;
 use WPPluginCore\Persistence\Domain\Entity\Implementation\AffiliateApplication;
-use WPPluginCore\Logger;
-use WPPluginCore\Persistence\DAO\Entity\WPEntityContainer;
-use WPPluginCore\Service\Wordpress\Assets\Implementation\PDF;
-use WPPluginCore\View\Implementation\AjaxButton;
-use WPPluginCore\View\Implementation\Metabox as MetaboxView;
-use WPPluginCore\View\Implementation\MetaboxWrapper;
-use WPPluginCore\View\Implementation\PDFButton;
 
 class Metabox extends Service
 {

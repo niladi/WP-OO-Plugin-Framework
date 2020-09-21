@@ -5,24 +5,7 @@ defined('ABSPATH') || exit;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use WPPluginCore\DBInit;
-use WPPluginCore\Logger;
-use WPPluginCore\Service\Wordpress\Menu;
-use WPPluginCore\Service\Wordpress\Assets;
-use WPPluginCore\Web\Abstraction\Endpoint;
-use WPPluginCore\Abstraction\IRegisterable;
-use WPPluginCore\Service\Abstraction\Service;
-use WPPluginCore\Util\Date;
-use WPPluginCore\Service\Wordpress\Entity\Save;
-use WPPluginCore\Exception\IllegalStateException;
-use WPPluginCore\Persistence\DAO\Abstraction\DAO;
-use WPPluginCore\Persistence\DAO\Entity\Abstraction\Entity;
-use WPPluginCore\Persistence\EntityFactory;
-use WPPluginCore\Service\Wordpress\Entity\Metabox;
-use WPPluginCore\Service\Wordpress\Entity\Metaboxes;
-use WPPluginCore\Service\Wordpress\Entity\PostTypeRegistration;
-use WPPluginCore\Service\Wordpress\Ressource\Implementation\JSONAttribute;
-use WPPluginCore\Service\Wordpress\Ressource\Implementation\Metabox as MetaboxRessource;
+
 
 /**
  * The main WPPluginCore class
@@ -31,7 +14,8 @@ use WPPluginCore\Service\Wordpress\Ressource\Implementation\Metabox as MetaboxRe
  */
 class PluginBuilder 
 {
-
+    private array $helper;
+    private array $daos;
     private array $services;
     private array $endpoints;
 
@@ -45,9 +29,27 @@ class PluginBuilder
         return $this;
     }
 
+    public function setEndpoints(array $endpoints) : self
+    {
+        $this->endpoints = $endpoints;
+        return $this;
+    }
+
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+        return $this;
+    }
+
+    public function setHelper(array $helper) : self
+    {
+        $this->helper = $helper;
+        return $this;
+    }
+
+    public function setDAOs(array $daos) : self
+    {
+        $this->daos = $daos;
         return $this;
     }
 
@@ -67,9 +69,11 @@ class PluginBuilder
     final public function build() : Plugin
     {
         $containerBuilder = new ContainerBuilder();
-        $containerBuilder->addDefinitions();
         $containerBuilder->useAutowiring(false);
         $containerBuilder->useAnnotations(false);
+
+        $containerBuilder->addDefinitions($this->helper);
+        $containerBuilder->addDefinitions($this->daos);
         $containerBuilder->addDefinitions($this->services);
         $containerBuilder->addDefinitions($this->endpoints);
 

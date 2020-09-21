@@ -4,9 +4,9 @@ namespace WPPluginCore\Persistence\DAO\Entity\Abstraction;
 
 defined('ABSPATH') || exit;
 
-use Psr\Log\LoggerInterface;
 use WP_Error;
 use WPPluginCore\Logger;
+use Psr\Log\LoggerInterface;
 use WPPluginCore\Exception\ReadException;
 use WPPluginCore\Exception\QueryException;
 use WPPluginCore\Exception\WPDAOException;
@@ -14,8 +14,10 @@ use WPPluginCore\Exception\UpdateException;
 use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Exception\AttributeException;
 use WPPluginCore\Exception\NegativIdException;
-use WPPluginCore\Persistence\DAO\Adapter\DBConnector;
 use WPPluginCore\Service\Wordpress\Entity\Save;
+use WPPluginCore\Persistence\DAO\Adapter\DBConnector;
+use WPPluginCore\Persistence\DAO\Entity\Container\EntityContainer;
+use WPPluginCore\Persistence\DAO\Entity\Container\WPEntityContainer;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\Entity as DomainEntity;
 use WPPluginCore\Persistence\Domain\Entity\Abstraction\WPEntity as DomainWPEntity;
 
@@ -28,9 +30,10 @@ abstract class WPEntity extends Entity
 {
     protected Save $save;
 
-    public function __construct(EntityFactory $entityFactory,DBConnector $dBConnector, LoggerInterface $logger, Save $save)
+    public function __construct(EntityFactory $entityFactory, EntityContainer $entityContainer, DBConnector $dBConnector, LoggerInterface $logger, WPEntityContainer $wPEntityContainer, Save $save)
     {
-        parent::__construct($entityFactory, $dBConnector, $logger);
+        parent::__construct($entityFactory, $entityContainer, $dBConnector, $logger);
+        $wPEntityContainer->set($entityFactory->getEntityClass()::getTable(), $this);
         $this->save = $save;
     }
 
