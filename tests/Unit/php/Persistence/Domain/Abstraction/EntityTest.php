@@ -6,16 +6,16 @@ use ReflectionClass;
 use WPPluginCoreTest\Unit\TestHelper\TestCase;
 use WPPluginCore\Exception\IllegalKeyException;
 use WPPluginCore\Exception\IllegalArgumentException;
-use WPPluginCore\Persistence\Domain\Entity\Abstraction\Entity;
-use WPPluginCore\Persistence\Domain\Entity\Attribute\Implementation\Text;
-use WPPluginCore\Persistence\Domain\Entity\Attribute\Implementation\EntityID;
+use WPPluginCore\Domain\Entity\Abstraction\Entity;
+use WPPluginCore\Domain\Entity\Attribute\Implementation\Text;
+use WPPluginCore\Domain\Entity\Attribute\Implementation\EntityID;
 
 /**
  * Class EntityTest.
  *
  * @author Niklas Lakner niklas.lakner@gmail.com
  *
- * @covers \WPPluginCore\Persistence\Domain\Entity\Abstraction\Entity
+ * @covers \WPPluginCore\Domain\Entity\Abstraction\Entity
  */
 class EntityTest extends TestCase
 {

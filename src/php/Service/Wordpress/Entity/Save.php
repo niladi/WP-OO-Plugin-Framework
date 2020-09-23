@@ -6,23 +6,24 @@ namespace WPPluginCore\Service\Wordpress\Entity;
 use WPPluginCore\Logger;
 use WPPluginCore\Plugin;
 use Psr\Log\LoggerInterface;
-use WPPluginCore\Persistence\Domain;
+use WPPluginCore\Domain;
 use WPPluginCore\Exception\WPDAOException;
 use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Exception\AttributeException;
-use WPPluginCore\Persistence\Domain\Entity\Abstraction\WPEntity;
+use WPPluginCore\Domain\Entity\Abstraction\WPEntity;
+use WPPluginCore\Persistence\DAO\Entity\Abstraction\WPEntity as WPEntityDAO;
 use WPPluginCore\Persistence\DAO\Entity\Container\WPEntityContainer;
 
 class Save extends Service
 {
 
-    private WPEntityContainer $wpEntityContainer;
+    private WPEntityDAO $wpEntityDAO;
 
-    public function __construct(LoggerInterface $logger, WPEntityContainer $wpEntityContainer)
+    public function __construct(LoggerInterface $logger, WPEntityDAO $wpEntityDAO)
     {
         parent::__construct($logger);
-        $this->wpEntityContainer = $wpEntityContainer;
+        $this->wpEntityDAO = $wpEntityDAO;
     }
 
     /**
@@ -88,8 +89,8 @@ class Save extends Service
         $slug = get_post_type( $post_id );
         if ($this->checkPostValidMetaSave($post_id, $slug)) {
             $this->logger->debug('Trying to save');
-            $dao = $this->wpEntityContainer->get($slug);
-            $entity = $dao->getEntityFactory()->entity();
+
+            $entity = $this->wpEntityDAO->getEntityFactory()->entity();
             foreach ($entity->getAttributes() as $attribute) {
                 try {
                     $attribute->loadFromPost();
@@ -98,11 +99,11 @@ class Save extends Service
                 }
             }
             if ($entity->getID() == -1) {
-                if ($dao->create($entity) === false) {
+                if ($this->wpEntityDAO->create($entity) === false) {
                     $this->logger->error('Can\t save the post: ', (array) $entity);
                 }
             } else {
-                $dao->update($entity);
+                $this->wpEntityDAO->update($entity);
             }
         }
     }

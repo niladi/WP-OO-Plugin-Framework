@@ -4,52 +4,39 @@
 namespace WPPluginCore\Service\Wordpress\Entity;
 defined('ABSPATH') || exit;
 
-use Psr\Log\LoggerInterface;
 use WP_Post;
 use WPPluginCore\Plugin;
+use Psr\Log\LoggerInterface;
 use WPPluginCore\Persistence\DAO;
-use WPPluginCore\Persistence\Domain;
+use WPPluginCore\Domain;
+use WPPluginCore\Domain\Entity\Abstraction\WPEntity;
 use WPPluginCore\Exception\WPDAOException;
 use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Exception\AttributeException;
 use WPPluginCore\Exception\IllegalKeyException;
 use WPPluginCore\Service\Wordpress\Entity\Save;
+use WPPluginCore\Service\Wordpress\Entity\Metabox;
 use WPPluginCore\Exception\IllegalArgumentException;
 use WPPluginCore\Service\Wordpress\Abstraction\Menu;
-use WPPluginCore\Service\Wordpress\Entity\Metabox;
-use WPPluginCore\Persistence\DAO\Entity\WPEntityContainer;
+use WPPluginCore\Persistence\DAO\Entity\Container\WPEntityContainer;
 
 class PostTypeRegistration extends Service
 {
 
-    private WPEntityContainer $wpEntityContainer;
+    private string $entityClass;
     private Metabox $metabox;
 
-    public function __construct(LoggerInterface $logger,WPEntityContainer $wpEntityContainer, Metabox $metabox)
+    public function __construct(LoggerInterface $logger, Metabox $metabox, string $entityClass)
     {
         parent::__construct($logger);
-        $this->wpEntityContainer = $wpEntityContainer;
+        if (!is_subclass_of($entityClass, WPEntity::class)) {
+            throw new IllegalArgumentException("The entity class $entityClass is not of tyoe ${WPEntity::class}")
+        }
+        $this->entityClass = $entityClass;
         $this->metabox = $metabox;
 
     }
-
-    /**
-     * Returns the labels for initializing the WPEntity
-     *
-     * @param string $slug the key in entities
-     *
-     * @return array the array of the labels
-     * @throws IllegalKeyException if the key does not exists
-     */
-    private function getLabels(string $slug) : array
-    {
-        if (!key_exists($slug, $this->entities)) {
-            throw new IllegalKeyException();
-        }
-        return call_user_func(array($this->entities[$slug]["domain"], 'getLabels'));
-    }
-
 
 
     /*
@@ -65,10 +52,10 @@ class PostTypeRegistration extends Service
      * @param $labels array the Labels for menu etc
      * @param string $class the slug of the postType
      */
-    final private function register(string $class) : void
+    final public function register() : void
     {
-        $labels = $class::getLabels();
-        $slug = $class::getSlug();
+        $labels = $this->entityClass::getLabels();
+        $slug = $this->entityClass::getSlug();
 
         $args = array(
             'label'               => $labels['name'],
@@ -83,7 +70,7 @@ class PostTypeRegistration extends Service
             'has_archive'         => true,
             'exclude_from_search' => false,
             'capability_type'     => 'post',
-            'show_in_menu'        => $class::getMenuSlug()
+            'show_in_menu'        => $this->entityClass::getMenuSlug()
         );
 
         register_post_type($slug, $args);
@@ -96,20 +83,7 @@ class PostTypeRegistration extends Service
     public function registerMe() : void 
     {
         parent::registerMe();
-        add_action('init', array($this, 'registerPostTypes'));
+        add_action('init', array($this, 'register'));
 
-    }
-
-    /**
-     * Registeres the post types
-     *
-     * @return void
-     * @author Niklas Lakner niklas.lakner@gmail.com
-     */
-    public function registerPostTypes() : void
-    {
-        foreach ($this->wpEntityContainer->getAll() as $dao) {
-            $this->register($dao->getEntityFactory()->getEntityClass());
-        }
     }
 }

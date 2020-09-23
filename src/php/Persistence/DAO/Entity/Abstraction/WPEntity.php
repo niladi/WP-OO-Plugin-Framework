@@ -15,11 +15,11 @@ use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Exception\AttributeException;
 use WPPluginCore\Exception\NegativIdException;
 use WPPluginCore\Service\Wordpress\Entity\Save;
-use WPPluginCore\Persistence\DAO\Adapter\DBConnector;
+use WPPluginCore\Persistence\DB\DBConnector;
 use WPPluginCore\Persistence\DAO\Entity\Container\EntityContainer;
 use WPPluginCore\Persistence\DAO\Entity\Container\WPEntityContainer;
-use WPPluginCore\Persistence\Domain\Entity\Abstraction\Entity as DomainEntity;
-use WPPluginCore\Persistence\Domain\Entity\Abstraction\WPEntity as DomainWPEntity;
+use WPPluginCore\Domain\Entity\Abstraction\Entity as DomainEntity;
+use WPPluginCore\Domain\Entity\Abstraction\WPEntity as DomainWPEntity;
 
 /**
  * A more specific entity
@@ -30,10 +30,9 @@ abstract class WPEntity extends Entity
 {
     protected Save $save;
 
-    public function __construct(EntityFactory $entityFactory, EntityContainer $entityContainer, DBConnector $dBConnector, LoggerInterface $logger, WPEntityContainer $wPEntityContainer, Save $save)
+    public function __construct(EntityFactory $entityFactory, DBConnector $dBConnector, LoggerInterface $logger, Save $save)
     {
-        parent::__construct($entityFactory, $entityContainer, $dBConnector, $logger);
-        $wPEntityContainer->set($entityFactory->getEntityClass()::getTable(), $this);
+        parent::__construct($entityFactory, $dBConnector, $logger);
         $this->save = $save;
     }
 

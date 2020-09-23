@@ -6,56 +6,27 @@ namespace WPPluginCore\Service\Wordpress\Entity;
 use WP_Post;
 use WPPluginCore\Logger;
 use Psr\Log\LoggerInterface;
-use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Service\Abstraction\Service;
-use WPPluginCore\View\Implementation\PDFButton;
-use WPPluginCore\View\Implementation\AjaxButton;
-use WPPluginCore\Exception\IllegalStateException;
-use WPPluginCore\Exception\IllegalArgumentException;
 use WPPluginCore\View\Implementation\MetaboxWrapper;
 use WPPluginCore\View\Implementation\Metabox as MetaboxView;
-use WPPluginCore\Service\Wordpress\Assets\Implementation\PDF;
-use WPPluginCore\Persistence\Domain\Entity\Abstraction\WPEntity;
-use WPPluginCore\Persistence\DAO\Entity\Container\WPEntityContainer;
-use WPPluginCore\Persistence\Domain\Entity\Abstraction\PayoutEntity;
-use WPPluginCore\Persistence\Domain\Entity\Implementation\LicencePayout;
-use WPPluginCore\Persistence\Domain\Entity\Abstraction\ApplicationEntity;
-use WPPluginCore\Persistence\Domain\Entity\Implementation\LicenceApplication;
-use WPPluginCore\Persistence\Domain\Entity\Implementation\AffiliateApplication;
+use WPPluginCore\Domain\Entity\Abstraction\WPEntity;
+use WPPluginCore\Persistence\DAO\Entity\Abstraction\WPEntity as WPEntityDAO;
+
 
 class Metabox extends Service
 {
-    private array $customContent = array();
 
-    private WPEntityContainer $wpEntityContainer;
+    private WPEntityDAO $wpEntityDAO;
     private MetaboxWrapper $metaboxWrapper;
     private MetaboxView $metaboxView;
 
 
-    public function __construct(LoggerInterface $logger, WPEntityContainer $wpEntityContainer, MetaboxWrapper $metaboxWrapper, MetaboxView $metaboxView)
+    public function __construct(LoggerInterface $logger, WPEntityDAO $wpEntityDAO, MetaboxWrapper $metaboxWrapper, MetaboxView $metaboxView)
     {
         parent::__construct($logger);
-        $this->wpEntityContainer = $wpEntityContainer;
+        $this->wpEntityDAO = $wpEntityDAO;
         $this->metaboxWrapper = $metaboxWrapper;
         $this->metaboxView = $metaboxView;
-    }
-
-
-    /**
-     * Void adds the custom content functions to the metaboxes
-     *
-     * @param string $class the class of the WPEntity
-     * @param callable $callback the callback function of the which echos which 
-     * @return self for better methode chaining
-     * @author Niklas Lakner niklas.lakner@gmail.com
-     */
-    public function addCustomContent(string $class, callable $callback) : self
-    {
-        if (!is_subclass_of($class, WPEntity::class)) {
-            throw new IllegalStateException('The class shoudl be of type: ' . WPEntity::class);
-        }
-        $this->customContent[$class] = $callback;
-        return $this;
     }
 
     /**
@@ -63,19 +34,18 @@ class Metabox extends Service
      */
     public function editor(WPEntity $entity): void
     {
-        foreach ($this->customContent as $key => $value) {
-            if ($entity instanceof $key) {
-                call_user_func($value, $entity);
-            }
-        }
+        $this->metaboxWrapper->slug = $entity::getSlug();
+        $this->metaboxWrapper->html = $this->createHTML($entity);
+        $this->metaboxView->show();
+    }
+
+    protected function createHTML(WPEntity $entity) : string
+    {
         $output = '';
         foreach ($entity->getAttributes() as $key => $value) {
             $output .= $value->getAdminHTML();
         }
-
-        $this->metaboxWrapper->slug = $entity::getSlug();
-        $this->metaboxWrapper->html = $output;
-        $this->metaboxView->show();
+        return $output;
     }
 
     /**
@@ -119,11 +89,10 @@ class Metabox extends Service
      */
     public function editorByPost(WP_Post $post) : void
     {
-        $dao = $this->wpEntityContainer->get($post->post_type);
-        $entity = $dao->readFromWPPostID($post->ID);
+        $entity = $this->wpEntityDAO->readFromWPPostID($post->ID);
         if (!$entity) {
-            if ( $dao->createByArray(array(WPEntity::KEY_WP_POST_ID => $post->ID))) {
-                $entity = $dao->readFromWPPostID($post->ID);
+            if ( $this->wpEntityDAO->createByArray(array(WPEntity::KEY_WP_POST_ID => $post->ID))) {
+                $entity = $this->wpEntityDAO->readFromWPPostID($post->ID);
             } else {
                 $this->logger->error('Can`t create database entry');
                 exit;
