@@ -37,9 +37,20 @@ class Metabox extends View
 
     protected function showMe() : void
     {
-        global $viewParams; // todo cleaner 
-        wp_nonce_field( "{$this->metaboxWrapper->slug}_save_meta_box_data", "{$this->metaboxWrapper->slug}_meta_box_nonce");
-        echo "<table class='form-table'><tbody>{$this->metaboxWrapper->html}</tbody></table>";
+        $slug = $this->metaboxWrapper->wpEntity::getSlug();
+        $html = $this->createHTML();
+        wp_nonce_field( "{$slug}_save_meta_box_data", "{$slug}_meta_box_nonce");
+        echo "<table class='form-table'><tbody>{$html}</tbody></table>";
+    }
+
+    protected function createHTML() : string
+    {
+        $output = '';
+        $entity = $this->metaboxWrapper->wpEntity;
+        foreach ($entity->getAttributes() as $key => $value) {
+            $output .= $value->getAdminHTML();
+        }
+        return $output;
     }
 
 } 

@@ -23,8 +23,6 @@ use WPPluginCore\Persistence\DAO\Entity\Container\WPEntityContainer;
 class PostTypeRegistrationFactory
 {
 
-    private WPEntityContainer $wpEntityContainer;
-    private Metabox $metabox;
     private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger) 

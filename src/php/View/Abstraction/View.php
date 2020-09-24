@@ -26,11 +26,10 @@ abstract class View
     /**
      * echo the HTML for the view
      *
-     * @param array $params which holds the specific information fro teh view
      * @return void
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    abstract static protected function showMe() : void;
+    abstract protected function showMe() : void;
 
 
     /**

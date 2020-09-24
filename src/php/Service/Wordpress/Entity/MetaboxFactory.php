@@ -16,17 +16,19 @@ use WPPluginCore\Persistence\DAO\Entity\Container\WPEntityContainer;
 
 class MetaboxFactory
 {
-
     private LoggerInterface $logger;
+    private MetaboxWrapper $wrapper;
+    private MetaboxView $view;
 
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, MetaboxWrapper $wrapper, MetaboxView $view)
     {
         $this->logger = $logger;
+        $this->wrapper = $wrapper;
+        $this->view = $view;
     }
 
-    public function create(WPEntityDAO $dao,  MetaboxWrapper $metaboxWrapper, MetaboxView $metaboxView)
+    public function create(WPEntityDAO $dao)
     {
-        return new Metabox($this->logger, $dao, $metaboxWrapper, $metaboxView);
+        return new Metabox($this->logger, $dao, $this->wrapper, $this->view);
     }
 }

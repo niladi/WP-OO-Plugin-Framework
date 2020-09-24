@@ -34,18 +34,8 @@ class Metabox extends Service
      */
     public function editor(WPEntity $entity): void
     {
-        $this->metaboxWrapper->slug = $entity::getSlug();
-        $this->metaboxWrapper->html = $this->createHTML($entity);
+        $this->metaboxWrapper->wpEntity = $entity;
         $this->metaboxView->show();
-    }
-
-    protected function createHTML(WPEntity $entity) : string
-    {
-        $output = '';
-        foreach ($entity->getAttributes() as $key => $value) {
-            $output .= $value->getAdminHTML();
-        }
-        return $output;
     }
 
     /**
