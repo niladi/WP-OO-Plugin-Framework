@@ -17,9 +17,14 @@ abstract class View
      */
     private array $assets;
     
-    public function __construct(... $assets)
+    public function __construct()
     {
-        $this->assets = $assets;
+        $this->assets = array();
+    }
+
+    protected function addAsset(Ressource $asset) 
+    {
+        array_push($this->assets, $asset);
     }
 
     /**
