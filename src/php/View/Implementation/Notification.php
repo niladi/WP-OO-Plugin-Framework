@@ -19,11 +19,4 @@ class Notification extends View
         echo "<div class='notice {$viewParams[self::LEVEL]} is-dismissible'><p><strong>{$viewParams[self::TITLE]}</strong></p><p>{$viewParams[self::MESSAGE]}</p></div>";
     }
 
-    protected function validateParams(): bool
-    {
-        global $viewParams;
-        return isset($viewParams[self::TITLE]) && isset($viewParams[self::MESSAGE]) && isset($viewParams[self::LEVEL]);
-    }
-
-
 }

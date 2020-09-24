@@ -23,16 +23,8 @@ class Metabox extends View
 
     public function __construct(MetaboxRessource $metabox, JSONAttribute $jSONAttribute, MetaboxWrapper $metaboxWrapper)
     {
-        $this->metabox = $metabox;
-        $this->jSONAttribute = $jSONAttribute;
+        parent::__construct($metabox, $jSONAttribute);
         $this->metaboxWrapper = $metaboxWrapper;
-    }
-
-
-    protected function loadAssets(): void
-    {
-        $this->metabox->loadRessource();
-        $this->jSONAttribute->loadRessource();
     }
 
     protected function showMe() : void

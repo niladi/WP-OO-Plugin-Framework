@@ -2,13 +2,25 @@
 
 namespace WPPluginCore\View\Abstraction;
 
+use WPPluginCore\Exception\IllegalArgumentException;
 use WPPluginCore\Exception\IllegalStateException;
+use WPPluginCore\Service\Wordpress\Ressource\Abstraction\Ressource;
 
 defined('ABSPATH') || exit;
 
 abstract class View 
 {
     //todo add reuqired paramter validation
+
+    /**
+     * @var Ressource[]
+     */
+    private array $assets;
+    
+    public function __construct(... $assets)
+    {
+        $this->assets = $assets;
+    }
 
     /**
      * Loads the ressources and shows the view
@@ -38,9 +50,15 @@ abstract class View
      * @return void
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    protected function loadAssets() : void
+    private function loadAssets() : void
     {
-        // playholder if there are needed any assets
+        foreach($this->assets as $asset) {
+            if ($asset instanceof Ressource) {
+                $asset->loadRessource();
+            } else {
+                throw new IllegalArgumentException("wraong type of " . $asset::class);    
+            }
+        }
     }
 
     /**
