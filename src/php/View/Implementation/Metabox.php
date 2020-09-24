@@ -16,9 +16,7 @@ class Metabox extends View
     public const SLUG = 'slug';
     public const HTML = 'html';
 
-    private MetaboxRessource $metabox;
-    private JSONAttribute $jSONAttribute;
-    private MetaboxWrapper $metaboxWrapper;
+    protected MetaboxWrapper $metaboxWrapper;
 
 
     public function __construct(MetaboxRessource $metabox, JSONAttribute $jSONAttribute, MetaboxWrapper $metaboxWrapper)
