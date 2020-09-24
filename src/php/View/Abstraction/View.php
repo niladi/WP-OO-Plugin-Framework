@@ -56,19 +56,8 @@ abstract class View
             if ($asset instanceof Ressource) {
                 $asset->loadRessource();
             } else {
-                throw new IllegalArgumentException("wraong type of " . $asset::class);    
+                throw new IllegalArgumentException("wraong type of " . get_class($asset));    
             }
         }
-    }
-
-    /**
-     * Validates the view params
-     *
-     * @return boolean
-     * @author Niklas Lakner niklas.lakner@gmail.com
-     */
-    static protected function validateParams() : bool
-    {
-        return true;
     }
 }
