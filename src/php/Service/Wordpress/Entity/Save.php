@@ -7,6 +7,7 @@ use WPPluginCore\Logger;
 use WPPluginCore\Plugin;
 use Psr\Log\LoggerInterface;
 use WPPluginCore\Domain;
+use WPPluginCore\Domain\Entity\Abstraction\EntityValidator;
 use WPPluginCore\Exception\WPDAOException;
 use WPPluginCore\Persistence\EntityFactory;
 use WPPluginCore\Service\Abstraction\Service;
@@ -19,11 +20,13 @@ class Save extends Service
 {
 
     private WPEntityDAO $wpEntityDAO;
+    private ?EntityValidator $entityValidator;
 
-    public function __construct(LoggerInterface $logger, WPEntityDAO $wpEntityDAO)
+    public function __construct(LoggerInterface $logger, WPEntityDAO $wpEntityDAO, ?EntityValidator $entityValidator = null)
     {
         parent::__construct($logger);
         $this->wpEntityDAO = $wpEntityDAO;
+        $this->entityValidator = $entityValidator;
     }
 
     /**
@@ -98,12 +101,17 @@ class Save extends Service
                     wp_die($e->getMessage());
                 }
             }
-            if ($entity->getID() == -1) {
-                if ($this->wpEntityDAO->create($entity) === false) {
-                    $this->logger->error('Can\t save the post: ', (array) $entity);
+            if ($this->entityValidator && $this->entityValidator->isValid($entity)) {
+                if ($entity->getID() == -1) {
+                    if ($this->wpEntityDAO->create($entity) === false) { 
+                        $this->logger->error('Can\t save the post: ', (array) $entity);
+                    }
+                } else {
+                    $this->wpEntityDAO->update($entity);
                 }
             } else {
-                $this->wpEntityDAO->update($entity);
+                // todo Notification handler
+                $this->logger->info("the post is not valid");
             }
         }
     }

@@ -25,7 +25,7 @@ use WPPluginCore\Exception\IllegalArgumentException;
 use WPPluginCore\Persistence\DB\DBConnector;
 use WPPluginCore\Persistence\DAO\Entity\Container\EntityContainer;
 use WPPluginCore\Domain\Entity\Abstraction\Entity as DomainEntity;
-
+use WPPluginCore\Domain\Entity\Abstraction\EntityValidator;
 
 /**
  * 
@@ -222,12 +222,12 @@ abstract class Entity
         } catch (NegativIdException $ex) {
             throw new IllegalArgumentException($ex->getMessage());
         }
-        $entity->validate();
         try {
-        $this->getConnector()->exec("UPDATE {$entity::getTable()} SET {$query} WHERE id={$entity->getID()}", false);
+            $this->dbConnector->exec("UPDATE {$entity::getTable()} SET {$query} WHERE id={$entity->getID()}", false);
         } catch (QueryException $ex) {
             throw new IllegalArgumentException("Watchout: beforeSave was executed \n" . $ex->getMessage());
         }
+
     }
 
 
@@ -241,8 +241,7 @@ abstract class Entity
     {
         try {
             $this->crudValidation($entity->getID())
-                 ->getConnector()
-        ->exec("DELETE FROM {$entity::getTable()} WHERE id={$entity->getID()}");
+                 ->dbConnector->exec("DELETE FROM {$entity::getTable()} WHERE id={$entity->getID()}");
         } catch (NegativIdException $e) {
         } catch (QueryException $e) {
         }
@@ -274,7 +273,7 @@ abstract class Entity
      */
     final public function querySingle(string $statement) : ?DomainEntity
     {
-        $result = $this->getConnector()->querySingle($statement);
+        $result = $this->dbConnector->querySingle($statement);
         return empty($result) ? null : $this->instanceFromDB($result);
     }
 
@@ -287,7 +286,7 @@ abstract class Entity
     final protected function queryMultiple(string $statement) : array
     {
         $arr = array();
-        foreach ($this->getConnector()->queryMultiple($statement) as $res) {
+        foreach ($this->dbConnector->queryMultiple($statement) as $res) {
             $instance = $this->instanceFromDB($res);
             array_push($arr,  $instance);
         }

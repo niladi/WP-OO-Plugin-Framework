@@ -17,16 +17,18 @@ use WPPluginCore\Exception\IllegalKeyException;
 use WPPluginCore\Service\Wordpress\Entity\Save;
 use WPPluginCore\Service\Wordpress\Entity\Metabox;
 use WPPluginCore\Exception\IllegalArgumentException;
-use WPPluginCore\Service\Wordpress\Abstraction\Menu;
 use WPPluginCore\Persistence\DAO\Entity\Container\WPEntityContainer;
+use WPPluginCore\Service\Wordpress\Menu;
 
 class PostTypeRegistrationFactory
 {
 
     private LoggerInterface $logger;
+    private Menu $menu;
 
-    public function __construct(LoggerInterface $logger) 
+    public function __construct(LoggerInterface $logger, Menu $menu) 
     {
+        $this->menu = $menu;
         $this->logger = $logger;
     }
 
