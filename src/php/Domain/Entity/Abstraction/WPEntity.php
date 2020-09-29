@@ -106,6 +106,4 @@ abstract class WPEntity extends Entity
             throw new IllegalStateException('There is no way an IllegalKeyException is throwed');
         }
     }
-
-    abstract static public function getMenuSlug() : string;
 }

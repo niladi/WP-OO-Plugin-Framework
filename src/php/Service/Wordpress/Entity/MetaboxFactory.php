@@ -20,15 +20,13 @@ class MetaboxFactory
     private MetaboxWrapper $wrapper;
     private MetaboxView $view;
 
-    public function __construct(LoggerInterface $logger, MetaboxWrapper $wrapper, MetaboxView $view)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
-        $this->wrapper = $wrapper;
-        $this->view = $view;
     }
 
-    public function create(WPEntityDAO $dao)
+    public function create(WPEntityDAO $dao, MetaboxWrapper $wrapper, MetaboxView $view)
     {
-        return new Metabox($this->logger, $dao, $this->wrapper, $this->view);
+        return new Metabox($this->logger, $dao, $wrapper, $view);
     }
 }

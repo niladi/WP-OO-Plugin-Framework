@@ -24,17 +24,15 @@ class PostTypeRegistrationFactory
 {
 
     private LoggerInterface $logger;
-    private Menu $menu;
 
-    public function __construct(LoggerInterface $logger, Menu $menu) 
+    public function __construct(LoggerInterface $logger) 
     {
-        $this->menu = $menu;
         $this->logger = $logger;
     }
 
-    public function create(string $entityClass, Metabox $metabox) : PostTypeRegistration
+    public function create(string $entityClass, Menu $menu, Metabox $metabox) : PostTypeRegistration
     {
-        return new PostTypeRegistration($this->logger, $metabox, $entityClass);
+        return new PostTypeRegistration($this->logger,  $metabox,$menu, $entityClass);
     }
 
 }

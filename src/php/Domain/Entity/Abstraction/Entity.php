@@ -73,11 +73,6 @@ abstract class Entity
      * **************************************************************
      *
      */
-    public function validate() : Entity
-    {
-        //Todo boolean could be better
-        return $this;
-    }
     /**
      * add all meta data
      *
