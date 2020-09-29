@@ -19,13 +19,13 @@ defined('ABSPATH') || exit;
 
 class EntityDAOFactory
 {
-    public static function wPEntityFactory(EntityFactory $entityFactory,  DBConnector $dBConnector, LoggerInterface $logger, Save $save) : FactoryDefinitionHelper
+    public static function wPEntityFactory() : FactoryDefinitionHelper
     {
         return factory(fn(EntityFactory $entityFactory, DBConnector $dBConnector, LoggerInterface $logger, Save $save) 
         => new WPEntity($entityFactory,  $dBConnector, $logger, $save));
     }
 
-    public static function entityFactory(EntityFactory $entityFactory, DBConnector $dBConnector, LoggerInterface $logger): FactoryDefinitionHelper
+    public static function entityFactory(): FactoryDefinitionHelper
     {
         return factory(fn(EntityFactory $entityFactory, DBConnector $dBConnector, LoggerInterface $logger) 
         => new Entity($entityFactory, $dBConnector, $logger));

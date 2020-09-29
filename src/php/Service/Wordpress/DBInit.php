@@ -1,7 +1,7 @@
 <?php
 
 
-namespace WPPluginCore\Service\Wordpress\Entity;
+namespace WPPluginCore\Service\Wordpress;
 
 use WPPluginCore\Logger;
 use WPPluginCore\Plugin;
