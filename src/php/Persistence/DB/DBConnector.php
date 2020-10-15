@@ -18,12 +18,11 @@ class DBConnector
     private PDO $connection;
     private LoggerInterface $logger;
 
-    protected function __construct(LoggerInterface $logger)
+    protected function __construct(LoggerInterface $logger, string $dbName, string $dbHost, string $dbUser, string $dbPassword)
     {
-        $this->connection = new PDO(
-            sprintf('mysql:dbname=%s;host=%s', DB_NAME, DB_HOST),
-            DB_USER,
-            DB_PASSWORD
+        $this->connection = new PDO("mysql:dbname=$dbName;host=$dbHost",
+            $dbUser,
+            $dbPassword
         );
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
