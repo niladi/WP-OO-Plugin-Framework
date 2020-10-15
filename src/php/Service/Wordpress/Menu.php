@@ -21,16 +21,16 @@ class Menu extends Service
     private string $parentSlug;
     private string $type;
     private string $label;
-    private string $viewClass;
+    private string $view;
 
     /**
      * @var Menu[]
      */
     private array $subMenuEntries;
 
-    public function __construct(string $slug, string $label, string $viewClass, int $type, string $parentSlug = '', $subMenuEntries = array())
+    public function __construct(string $slug, string $label, View $view, int $type, string $parentSlug = '', $subMenuEntries = array())
     {
-        if (!is_subclass_of($viewClass, View::class) ) {
+        if (!is_subclass_of($view, View::class) ) {
             throw new IllegalArgumentException("view has to be of type " . View::class);
         }
         if (!($type === self::TYPE_MAIN_MENU || $type === self::TYPE_SUB_MENU)) {
@@ -40,7 +40,7 @@ class Menu extends Service
             throw new IllegalArgumentException('The parentSlug of an sub menu entry can\'t be empty');
         }
         $this->type = $type;
-        $this->mainView = $viewClass;
+        $this->mainView = $view;
         $this->label = $label;
         $this->slug = $slug;
         $this->parentSlug = $parentSlug;
@@ -69,7 +69,7 @@ class Menu extends Service
                     $this->label,
                     'manage_options',
                     $this->slug,
-                    array($this->viewClass, 'show'),
+                    array($this->view, 'show'),
                     "",
                     20
                 );
@@ -84,7 +84,7 @@ class Menu extends Service
                     $this->name,
                     'manage_options',
                     $this->slug,
-                    array($this->viewClass, 'show')
+                    array($this->view, 'show')
                 );
             default:
                 # code...

@@ -6,6 +6,7 @@ namespace WPPluginCore\Service\Wordpress;
 use Psr\Log\LoggerInterface;
 use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Util\SlugBuilder;
+use WPPluginCore\View\Abstraction\View;
 
 defined('ABSPATH') || exit;
 
@@ -14,7 +15,7 @@ class MenuBuilder
     private string $slug;
     private string $pluginSlug;
     private string $label;
-    private string $viewClass;
+    private View $view;
 
     private array $subMenuEntries = array();
 
@@ -24,9 +25,9 @@ class MenuBuilder
         $this->slug = $this->buildSlug('main');
     }
 
-    public function addSubMenuEntry(string $label, string $key, string $viewClass) : self
+    public function addSubMenuEntry(string $label, string $key, string $view) : self
     {
-        array_push($this->subMenuEntries, new Menu( $this->buildSlug($key),$label, $viewClass, Menu::TYPE_SUB_MENU, $this->slug));
+        array_push($this->subMenuEntries, new Menu( $this->buildSlug($key),$label, $this->view, Menu::TYPE_SUB_MENU, $this->slug));
         return $this;
     }
 
@@ -35,9 +36,9 @@ class MenuBuilder
         $this->label = $label;
         return $this;
     }
-    public function setViewClass(string $viewClass) : self
+    public function setView(View $view) : self
     {
-        $this->viewClass = $viewClass;
+        $this->view = $view;
         return $this;
     }
     public function buildSlug(string $key) : string
@@ -47,6 +48,6 @@ class MenuBuilder
 
     public function build(LoggerInterface $logger) : Menu
     {
-        return new Menu($this->slug, $this->label, $this->viewClass, Menu::TYPE_MAIN_MENU, '', $this->subMenuEntries, $logger);
+        return new Menu($this->slug, $this->label, $this->view, Menu::TYPE_MAIN_MENU, '', $this->subMenuEntries, $logger);
     }
 }
