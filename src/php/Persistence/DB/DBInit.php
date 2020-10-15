@@ -65,6 +65,7 @@ class DBInit
         }
         $this->onInit = false;
         $this->initDB = false;
+        $this->entities = array();
         array_push($this->entities, $entities);
         $this->dbConnector =  $dbConnector;
     }
