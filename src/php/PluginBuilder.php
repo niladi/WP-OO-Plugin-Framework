@@ -77,6 +77,8 @@ class PluginBuilder
         $containerBuilder->addDefinitions($this->services);
         $containerBuilder->addDefinitions($this->endpoints);
 
+        $containerBuilder->addDefinitions(['file' => $this->file]);
+
         return new Plugin(
             $this->file, 
             $this->url, 
