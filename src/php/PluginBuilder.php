@@ -76,7 +76,7 @@ class PluginBuilder
     final public function build() : Plugin
     {
         $containerBuilder = new ContainerBuilder();
-        $containerBuilder->useAutowiring(false);
+        $containerBuilder->useAutowiring(true);
         $containerBuilder->useAnnotations(false);
 
         $containerBuilder->addDefinitions($this->helper);
