@@ -28,14 +28,6 @@ use WPPluginCore\Domain\Entity\Abstraction\WPEntity as DomainWPEntity;
  */
 abstract class WPEntity extends Entity
 {
-    protected Save $save;
-
-    public function __construct(EntityFactory $entityFactory, DBConnector $dBConnector, LoggerInterface $logger, Save $save)
-    {
-        parent::__construct($entityFactory, $dBConnector, $logger);
-        $this->save = $save;
-    }
-
     /**
      * @param int $wpPostID
      *
@@ -104,5 +96,10 @@ abstract class WPEntity extends Entity
         if ($entity instanceof DomainWPEntity ) {
             $this->save->updateTitle($entity);
         }
+    }
+
+    public function updateTitle() : void
+    {
+        
     }
 }

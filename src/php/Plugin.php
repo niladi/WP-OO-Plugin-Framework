@@ -120,6 +120,8 @@ class Plugin
 
         $this->services = $services;
         $this->endpoints = $endpoints;
+
+        $this->container = $container;
     }
 
     /**
