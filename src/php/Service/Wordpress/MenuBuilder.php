@@ -25,9 +25,9 @@ class MenuBuilder
         $this->slug = $this->buildSlug('main');
     }
 
-    public function addSubMenuEntry(string $label, string $key, string $view) : self
+    public function addSubMenuEntry(string $label, string $key, View $view) : self
     {
-        array_push($this->subMenuEntries, new Menu( $this->buildSlug($key),$label, $this->view, Menu::TYPE_SUB_MENU, $this->slug));
+        array_push($this->subMenuEntries, new Menu( $this->buildSlug($key),$label, $view, Menu::TYPE_SUB_MENU, $this->slug));
         return $this;
     }
 
