@@ -222,7 +222,7 @@ class Entity extends Service {
         if ($this->checkPostValidMetaSave($post_id, $slug)) {
             $this->logger->debug('Trying to save');
 
-            $entity = $this->wpEntityDAO->getEntityFactory()->entity();
+            $entity = $this->entityClass::init();
             foreach ($entity->getAttributes() as $attribute) {
                 try {
                     $attribute->loadFromPost();

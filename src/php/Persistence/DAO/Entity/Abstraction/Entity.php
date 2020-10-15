@@ -26,6 +26,7 @@ use WPPluginCore\Persistence\DB\DBConnector;
 use WPPluginCore\Persistence\DAO\Entity\Container\EntityContainer;
 use WPPluginCore\Domain\Entity\Abstraction\Entity as DomainEntity;
 use WPPluginCore\Domain\Entity\Abstraction\EntityValidator;
+use WPPluginCore\Exception\IllegalStateException;
 
 /**
  * 
@@ -34,20 +35,18 @@ use WPPluginCore\Domain\Entity\Abstraction\EntityValidator;
 abstract class Entity 
 {
 
-    protected EntityFactory $entityFactory;
+    protected string $entityClass;
     protected DBConnector $dbConnector;
     protected LoggerInterface $logger;
 
-    public function __construct(EntityFactory $entityFactory,  DBConnector $dbConnector, LoggerInterface $logger)
+    public function __construct(string $entityClass,  DBConnector $dbConnector, LoggerInterface $logger)
     {
-        $this->entityFactory = $entityFactory;
+        if (!is_subclass_of($entityClass, DomainEntity::class)) {
+            throw new IllegalStateException('Illgela entiyt class');
+        }
+        $this->entityClass = $entityClass;
         $this->dbConnector = $dbConnector;
         $this->logger = $logger;
-    }
-
-    public function getEntityFactory() : EntityFactory 
-    {
-        return $this->entityFactory;
     }
 
     /**
@@ -58,7 +57,7 @@ abstract class Entity
     final private function instanceFromDB(array $metaarr)  : DomainEntity
     {
         try {
-            return ( $this->entityFactory->entity($metaarr));
+            return ( $this->entityClass::init($metaarr));
         } catch (IllegalArgumentException $e) {
             $this->logger->error('Database entry is corrupted: ' . $e->getMessage(), $metaarr);
         }
@@ -108,7 +107,7 @@ abstract class Entity
      */
     public function createByArray(array $metaarr) : bool
     {
-        return $this->create($this->entityFactory->entity( $metaarr));
+        return $this->create($this->entityClass::init( $metaarr));
     }
 
     /**
@@ -148,7 +147,7 @@ abstract class Entity
      */
     public function readSingleByArray(array $arr) : ?DomainEntity
     {
-        return $this->readSingleByEntityKeys($this->entityFactory->entity($arr), array_keys($arr));
+        return $this->readSingleByEntityKeys($this->entityClass::init($arr), array_keys($arr));
     }
 
     /**
@@ -190,7 +189,7 @@ abstract class Entity
      */
     public function readMultipleByArray(array $arr) : array
     {
-        return $this->readMultipleByEntityKeys($this->entityFactory->entity($arr), array_keys($arr));
+        return $this->readMultipleByEntityKeys($this->entityClass::init($arr), array_keys($arr));
     }
 
     /**
