@@ -16,7 +16,7 @@ class Metabox extends Ressource
     /**
      * @inheritDoc
      */
-    protected function register() : void 
+     public function register() : void 
     {
         wp_register_style(self::KEY_CUSTOM_METABOX, static::getRessourceURLPath() . 'css/metabox.css');
     }

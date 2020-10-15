@@ -15,7 +15,7 @@ class JSONAttribute extends Ressource
     /**
      * @inheritDoc
      */
-    protected function register() : void 
+     public function register() : void 
     {
         wp_register_script(self::KEY_JSON_ATTRIBUTE, static::getRessourceURLPath() . 'js/json-attribute.js', array( 'jquery' ));
         wp_localize_script(self::KEY_JSON_ATTRIBUTE, 'acme_ajax_object', array(

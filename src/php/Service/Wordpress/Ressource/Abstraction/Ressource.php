@@ -12,8 +12,8 @@ use WPPluginCore\Exception\IllegalStateException;
 abstract class Ressource extends Service
 {
     // protected const TYPE_META_BOX = 1;
-    protected const TYPE_ADMIN = 1;
-    protected const TYPE_LOAD = 2;
+    public const TYPE_ADMIN = 1;
+    public const TYPE_LOAD = 2;
 
     protected string $pluginURL;
 
@@ -24,7 +24,7 @@ abstract class Ressource extends Service
         $this->type = $type;
     }
 
-    abstract protected function register() : void;
+    abstract public function register() : void;
 
     /**
      * Enques the ressource for using it
