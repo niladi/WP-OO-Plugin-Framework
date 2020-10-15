@@ -68,6 +68,9 @@ class TestCase extends Framework\TestCase {
             'home_url' => 'https://example.org',
             'add_shortcode' => function (string $shortcode, callable $callback) {
                 $this->shortCodes[$shortcode] = $callback;
+            },
+            'plugins_url' => function($arg1, $arg2) {
+                return $arg2;
             }
         ]);
 

@@ -38,7 +38,7 @@ class DBInit extends Service
      * 
      * @author Niklas Lakner <niklas.lakner@gmail.com>
      */
-    protected function __construct(LoggerInterface $logger, DBDBInit $dBInit, string $pluginFile)
+    public function __construct(LoggerInterface $logger, DBDBInit $dBInit, string $pluginFile)
     {
         parent::__construct($logger);
         $this->dBInit = $dBInit;

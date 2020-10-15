@@ -18,7 +18,7 @@ class DBConnector
     private PDO $connection;
     private LoggerInterface $logger;
 
-    protected function __construct(LoggerInterface $logger, string $dbName, string $dbHost, string $dbUser, string $dbPassword)
+    public function __construct(LoggerInterface $logger, string $dbName, string $dbHost, string $dbUser, string $dbPassword)
     {
         $this->connection = new PDO("mysql:dbname=$dbName;host=$dbHost",
             $dbUser,

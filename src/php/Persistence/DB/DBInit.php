@@ -43,7 +43,7 @@ class DBInit
     
     private string $pluginFile;
 
-    private array $entyties;
+    private array $entities;
 
     private DBConnector $dbConnector;
 
@@ -55,17 +55,17 @@ class DBInit
      * 
      * @author Niklas Lakner <niklas.lakner@gmail.com>
      */
-    protected function __construct(LoggerInterface $logger, DBConnector $dbConnector, string ...$entyties)
+    public function __construct(LoggerInterface $logger, DBConnector $dbConnector, string ...$entities)
     {
         $this->logger = $logger;
-        foreach($entyties  as $entity) {
+        foreach($entities  as $entity) {
             if (!is_subclass_of($entity, Entity::class)) {
                 throw new IllegalArgumentException('String is not of class');
             }
         }
         $this->onInit = false;
         $this->initDB = false;
-        array_push($this->entyties, $entyties);
+        array_push($this->entities, $entities);
         $this->dbConnector =  $dbConnector;
     }
 
@@ -80,7 +80,7 @@ class DBInit
         $this->onInit = true;
         if (!$this->initDB) {
             try {
-                foreach ($this->entyties as $entity) {
+                foreach ($this->entities as $entity) {
                     $this->createTable($entity);
                 }
                 $this->initDB = true;
