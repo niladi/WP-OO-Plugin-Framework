@@ -23,6 +23,13 @@ class PluginBuilder
     private string $url;
     private string $slug;
 
+    public function __construct(string $file,  string $url, string $slug)
+    {
+        $this->file = $file;
+        $this->url = $url;
+        $this->slug = $slug;
+    }
+
     public function setServices(array $services) : self
     {
         $this->services = $services;
