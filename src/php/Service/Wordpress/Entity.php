@@ -231,17 +231,19 @@ class Entity extends Service {
                     wp_die($e->getMessage());
                 }
             }
-            if ($this->entityValidator && $this->entityValidator->isValid($entity)) {
-                if ($entity->getID() == -1) {
-                    if ($this->wpEntityDAO->create($entity) === false) { 
-                        $this->logger->error('Can\t save the post: ', (array) $entity);
-                    }
-                } else {
-                    $this->wpEntityDAO->update($entity);
+            if ($this->entityValidator) {
+                if (!$this->entityValidator->isValid($entity)) {
+                    // todo Notification handler
+                    $this->logger->info("the post is not valid");
+                    return;
+                }
+            }
+            if ($entity->getID() == -1) {
+                if ($this->wpEntityDAO->create($entity) === false) { 
+                    $this->logger->error('Can\t save the post: ', (array) $entity);
                 }
             } else {
-                // todo Notification handler
-                $this->logger->info("the post is not valid");
+                $this->wpEntityDAO->update($entity);
             }
         }
     }
