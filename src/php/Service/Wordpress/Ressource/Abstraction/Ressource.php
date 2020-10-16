@@ -17,14 +17,26 @@ abstract class Ressource extends Service
 
     protected string $pluginURL;
 
+    private bool $ressourceRegistered;
+
     public function __construct(LoggerInterface $logger, string $pluginURL, int $type)
     {
         parent::__construct($logger);
         $this->pluginURL = $pluginURL;
         $this->type = $type;
+        $this->ressourceRegistered = false;
     }
 
-    abstract public function register() : void;
+    public function registerRessource() : void
+    {
+        if (!$this->ressourceRegistered) {
+            $this->register();
+            $this->ressourceRegistered = true;
+        }
+        
+    }
+
+    abstract protected function register() : void;
 
     /**
      * Enques the ressource for using it
@@ -48,10 +60,10 @@ abstract class Ressource extends Service
     {
         parent::registerMe(); 
         if ($this->type | self::TYPE_ADMIN) {
-            add_action('admin_enqueue_scripts', array($this, 'register'));
+            add_action('admin_enqueue_scripts', array($this, 'registerRessource'));
         }
         if ($this->type | self::TYPE_LOAD) {
-            add_action('wp_enqueue_scripts', array($this, 'register'));
+            add_action('wp_enqueue_scripts', array($this, 'registerRessource'));
         }
         
     }

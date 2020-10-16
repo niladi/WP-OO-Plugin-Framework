@@ -4,6 +4,7 @@
 namespace WPPluginCore\Service\Wordpress;
 
 use Psr\Log\LoggerInterface;
+use WP_Post;
 use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\View\Implementation\Metabox;
 use WPPluginCore\Domain\Entity\Abstraction\WPEntity;

@@ -38,7 +38,7 @@ class Date
 
     public static function getFirstDay(?DateTimeZone $timezone = null)
     {
-        return new DateTime(self::FIRST_DAY, $timezone)
+        return new DateTime(self::FIRST_DAY, $timezone);
     }
 
     public static function createDateTime($time = 'now', ?DateTimeZone $timezone = null)

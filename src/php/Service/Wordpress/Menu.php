@@ -80,8 +80,8 @@ class Menu extends Service
             case self::TYPE_SUB_MENU:
                 add_submenu_page(
                     $this->parentSlug,
-                    $this->name,
-                    $this->name,
+                    $this->label,
+                    $this->label,
                     'manage_options',
                     $this->slug,
                     array($this->view, 'show')
