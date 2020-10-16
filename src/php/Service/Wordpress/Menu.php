@@ -40,7 +40,7 @@ class Menu extends Service
             throw new IllegalArgumentException('The parentSlug of an sub menu entry can\'t be empty');
         }
         $this->type = $type;
-        $this->mainView = $view;
+        $this->view = $view;
         $this->label = $label;
         $this->slug = $slug;
         $this->parentSlug = $parentSlug;
