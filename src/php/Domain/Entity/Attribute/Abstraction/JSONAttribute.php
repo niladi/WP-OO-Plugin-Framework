@@ -39,7 +39,7 @@ abstract class JSONAttribute extends Attribute
         return "'". $this ."'";
     }
 
-    private function __toString() : string
+    public function __toString() : string
     {
         $val = $this->getValue();
         try {
