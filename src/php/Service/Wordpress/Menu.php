@@ -21,7 +21,7 @@ class Menu extends Service
     private string $parentSlug;
     private string $type;
     private string $label;
-    private string $view;
+    private View $view;
 
     /**
      * @var Menu[]
