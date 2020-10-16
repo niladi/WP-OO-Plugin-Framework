@@ -221,8 +221,6 @@ class Entity extends Service {
     {
         $slug = get_post_type( $post_id );
         if ($this->checkPostValidMetaSave($post_id, $slug)) {
-            $this->logger->debug('Trying to save');
-
             $entity = $this->entityClass::init();
             foreach ($entity->getAttributes() as $attribute) {
                 try {
@@ -250,12 +248,12 @@ class Entity extends Service {
 
     final private function addSaveAction() : void
     {
-        add_action('save_post', array( $this, 'savePost' ));
+        add_action('save_post_' .$this->entityClass::getSlug(), array( $this, 'savePost' ));
     }
 
     final private function removeSaveAction() : void
     {
-        remove_action('save_post', array( $this, 'savePost' ));
+        remove_action('save_post_'. $this->entityClass::getSlug() , array( $this, 'savePost' ));
     }
 
 

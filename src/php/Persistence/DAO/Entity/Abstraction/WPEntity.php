@@ -28,6 +28,8 @@ use WPPluginCore\Domain\Entity\Abstraction\WPEntity as DomainWPEntity;
  */
 abstract class WPEntity extends Entity
 {
+    // todo ggf titel update
+
     /**
      * @param int $wpPostID
      *
@@ -79,7 +81,6 @@ abstract class WPEntity extends Entity
                 wp_delete_post($entity->getAttributeValue($keyPostId));
                 return false;
             }
-            $this->save->updateTitle($entity);
             return true;
         }
         return parent::create($entity);
