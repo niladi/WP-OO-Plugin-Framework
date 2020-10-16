@@ -84,22 +84,4 @@ abstract class WPEntity extends Entity
         }
         return parent::create($entity);
     }
-
-    /**
-     * @param DomainWPEntity $entity
-     *
-     * @throws UpdateException
-     */
-    public function update(DomainEntity $entity): void
-    {
-        parent::update($entity);
-        if ($entity instanceof DomainWPEntity ) {
-            $this->save->updateTitle($entity);
-        }
-    }
-
-    public function updateTitle() : void
-    {
-        
-    }
 }
