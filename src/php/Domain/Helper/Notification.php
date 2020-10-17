@@ -15,9 +15,9 @@ defined('ABSPATH') || exit;
 class Notification implements Serializable 
 {
     public const LEVEL_SUCCESS = 'notice-success';
-    public const LEVEL_ERROR = 'notice-success';
-    public const LEVEL_WARNING = 'notice-success';
-    public const LEVEL_INFO = 'notice-success';
+    public const LEVEL_ERROR = 'notice-error';
+    public const LEVEL_WARNING = 'notice-warning';
+    public const LEVEL_INFO = 'notice-info';
 
 
     private const KEY_MESSAGE = 'message';
@@ -29,7 +29,7 @@ class Notification implements Serializable
     private const KEY_LEVEL = 'level';
     private string $level;
 
-    public function __construc(string $message, string $title, string $level = self::LEVEL_INFO)
+    public function __construct(string $message, string $title, string $level = self::LEVEL_INFO)
     {
         $this->message = $message;
         $this->title = $title;
@@ -51,6 +51,21 @@ class Notification implements Serializable
         $this->message = $arr[self::KEY_MESSAGE];
         $this->title = $arr[self::KEY_TITLE];
         $this->level = $arr[self::KEY_LEVEL];
+    }
+
+    public static function fromSerialized(string $serialized) : self 
+    {
+        $temp = new self('', '');
+        $temp.unserialize($serialized);
+        return $temp;
+    }
+
+    public function getBox()
+    {
+        return "<div class='notice $this->level is-dismissible'>
+        <strong>$this->title</strong>
+                     <p>$this->message</p>
+                 </div>";
     }
 
     //ggf serialisierbar
