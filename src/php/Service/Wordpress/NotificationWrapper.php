@@ -19,14 +19,20 @@ class NotificationWrapper extends Service
     /**
      * @var Notification[]
      */
-    private array $notices;
+    private array $tempNotices;
+
+    /**
+     * @var Notification[]
+     */
+    private array $persistentNotices;
 
     private const KEY_OPTION = 'notice_option';
     
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;    
-        $this->notices = array();
+        $this->tempNotices = array();
+        $this->persistentNotices = array();
         $this->loaded = false;
     }
 
@@ -40,15 +46,34 @@ class NotificationWrapper extends Service
     private function load() : void 
     {
         if (!$this->loaded) {
-            array_push($this->notices, 
-                fn($element) => Notification::fromSerialized($element),get_option( self::KEY_OPTION));    
+            array_push($this->persistentNotices, self::fromSerializedArray(get_option( self::KEY_OPTION)));    
+            array_push($this->tempNotices,  self::fromSerializedArray($_GET[self::KEY_OPTION]));
             $this->loaded = true;
         }
     }
 
-    private function save() : void
+    /**
+     * Undocumented function
+     *
+     * @param array $arr
+     * @return Notification[]
+     * @author Niklas Lakner niklas.lakner@gmail.com
+     */
+    private static function fromSerializedArray(array $arr) : array
     {
-        update_option( self::KEY_OPTION, $this->notices );
+        return array_map(fn(string $element) => Notification::fromSerialized($element),$arr);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Notification[] $arr
+     * @return array
+     * @author Niklas Lakner niklas.lakner@gmail.com
+     */
+    private static function toSerializedArray(array $arr) : array
+    {
+        return array_map(fn(Notification $element) => $element->serialize(), $arr);
     }
 
     public function registerSetting() : void
@@ -56,11 +81,17 @@ class NotificationWrapper extends Service
         register_setting(self::KEY_OPTION, self::KEY_OPTION);
     }
 
-    public function add(Notification $notification) : void 
+    public function addPersistent(Notification $notification) : void 
     {
         $this->load();
-        array_push($this->notices, $notification);
-        $this->save();
+        array_push($this->persistentNotices, $notification);
+        update_option( self::KEY_OPTION, self::toSerializedArray($this->persistentNotices) );
+    }
+
+    public function addTemp(Notification $notification) : void 
+    {
+        $this->load();
+        array_push($this->tempNotices, $notification);
     }
 
     public function show(): void

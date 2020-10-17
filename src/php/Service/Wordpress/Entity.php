@@ -11,6 +11,7 @@ use WPPluginCore\Domain\Entity\Abstraction\WPEntity;
 use WPPluginCore\Exception\IllegalArgumentException;
 use WPPluginCore\View\Implementation\MetaboxWrapper;
 use WPPluginCore\Domain\Entity\Abstraction\EntityValidator;
+use WPPluginCore\Domain\Helper\Notification;
 use WPPluginCore\Persistence\DAO\Entity\Abstraction\WPEntity as WPEntityDAO;
 
 defined('ABSPATH') || exit;
@@ -28,9 +29,10 @@ class Entity extends Service {
     private Menu $menu;
     private MetaboxWrapper $metaboxWrapper;
     private Metabox $metaboxView;
+    private NotificationWrapper $notificationWrapper;
 
 
-    public function __construct(LoggerInterface $logger, WPEntityDAO $wpEntityDAO,Menu $menu, string $entityClass, MetaboxWrapper $metaboxWrapper, Metabox $metaboxView, ?EntityValidator $entityValidator = null)
+    public function __construct(LoggerInterface $logger,NotificationWrapper $notificationWrapper, WPEntityDAO $wpEntityDAO,Menu $menu, string $entityClass, MetaboxWrapper $metaboxWrapper, Metabox $metaboxView, ?EntityValidator $entityValidator = null)
     {
         parent::__construct($logger);
         $this->wpEntityDAO = $wpEntityDAO;
@@ -42,6 +44,7 @@ class Entity extends Service {
         $this->entityClass = $entityClass;
         $this->metaboxWrapper = $metaboxWrapper;
         $this->metaboxView = $metaboxView;
+        $this->notificationWrapper = $notificationWrapper;
     }
 
     /*
@@ -244,6 +247,7 @@ class Entity extends Service {
                 $this->wpEntityDAO->update($entity);
             }
         }
+        $this->notificationWrapper->addTemp(new Notification('The Entity is saved', 'Done', Notification::LEVEL_SUCCESS));
     }
 
     final private function addSaveAction() : void
