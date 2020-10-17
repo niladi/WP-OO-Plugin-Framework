@@ -12,7 +12,7 @@ defined('ABSPATH') || exit;
  * 
  * @author Niklas Lakner niklas.lakner@gmail.com
  */
-class Notification implements Serializable 
+class Notification
 {
     public const LEVEL_SUCCESS = 'notice-success';
     public const LEVEL_ERROR = 'notice-error';
@@ -41,38 +41,26 @@ class Notification implements Serializable
         $this->dismissed = $dismissed;
     }
 
-    public function serialize($value  = null)
+    public function toJSON()
     {
-        if ($value === null) {
-            $value = $this;
-        }
         return json_encode( array (
-            self::KEY_MESSAGE =>  $value->message,
-            self::KEY_TITLE =>  $value->title,
-            self::KEY_LEVEL =>  $value->level,
-            self::KEY_DISMISSED => $value->dismissed
+            self::KEY_MESSAGE =>  $this->message,
+            self::KEY_TITLE =>  $this->title,
+            self::KEY_LEVEL =>  $this->level,
+            self::KEY_DISMISSED => $this->dismissed
         ));
     }
 
-    public function unserialize($serialized)
+    public static function fromJSON(string $serialized) : self
     {
         $arr = json_decode($serialized, true);
-        $this->message = $arr[self::KEY_MESSAGE];
-        $this->title = $arr[self::KEY_TITLE];
-        $this->level = $arr[self::KEY_LEVEL];
-        $this->dismissed = $arr[self::KEY_DISMISSED];
-    }
-
-    public static function fromSerialized(string $serialized) : self 
-    {
-        $temp = new self('', '');
-        $temp.unserialize($serialized);
-        return $temp;
+        return new self($arr[self::KEY_MESSAGE], $arr[self::KEY_TITLE], $arr[self::KEY_LEVEL], $arr[self::KEY_DISMISSED]);
     }
 
     public function getBox()
     {
-        return "<div class='notice $this->level ${($this->dismissed ? 'is-dismissible' : '')}'>
+        $dismissed = ($this->dismissed ? 'is-dismissible' : '');
+        return "<div class='notice $this->level $dismissed'>
         <strong>$this->title</strong>
                      <p>$this->message</p>
                  </div>";

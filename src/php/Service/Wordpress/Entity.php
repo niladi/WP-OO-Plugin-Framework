@@ -236,6 +236,7 @@ class Entity extends Service {
                 if (!$this->entityValidator->isValid($entity)) {
                     // todo Notification handler
                     $this->logger->info("the post is not valid");
+                    $this->notificationWrapper->addTemp(new Notification('The Entity is not saved', 'Error', Notification::LEVEL_ERROR));
                     return;
                 }
             }

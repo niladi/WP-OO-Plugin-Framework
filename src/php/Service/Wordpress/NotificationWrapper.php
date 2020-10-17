@@ -12,7 +12,6 @@ use WPPluginCore\Service\Abstraction\Service;
 
 class NotificationWrapper extends Service
 {
-    private LoggerInterface $logger;
 
     private bool $loaded;
 
@@ -26,14 +25,25 @@ class NotificationWrapper extends Service
      */
     private array $persistentNotices;
 
-    private const KEY_OPTION = 'notice_option';
+    private const KEY_OPTION_GROUP = 'notice_option';
+    private const KEY_NOTICE_PERSISTENT = 'no_persistent';
+    private const KEY_NOTICE_TEMP = 'no_temp';
     
     public function __construct(LoggerInterface $logger)
     {
-        $this->logger = $logger;    
+        parent::__construct($logger);   
         $this->tempNotices = array();
         $this->persistentNotices = array();
         $this->loaded = false;
+        $this->logger->debug('__construct is executed');
+    }
+
+    public function __destruct()
+    {
+        if ($this->loaded) {
+            update_option( self::KEY_NOTICE_PERSISTENT, self::toSerializedArray($this->persistentNotices) );
+            update_option( self::KEY_NOTICE_TEMP, self::toSerializedArray($this->tempNotices) );
+        }
     }
 
     public function registerMe(): void
@@ -46,10 +56,16 @@ class NotificationWrapper extends Service
     private function load() : void 
     {
         if (!$this->loaded) {
-            array_push($this->persistentNotices, self::fromSerializedArray(get_option( self::KEY_OPTION)));    
-            array_push($this->tempNotices,  self::fromSerializedArray($_GET[self::KEY_OPTION]));
+            array_push($this->persistentNotices,  ...self::getFromOption(self::KEY_NOTICE_PERSISTENT));
+            array_push($this->tempNotices,  ...self::getFromOption(self::KEY_NOTICE_TEMP));
             $this->loaded = true;
         }
+    }
+
+    private static function getFromOption(string $optionKey) : array
+    {
+        $notices = get_option( $optionKey);
+        return self::fromSerializedArray(is_array($notices) ? $notices : array());
     }
 
     /**
@@ -61,7 +77,11 @@ class NotificationWrapper extends Service
      */
     private static function fromSerializedArray(array $arr) : array
     {
-        return array_map(fn(string $element) => Notification::fromSerialized($element),$arr);
+        $ret = array();
+        foreach ($arr as $key => $value) {
+            array_push($ret, Notification::fromJSON($value));
+        }
+        return $ret;
     }
 
     /**
@@ -73,31 +93,40 @@ class NotificationWrapper extends Service
      */
     private static function toSerializedArray(array $arr) : array
     {
-        return array_map(fn(Notification $element) => $element->serialize(), $arr);
+        $ret = array();
+        foreach ($arr as $key => $value) {
+            array_push($ret, $value->toJSON());
+        }
+        return $ret;
     }
 
     public function registerSetting() : void
     {
-        register_setting(self::KEY_OPTION, self::KEY_OPTION);
+        register_setting(self::KEY_OPTION_GROUP, self::KEY_NOTICE_PERSISTENT);
+        register_setting(self::KEY_OPTION_GROUP, self::KEY_NOTICE_TEMP);
     }
 
     public function addPersistent(Notification $notification) : void 
     {
         $this->load();
-        array_push($this->persistentNotices, $notification);
-        update_option( self::KEY_OPTION, self::toSerializedArray($this->persistentNotices) );
+        array_push( $this->persistentNotices, $notification );
     }
 
     public function addTemp(Notification $notification) : void 
     {
         $this->load();
-        array_push($this->tempNotices, $notification);
+        array_push($this->tempNotices, $notification );
     }
+
 
     public function show(): void
     {
         $this->load();
-        foreach($this->notices as $notification) {
+        foreach($this->tempNotices as $notification) {
+            echo $notification->getBox();
+        }
+        $this->tempNotices = array();
+        foreach($this->persistentNotices as $notification) {
             echo $notification->getBox();
         }
     }
