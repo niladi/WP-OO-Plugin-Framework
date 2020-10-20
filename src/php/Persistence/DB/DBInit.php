@@ -55,18 +55,19 @@ class DBInit
      * 
      * @author Niklas Lakner <niklas.lakner@gmail.com>
      */
-    public function __construct(LoggerInterface $logger, DBConnector $dbConnector, string ...$entities)
+    public function __construct(LoggerInterface $logger, DBConnector $dbConnector, array $entities)
     {
         $this->logger = $logger;
+        $this->entities = array();
         foreach($entities  as $entity) {
             if (!is_subclass_of($entity, Entity::class)) {
                 throw new IllegalArgumentException('String is not of class');
             }
+            array_push($this->entities, $entity);
         }
         $this->onInit = false;
         $this->initDB = false;
-        $this->entities = array();
-        array_push($this->entities, ...$entities);
+        
         $this->dbConnector =  $dbConnector;
     }
 
