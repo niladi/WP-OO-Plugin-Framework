@@ -120,8 +120,8 @@ class DBInit
     public function dropDB() : bool
     {
         try {
-            foreach ($this->entityContainer->getAll() as $entity) {
-                $this->dropTable($entity->getEntityFactory()->entity());
+            foreach ($this->entities as $entityClass) {
+                $this->dropTable($entityClass);
             }
         } catch (QueryException $queryException) {
             $this->logger->error('Cant drop database', $queryException->getTrace());
@@ -134,16 +134,16 @@ class DBInit
     /**
      * Drops the table of an entity
      *
-     * @param Entity $entity
+     * @param string $entityClass
      * @return void
      * 
      * @throws QueryException if something of the query went wrong
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    private function dropTable(Entity $entity) : void
+    private function dropTable(string $entityClass) : void
     {
         $db = $this->dbConnector->getConnection();
-        $statement = sprintf('DROP TABLE %s;', $entity::getTable());
+        $statement = sprintf('DROP TABLE %s;', $entityClass::getTable());
         $db->exec($statement);
     }
 
