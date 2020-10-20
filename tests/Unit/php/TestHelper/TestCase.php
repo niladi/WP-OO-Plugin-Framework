@@ -67,6 +67,9 @@ class TestCase extends Framework\TestCase {
             },
             'wp_insert_post' => function($post) {
                 return 1;
+            },
+            'is_email' => function(string $email) {
+                return true;
             }
         ]);
 
