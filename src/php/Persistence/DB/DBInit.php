@@ -66,7 +66,7 @@ class DBInit
         $this->onInit = false;
         $this->initDB = false;
         $this->entities = array();
-        array_push($this->entities, $entities);
+        array_push($this->entities, ...$entities);
         $this->dbConnector =  $dbConnector;
     }
 
@@ -81,8 +81,8 @@ class DBInit
         $this->onInit = true;
         if (!$this->initDB) {
             try {
-                foreach ($this->entities as $entity) {
-                    $this->createTable($entity);
+                foreach ($this->entities as $entityClass) {
+                    $this->createTable($entityClass::init());
                 }
                 $this->initDB = true;
             } catch (QueryException $queryException) {
