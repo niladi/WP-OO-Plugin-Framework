@@ -64,6 +64,9 @@ class TestCase extends Framework\TestCase {
             },
             'plugins_url' => function($arg1, $arg2) {
                 return $arg2;
+            },
+            'wp_insert_post' => function($post) {
+                return 1;
             }
         ]);
 
