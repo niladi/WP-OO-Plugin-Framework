@@ -178,19 +178,21 @@ abstract class Entity
      */
     public function readMultipleByEntityKeys(DomainEntity $entity, array $keys) : array
     {
+        $where = isset($keys) && !empty($keys) ? 'WHERE ' . $entity->attributesForDB($keys, '=', ' AND ') :'';
+        $table = $entity::getTable();
         return $this->queryMultiple(
-            "SELECT * FROM {$entity::getTable()} WHERE { $entity->attributesForDB($keys, '=', ' AND ')}");
+            "SELECT * FROM $table $where");
     }
 
     /**
      * Returns the Entities
      *
-     * @param array $arr
+     * @param array $arr if empty all Entities are returned
      *
      * @return DomainEntity[]
      * @throws QueryException
      */
-    public function readMultipleByArray(array $arr) : array
+    public function readMultipleByArray(array $arr = array()) : array
     {
         return $this->readMultipleByEntityKeys($this->entityClass::init($arr), array_keys($arr));
     }

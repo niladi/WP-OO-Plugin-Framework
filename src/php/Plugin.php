@@ -4,6 +4,7 @@ namespace WPPluginCore;
 defined('ABSPATH') || exit;
 
 use DI\Container;
+use Psr\Container\ContainerInterface;
 use WPPluginCore\Abstraction\IBaseFactory;
 use WPPluginCore\DBInit;
 use WPPluginCore\Logger;
@@ -134,6 +135,17 @@ class Plugin
     {
         $this->register($this->services);
         $this->register($this->endpoints);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return ContainerInterface
+     * @author Niklas Lakner niklas.lakner@gmail.com
+     */
+    final public function getContainer() : ContainerInterface
+    {
+        return $this->container;
     }
 
 } 

@@ -14,9 +14,6 @@ if (isset($_ENV['DB_HOST'])) {
     define('DB_HOST', 'localhost:3306');
 }
 
-define('DB_NAME', 'lstest');
-define('DB_PASSWORD', 'secret');
-define('DB_USER', 'lsuser');
 define('ABSPATH', 1);
 
 class TestCase extends Framework\TestCase {
