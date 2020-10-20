@@ -1,6 +1,6 @@
 <?php
 
-namespace WPPluginCoreTest\Unit\Persistence\Domain\Abstraction;
+namespace WPPluginCoreTest\Unit\Domain\Entity\Abstraction;
 
 use ReflectionClass;
 use WPPluginCoreTest\Unit\TestHelper\TestCase;

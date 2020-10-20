@@ -75,9 +75,12 @@ abstract class Entity
     {
         $arr = $entity->getAttributesValuesAssoc();
         unset($arr[DomainEntity::KEY_ID]);
+        $keys = implode(', ', array_keys($arr));
+        $values = implode(', ', array_values($arr));
+        $table = $entity::getTable();
         try {
             $this->dbConnector->exec(
-                "INSERT INTO {$entity::getTable()} ({implode(', ', array_keys($arr))}) VALUES ({implode(', ', array_values($arr))}})",
+                "INSERT INTO $table ($keys) VALUES ($values)"
             );
         } catch (QueryException $exception) {
             $this->logger->error('Can\'t create an entity: Error Message: ' . $exception->getMessage(), $arr);

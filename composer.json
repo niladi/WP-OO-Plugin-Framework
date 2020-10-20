@@ -16,6 +16,12 @@
         "WPPluginCoreTest\\Unit\\":"tests/Unit/php/"
       }
     },
+    "autoload-dev": {
+      "psr-4": {
+        "WPPluginCore\\":"src/php/",
+        "WPPluginCoreTest\\Unit\\": "tests/Unit/php/"
+      }
+    },
     "require": {
       "ext-json": "*",
       "ext-pdo": "*",
@@ -26,11 +32,11 @@
         "ocramius/proxy-manager": "^2.9"
     },
     "require-dev": {
-      "squizlabs/php_codesniffer": "2.2.*",
+      "phpunitgen/console": "^1.3",
       "phpunit/phpunit": "^9",
+      "squizlabs/php_codesniffer": "2.2.*",
       "brain/monkey": "2.*",
       "mockery/mockery": ">=0.7.2",
-      "phpunitgen/console": "^1.2",
       "php-stubs/woocommerce-stubs": "^4.4",
       "php-stubs/wordpress-stubs": "^5.5"
     }
