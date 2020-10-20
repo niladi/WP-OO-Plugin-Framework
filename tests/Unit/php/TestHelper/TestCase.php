@@ -34,11 +34,7 @@ class TestCase extends Framework\TestCase {
         Monkey\Functions\stubs([
             '__' =>  function ($arg1, $arg2 = 'default') 
             {
-                if ($arg2 === 'wp-licence-sales') {
-                    return $arg1;
-                }
-                throw new TestException('Language function is called wrong');
-                
+                return $arg1;
             },
             "post_type_exists" => true,
             'get_terms' => function ($arg1, $arg2) 
