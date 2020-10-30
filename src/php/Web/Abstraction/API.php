@@ -23,9 +23,15 @@ abstract class API extends Endpoint
     private const NAMEPSACE = 'ls/v1';
 
     protected array $endpoints = array();
+    private string $namespace;
 
-    protected abstract static function getNamespace() : string;
 
+    public function __construct(string $namespace)
+    {
+        $this->endpoints = array();
+        $this->namespace = $namespace;
+        $this->addEndpoints();
+    }
 
     /**
      * @inheritDoc
@@ -57,26 +63,23 @@ abstract class API extends Endpoint
     /**
      * Add an Wordpress Rest Route
      *
-     * @param string $namespace_path the main namespace for the endpoint (should be unique over the full rest API)
-     * @param string $param_path the route (after the namespace)
+     * @param string $path the main namespace for the endpoint (should be unique over the full rest API)
+     * the route (after the namespace)
      * @param callable $callback the function which should get after calling the route (should have the return type WP_REST_Response)
      * @param string $method the HTTP Verb (default is GET)
      * 
      * @throws IllegalArgumentException if the namepace path is already in use
      */
-    final protected function addEndpoint(string $namespace_path,string $param_path, callable $callback, string $method=\WP_REST_Server::READABLE)
+    final protected function addEndpoint(string $path, callable $callback, string $method=\WP_REST_Server::READABLE)
     {
-        if (key_exists( $namespace_path, $this->endpoints)) {
-            throw new IllegalArgumentException('The namespace_path ' . $namespace_path . ' is already an key');
-        } 
-        $this->endpoints[$namespace_path] = array(
-            self::KEY_ROUTE => static::getNamespace() . '/' . $namespace_path . '/'. $param_path,
+        array_push($this->endpoints, array(
+            self::KEY_ROUTE => $this->namespace . '/' . $path,
             self::KEY_ARGS => array(
                 self::KEY_METHOD => $method,
                 self::KEY_CALLBACK => $callback,
                 self::KEY_PERMISSION_CALLBACK =>array($this, 'permission'),
             )
-        );
+        ));
     }
 
     /**
@@ -89,11 +92,5 @@ abstract class API extends Endpoint
     public function permission(WP_REST_Request $request)
     {
         return true;
-    }
-
-    public function __construct()
-    {
-        $this->endpoints = array();
-        $this->addEndpoints();
     }
 }

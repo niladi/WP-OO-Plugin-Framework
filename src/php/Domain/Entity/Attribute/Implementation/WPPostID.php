@@ -30,7 +30,7 @@ class WPPostID extends IDAttribute
 
     public function validateValue($value): bool
     {
-        return $value == -1 ||  parent::validateValue($value)  && get_post_type($value) == $this->slug;
+        return $value == -1 ||  parent::validateValue($value)  && get_post_type($value) == $this->slug; // todo validator 
     }
 
     public function getDefault()

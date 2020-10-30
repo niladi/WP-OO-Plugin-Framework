@@ -86,6 +86,9 @@ class PluginBuilder
 
         $containerBuilder->addDefinitions(['plugin.file' => $this->file, 'plugin.slug' => $this->slug, 'plugin.url' => $this->url]);
 
+        // if (/* is production */) { todo only in production
+            $containerBuilder->enableCompilation(dirname($this->file) . '/cache');
+        // } 
         return new Plugin(
             $this->file, 
             $this->url, 
