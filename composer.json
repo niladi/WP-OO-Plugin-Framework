@@ -38,6 +38,7 @@
       "brain/monkey": "2.*",
       "mockery/mockery": ">=0.7.2",
       "php-stubs/woocommerce-stubs": "^4.4",
-      "php-stubs/wordpress-stubs": "^5.5"
+      "php-stubs/wordpress-stubs": "^5.5",
+        "vimeo/psalm": "^4.1"
     }
 }
