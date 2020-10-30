@@ -40,24 +40,22 @@ class DBInit
      */
     private bool $onInit;
 
-    
-    private string $pluginFile;
 
+    /**
+     * @var class-string<Entity>[]
+     */
     private array $entities;
 
     private DBConnector $dbConnector;
-
-    private LoggerInterface $logger; 
     
-
-    /**
+        /**
      * DBInit constructor. should be called on init action
      * 
      * @author Niklas Lakner <niklas.lakner@gmail.com>
+     * @psalm-param class-string<Entity>[] $entities
      */
-    public function __construct(LoggerInterface $logger, DBConnector $dbConnector, array $entities)
+    public function __construct(DBConnector $dbConnector, array $entities)
     {
-        $this->logger = $logger;
         $this->entities = array();
         foreach($entities  as $entity) {
             if (!is_subclass_of($entity, Entity::class)) {
@@ -73,8 +71,9 @@ class DBInit
 
     /**
      * Inits the database value
-     * 
-     * @return bool if the initlazing went good
+     *
+     * @return true if the initlazing went good
+     *
      * @author Niklas Lakner <niklas.lakner@gmail.com>
      */
     public function initDB() : bool
@@ -87,8 +86,7 @@ class DBInit
                 }
                 $this->initDB = true;
             } catch (QueryException $queryException) {
-                $this->logger->error('Cant init database', $queryException->getTrace());
-                wp_die( __('Die Website ist wegen technischer schwierigkeiten im Moment nicht erreichbar', 'wp-plugin-core'));
+                throw new IllegalStateException('Cant init database', 0, $queryException);
             }
 
         }
@@ -111,7 +109,7 @@ class DBInit
         $db->exec($statement);
     }
 
-    /**
+        /**
      * Drops each table, (should only implemented for test purposes)
      *
      * @return bool if something went wrong it returns false
@@ -130,7 +128,6 @@ class DBInit
         $this->initDB = false;
         return true;
     }
-
     /**
      * Drops the table of an entity
      *
@@ -170,7 +167,7 @@ class DBInit
         }
         return rtrim($s, ', ');
     }
-
+    
     /**
      * @return bool returns true if the DB is on init
      */

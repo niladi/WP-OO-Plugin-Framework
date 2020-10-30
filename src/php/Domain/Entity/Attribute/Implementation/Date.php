@@ -75,6 +75,8 @@ class Date extends Attribute
 
     /**
      * @inheritDoc
+     *
+     * @return DateTime
      */
     public function getDefault()
     {

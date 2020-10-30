@@ -45,7 +45,7 @@ class Plugin
 
     private static string $mode = self::MODE_PROD;
 
-    /**
+        /**
      * Setts the mode of the Project, if the setted mode is unoknown MODE_PROD is the default value
      *
      * @param string $mode MODE_DEBUG = 'debug' is the debug mode with extended logging and MODE_PROD = 'prod'  is the productive mode with only error and info logging 
@@ -74,7 +74,7 @@ class Plugin
         return self::$mode === self::MODE_DEBUG;
     }
 
-    private function register(array $definitions)
+    private function register(array $definitions): void
     {
         foreach ($definitions as $definition) {
             $object = $this->container->get($definition);
@@ -147,5 +147,4 @@ class Plugin
     {
         return $this->container;
     }
-
 } 

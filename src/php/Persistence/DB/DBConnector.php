@@ -29,7 +29,6 @@ class DBConnector
 
         $this->logger = $logger;
     }
-
     /**
      * Returns the PDO
      *
@@ -62,8 +61,11 @@ class DBConnector
      *
      * @param string $sql MYSQL SELECT Statement
      *
-     * @return array result of Query
+     * @return scalar[] result of Query
+     *
      * @throws QueryException if something on executing query gone wrong
+     *
+     * @psalm-return array<string, scalar>
      */
     final public function querySingle(string $sql) : array
     {

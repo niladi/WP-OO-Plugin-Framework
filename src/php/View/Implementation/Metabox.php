@@ -18,7 +18,6 @@ class Metabox extends View
 
     protected MetaboxWrapper $metaboxWrapper;
 
-
     public function __construct(MetaboxRessource $metabox, JSONAttribute $jSONAttribute, MetaboxWrapper $metaboxWrapper)
     {
         parent::__construct();
@@ -26,6 +25,7 @@ class Metabox extends View
         $this->addAsset($jSONAttribute);
         $this->metaboxWrapper = $metaboxWrapper;
     }
+
 
     protected function showMe() : void
     {

@@ -10,6 +10,10 @@ class JSONArray extends JSONAttribute
 
     /**
      * @inheritDoc
+     *
+     * @return array
+     *
+     * @psalm-return array<empty, empty>
      */
     protected function getDefault()
     {

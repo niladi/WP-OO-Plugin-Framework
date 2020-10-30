@@ -22,7 +22,7 @@ abstract class View
         $this->assets = array();
     }
 
-    protected function addAsset(Ressource $asset) 
+    protected function addAsset(Ressource $asset): void 
     {
         array_push($this->assets, $asset);
     }
@@ -58,11 +58,7 @@ abstract class View
     private function loadAssets() : void
     {
         foreach($this->assets as $asset) {
-            if ($asset instanceof Ressource) {
-                $asset->loadRessource();
-            } else {
-                throw new IllegalArgumentException("wraong type of " . get_class($asset));    
-            }
+            $asset->loadRessource();
         }
     }
 }

@@ -3,15 +3,16 @@
 
 namespace WPPluginCore\Service\Wordpress;
 
-use Psr\Log\LoggerInterface;
 use WP_Post;
+use Psr\Log\LoggerInterface;
+use WPPluginCore\Domain\Helper\Notification;
 use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\View\Implementation\Metabox;
+use WPPluginCore\Exception\IllegalValueException;
 use WPPluginCore\Domain\Entity\Abstraction\WPEntity;
 use WPPluginCore\Exception\IllegalArgumentException;
 use WPPluginCore\View\Implementation\MetaboxWrapper;
 use WPPluginCore\Domain\Entity\Abstraction\EntityValidator;
-use WPPluginCore\Domain\Helper\Notification;
 use WPPluginCore\Persistence\DAO\Entity\Abstraction\WPEntity as WPEntityDAO;
 
 defined('ABSPATH') || exit;
@@ -21,10 +22,15 @@ defined('ABSPATH') || exit;
  *
  * @author Niklas Lakner niklas.lakner@gmail.com
  */
-class Entity extends Service {
+class Entity extends Service 
+{
     
     private WPEntityDAO $wpEntityDAO;
     private ?EntityValidator $entityValidator;
+
+    /**
+     * @var class-string<WPEntity>
+     */
     private string $entityClass;
     private Menu $menu;
     private MetaboxWrapper $metaboxWrapper;
@@ -32,7 +38,7 @@ class Entity extends Service {
     private NotificationWrapper $notificationWrapper;
 
 
-    public function __construct(LoggerInterface $logger,NotificationWrapper $notificationWrapper, WPEntityDAO $wpEntityDAO,Menu $menu, string $entityClass, MetaboxWrapper $metaboxWrapper, Metabox $metaboxView, ?EntityValidator $entityValidator = null)
+    public function __construct(LoggerInterface $logger, NotificationWrapper $notificationWrapper, WPEntityDAO $wpEntityDAO,Menu $menu, string $entityClass, MetaboxWrapper $metaboxWrapper, Metabox $metaboxView, ?EntityValidator $entityValidator = null)
     {
         parent::__construct($logger);
         $this->wpEntityDAO = $wpEntityDAO;
@@ -113,7 +119,8 @@ class Entity extends Service {
                 exit;
             }
         }
-        $this->editor($entity);
+        if ($entity) 
+            $this->editor($entity);
     }
 
     /*
@@ -194,7 +201,7 @@ class Entity extends Service {
             return false;
         }
 
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        if (defined('DOING_AUTOSAVE') && constant('DOING_AUTOSAVE')) {
             return false;
         }
 
@@ -222,13 +229,17 @@ class Entity extends Service {
      */
     public function savePost(int $post_id): void
     {
-        $slug = get_post_type( $post_id );
+        $slug = get_post_type( $post_id ); 
+        if (!is_string($slug)) {
+            $this->notificationWrapper->addTemp(new Notification('The Entity is not saved, the id is not a valid posttype', 'Error', Notification::LEVEL_ERROR));
+            return;
+        }
         if ($this->checkPostValidMetaSave($post_id, $slug)) {
             $entity = $this->entityClass::init();
             foreach ($entity->getAttributes() as $attribute) {
                 try {
                     $attribute->loadFromPost();
-                } catch (AttributeException $e) {
+                } catch (IllegalValueException $e) {
                     wp_die($e->getMessage());
                 }
             }

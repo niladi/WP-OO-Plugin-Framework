@@ -14,7 +14,7 @@ class File extends Attribute
 
     // todo wird eh noch nicht verwendet
 
-    public function __construct($key, $label)
+    public function __construct(string $key,string  $label)
     {
         parent::__construct($key, $label);
         $this->inputKey = $key . '_set';
@@ -60,9 +60,12 @@ class File extends Attribute
         return is_numeric($value);
     }
 
-    public function attachmentUpload($filename, $type, $url)
+    /**
+     * @return true
+     */
+    public function attachmentUpload($filename, $type, $url): bool
     {
-        include_once(ABSPATH . 'wp-admin/includes/image.php');
+        include_once(constant('ABSPATH') . 'wp-admin/includes/image.php');
 
         $attachment = array(
             'post_mime_type' => $type,
@@ -84,7 +87,12 @@ class File extends Attribute
         return true;
     }
 
-    private function attachmentFormUpload($file = array())
+    /**
+     * @param \ArrayAccess|array $file
+     *
+     * @return bool
+     */
+    private function attachmentFormUpload($file = array()): bool
     {
         $file_return = wp_handle_upload($file, array( 'test_form' => false ));
 
@@ -97,6 +105,8 @@ class File extends Attribute
 
     /**
      * @inheritDoc
+     *
+     * @return int
      */
     protected function getDefault()
     {

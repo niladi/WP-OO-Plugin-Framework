@@ -48,7 +48,6 @@ abstract class Entity
         $this->dbConnector = $dbConnector;
         $this->logger = $logger;
     }
-
     /**
      * Instanciate from DB (should only executed from database, because no errors are thrown)
      *
@@ -112,7 +111,6 @@ abstract class Entity
     {
         return $this->create($this->entityClass::init( $metaarr));
     }
-
     /**
      *
      * Read an entity of the Database by its id
@@ -160,7 +158,7 @@ abstract class Entity
      * @return DomainEntity|null
      * @throws QueryException
      */
-    public function readSingleByKeyValue(string $key, $value) : ?DomainEntity
+    public function readSingleByKeyValue(string $key, int $value) : ?DomainEntity
     {
         return $this->readSingleByArray(array($key => $value));
     }
@@ -196,7 +194,6 @@ abstract class Entity
     {
         return $this->readMultipleByEntityKeys($this->entityClass::init($arr), array_keys($arr));
     }
-
     /**
      * @param string $key
      * @param $value
@@ -285,7 +282,10 @@ abstract class Entity
      * @param string $statement
      *
      * @return DomainEntity[]
+     *
      * @throws QueryException
+     *
+     * @psalm-return list<DomainEntity>
      */
     final protected function queryMultiple(string $statement) : array
     {

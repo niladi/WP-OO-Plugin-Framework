@@ -18,8 +18,15 @@ class EntityREST extends APIAdmin
 {
 
     protected Entity $entityDAO;
+
+    /**
+     * @var class-string<AbstractionEntity> $entityClass
+     */
     protected string $entityClass;
 
+    /**
+     * @psalm-param class-string<AbstractionEntity> $entityClass
+     */
     public function __construct(string $namespace, Entity $entityDAO, string $entityClass)
     {
         parent::__construct($namespace);
@@ -32,7 +39,7 @@ class EntityREST extends APIAdmin
     {
         $this->addEndpoint('', array($this, 'get'));
         $this->addEndpoint('create', array($this, 'create'), WP_REST_Server::CREATABLE);
-        $this->addEndpoint('', array($this, 'edit'), WP_REST_Server::EDITABLE);
+        $this->addEndpoint('', array($this, 'update'), WP_REST_Server::EDITABLE);
         $this->addEndpoint('', array($this, 'delete'), WP_REST_Server::DELETABLE);
     }
 
@@ -41,16 +48,12 @@ class EntityREST extends APIAdmin
         $params = $request->get_query_params();
         $entity = $this->entityClass::init();
         $return = array();
-        if ($entity instanceof AbstractionEntity) {
-            foreach ($params as $key => $value) {
-                if ($entity->hasAttribute($key)) {
-                    $return[$key] = $value;
-                }
+        foreach ($params as $key => $value) {
+            if ($entity->hasAttribute($key)) {
+                $return[$key] = $value;
             }
-            return $return;
-        } else {
-            throw new IllegalStateException('$entity Class is wrong');
         }
+        return $return;
     }
 
 
@@ -67,11 +70,11 @@ class EntityREST extends APIAdmin
     /**
      * 
      * @param WP_REST_Request $request 
-     * @return array 
+     * @return array|object
      * 
      * @throws JsonException 
      */
-    private function parseBody(WP_REST_Request $request, bool $assoc = false) : array
+    private function parseBody(WP_REST_Request $request, bool $assoc = false)
     {
         return json_decode($request->get_body(), $assoc, JSON_THROW_ON_ERROR);
     }
@@ -96,7 +99,9 @@ class EntityREST extends APIAdmin
         } else {
             $this->entityDAO->createByArray((array) $body);
         }
-        
+
+
+        return new WP_REST_Response('done');
     }
 
     public function update(WP_REST_Request $request): WP_REST_Response 
@@ -131,6 +136,8 @@ class EntityREST extends APIAdmin
         foreach ($entities as $entity) {
             $this->entityDAO->delete($entity);
         }
+
+        return new WP_REST_Response('done');
     }
 
 }

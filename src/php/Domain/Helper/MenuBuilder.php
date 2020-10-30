@@ -1,12 +1,14 @@
 <?php
 
 
-namespace WPPluginCore\Service\Wordpress;
+
+namespace WPPluginCore\Domain\Helper;
 
 use Psr\Log\LoggerInterface;
-use WPPluginCore\Service\Abstraction\Service;
 use WPPluginCore\Util\SlugBuilder;
+use WPPluginCore\Domain\Helper\Menu;
 use WPPluginCore\View\Abstraction\View;
+use WPPluginCore\Service\Abstraction\Service;
 
 defined('ABSPATH') || exit;
 
@@ -19,10 +21,12 @@ class MenuBuilder
 
     private array $subMenuEntries = array();
 
-    public function __construct(string $pluginSlug )
+    public function __construct(string $pluginSlug, string $label, View $view )
     {
         $this->pluginSlug = $pluginSlug;
         $this->slug = $this->buildSlug('main');
+        $this->label = $label;
+        $this->view = $view;
     }
 
     public function addSubMenuEntry(string $label, string $key, View $view) : self
@@ -46,8 +50,8 @@ class MenuBuilder
         return SlugBuilder::buildSlug($this->pluginSlug, $key, 'menu' );
     }
 
-    public function build(LoggerInterface $logger) : Menu
+    public function build() : Menu
     {
-        return new Menu($this->slug, $this->label, $this->view, Menu::TYPE_MAIN_MENU, '', $this->subMenuEntries, $logger);
+        return new Menu($this->slug, $this->label, $this->view, Menu::TYPE_MAIN_MENU, '', $this->subMenuEntries);
     }
 }

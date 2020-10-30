@@ -11,11 +11,11 @@ use WPPluginCore\Exception\IllegalStateException;
 
 abstract class Ressource extends Service
 {
-    // protected const TYPE_META_BOX = 1;
     public const TYPE_ADMIN = 1;
     public const TYPE_LOAD = 2;
 
     protected string $pluginURL;
+    private int $type;
 
     private bool $ressourceRegistered;
 
@@ -68,7 +68,7 @@ abstract class Ressource extends Service
         
     }
 
-    public static function getRessourceURLPath(string $file = __FILE__)
+    public static function getRessourceURLPath(string $file = __FILE__): string
     {
         return plugins_url( '../../../../../ressource/', $file );
     }

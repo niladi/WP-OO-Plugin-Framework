@@ -38,6 +38,8 @@ class EmailState extends Text
 
     /**
      * @inheritDoc
+     *
+     * @return string
      */
     protected function getDefault()
     {

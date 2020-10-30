@@ -9,7 +9,7 @@ use WPPluginCore\Domain\Entity\Attribute\Abstraction\Attribute;
 
 class Enum extends Attribute
 {
-    private $values;
+    private array $values;
 
     /**
      * MetaStatus constructor.
@@ -49,6 +49,8 @@ class Enum extends Attribute
 
     /**
      * @inheritDoc
+     *
+     * @return array-key
      */
     protected function getDefault()
     {

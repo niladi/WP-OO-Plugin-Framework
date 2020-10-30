@@ -11,4 +11,9 @@ defined('ABSPATH') || exit;
 class MetaboxWrapper
 {
     public WPEntity $wpEntity;
+
+    public function __construct(WPEntity $wpEntity)
+    {
+        $this->wpEntity = $wpEntity;
+    }
 }

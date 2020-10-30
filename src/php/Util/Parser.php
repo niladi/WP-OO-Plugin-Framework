@@ -14,10 +14,11 @@ class Parser
      *
      * @param $str string the to parsable string (lexical space)
      *
-     * @return int the value from the value space
+     * @return float|int the value from the value space
+     *
      * @throws ParserException if it is not parsable
      */
-    public static function strToInt(string $str) : int
+    public static function strToInt(string $str) 
     {
         // sicherstellen, dass ein String uebergeben wurde und Leerzeichen am Anfang/Ende entfernen
         $str = trim(strval($str));
@@ -45,7 +46,6 @@ class Parser
             return $pre*pow(10, $post);
         }
     }
-
     /**
      * Parse splits form the full string the auf type and returns the value
      *

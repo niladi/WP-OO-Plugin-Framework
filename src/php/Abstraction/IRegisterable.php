@@ -17,7 +17,6 @@ interface IRegisterable
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
     public function registerMe() : void  ;
-
     /**
      * Gets the value of the registered state
      *

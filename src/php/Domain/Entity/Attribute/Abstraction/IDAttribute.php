@@ -10,6 +10,11 @@ use WPPluginCore\Exception\IllegalArgumentException;
 
 defined('ABSPATH') || exit;
 
+/**
+ * @extends Attribute<int>
+ * @package WPPluginCore\Domain\Entity\Attribute\Abstraction
+ * @author Niklas Lakner <niklas.lakner@gmail.com>
+ */
 abstract class IDAttribute extends Attribute
 {
     public function getAdminHTML(): String
@@ -26,6 +31,8 @@ abstract class IDAttribute extends Attribute
 
     /**
      * @inheritDoc
+     *
+     * @return int
      */
     protected function getDefault()
     {

@@ -9,6 +9,14 @@ use WPPluginCore\Exception\IllegalStateException;
 use WPPluginCore\Domain\Entity\Attribute\Abstraction\Attribute;
 use WPPluginCore\Logger;
 
+
+/**
+ * @template T
+ * 
+ * @extends Attribute<T>
+ * @package WPPluginCore\Domain\Entity\Attribute\Abstraction
+ * @author Niklas Lakner <niklas.lakner@gmail.com>
+ */
 abstract class JSONAttribute extends Attribute
 {
 
@@ -49,7 +57,7 @@ abstract class JSONAttribute extends Attribute
                 return  json_encode($val, JSON_THROW_ON_ERROR);
             }
         } catch (JsonException $e) {
-            new IllegalStateException('Cant serialize the data to json string');
+            throw new IllegalStateException('Cant serialize the data to json string');
         }
     }
 

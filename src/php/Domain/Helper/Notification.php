@@ -41,6 +41,9 @@ class Notification
         $this->dismissed = $dismissed;
     }
 
+    /**
+     * @return false|string
+     */
     public function toJSON()
     {
         return json_encode( array (
@@ -57,7 +60,7 @@ class Notification
         return new self($arr[self::KEY_MESSAGE], $arr[self::KEY_TITLE], $arr[self::KEY_LEVEL], $arr[self::KEY_DISMISSED]);
     }
 
-    public function getBox()
+    public function getBox(): string
     {
         $dismissed = ($this->dismissed ? 'is-dismissible' : '');
         return "<div class='notice $this->level $dismissed'>

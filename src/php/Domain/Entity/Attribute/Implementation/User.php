@@ -55,6 +55,8 @@ class User extends IDAttribute
 
     /**
      * @inheritDoc
+     *
+     * @return int
      */
     protected function getDefault()
     {

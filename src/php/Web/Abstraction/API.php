@@ -67,10 +67,12 @@ abstract class API extends Endpoint
      * the route (after the namespace)
      * @param callable $callback the function which should get after calling the route (should have the return type WP_REST_Response)
      * @param string $method the HTTP Verb (default is GET)
-     * 
+     *
      * @throws IllegalArgumentException if the namepace path is already in use
+     *
+     * @return void
      */
-    final protected function addEndpoint(string $path, callable $callback, string $method=\WP_REST_Server::READABLE)
+    final protected function addEndpoint(string $path, callable $callback, string $method=\WP_REST_Server::READABLE): void
     {
         array_push($this->endpoints, array(
             self::KEY_ROUTE => $this->namespace . '/' . $path,
@@ -81,7 +83,7 @@ abstract class API extends Endpoint
             )
         ));
     }
-
+    
     /**
      * The default permission function
      *

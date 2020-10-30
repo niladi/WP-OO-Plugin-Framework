@@ -32,6 +32,9 @@ class Generator extends Attribute
         }
     }
 
+    /**
+     * @return true
+     */
     public function validateValue($value): bool
     {
         return true;
@@ -47,6 +50,8 @@ class Generator extends Attribute
 
     /**
      * @inheritDoc
+     *
+     * @return string
      */
     protected function getDefault()
     {

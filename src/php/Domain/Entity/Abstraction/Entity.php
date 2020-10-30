@@ -90,13 +90,14 @@ abstract class Entity
      *
      * @throws IllegalKeyException if attributes include key which is not set
      * @throws IllegalValueException the value is not valid
+     * @throws IllegalStateException if there are duplicate keys
      */
     public function __construct(array $attributes = array())
     {
         try {
             $this->addAttributes();
         } catch (DuplicateKeyException $exception) {
-            throw new IllegalStateException('Tried to instanciate attribute with duplicate keys, should be an illegal state and never occurs', $exception->getTrace());
+            throw new IllegalStateException('Tried to instanciate attribute with duplicate keys, should be an illegal state and never occurs',0, $exception);
         }
         foreach ($attributes as $key => $value) {
             $this->setAttributeValue($key, $value);
@@ -146,7 +147,6 @@ abstract class Entity
     {
         return $this->__get($property);
     }
-
     /**
      * Returns the id of the post
      *
@@ -204,6 +204,11 @@ abstract class Entity
         return ! $withoutID ? array_keys($this->attributes) : $this->getAttributesKeysWithoutID();
     }
 
+    /**
+     * @return array-key[]
+     *
+     * @psalm-return array<int, array-key>
+     */
     final private function getAttributesKeysWithoutID() : array
     {
         $arr = array_keys($this->attributes);
@@ -235,7 +240,7 @@ abstract class Entity
         throw new IllegalKeyException();
     }
 
-    /**
+        /**
      * @param string $key
      *
      * @return string
@@ -245,7 +250,6 @@ abstract class Entity
     {
         return $this->getAttribute($key)->getValueForDB();
     }
-
     /**
      * add a new attribute
      *
@@ -287,7 +291,7 @@ abstract class Entity
      * @throws IllegalKeyException if the key not found
      * @throws IllegalValueException if the value is not valid
      */
-    final public function setAttributeValue(string $key, $value)
+    final public function setAttributeValue(string $key, int $value)
     {
         $this->getAttribute($key)->setValue($value);
         return $this;
@@ -330,22 +334,6 @@ abstract class Entity
         return rtrim($s, $connector);
     }
 
-    /**
-     * validates the data semantic before save
-     */
-    public function beforeSave() : void
-    {
-        //Place holder
-    }
-
-    /**
-     * Do somthig the data semantic after save
-     */
-    public function afterSave() : void
-    {
-        //Place holder
-    }
-
     /*
      * **************************************************************
      * Table Creation SECTION
@@ -357,6 +345,8 @@ abstract class Entity
      * Returns the Primary Key's
      *
      * @return string[]
+     *
+     * @psalm-return array{0: string}
      */
     protected static function getPrimaryKeys() : array
     {
@@ -371,7 +361,9 @@ abstract class Entity
     /**
      * Returns an assoc array as $key: self::connectKeys($keys)
      *
-     * @return string[]
+     * @return array
+     *
+     * @psalm-return array<empty, empty>
      */
     public function getForeignKeys() : array
     {
@@ -380,17 +372,8 @@ abstract class Entity
         );
     }
 
-    final protected static function getKeysAsForeignKeys(array $keys) : string
-    {
-        return sprintf('%s (%s)', static::getTable(), self::connectKeys($keys));
-    }
-
     final public static function connectKeys(array $keys, string $glue = ', ') : string
     {
         return implode($glue, $keys);
-    }
-
-    final public function placeholder()
-    {
     }
 }

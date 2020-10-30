@@ -24,6 +24,8 @@ class Text extends Attribute
 
     /**
      * @inheritDoc
+     *
+     * @return string
      */
     protected function getDefault()
     {

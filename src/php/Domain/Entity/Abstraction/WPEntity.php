@@ -39,7 +39,6 @@ abstract class WPEntity extends Entity
      */
     abstract public static function getSlug(): String;
 
-
     /**
      * returns the labels of the post type
      *
@@ -98,7 +97,7 @@ abstract class WPEntity extends Entity
     abstract public function getWPPostTitle(): string;
 
 
-    public function getWPPostID()
+    public function getWPPostID() : int
     {
         try {
             return $this->getAttributeValue(self::KEY_WP_POST_ID);

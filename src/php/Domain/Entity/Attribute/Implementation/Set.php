@@ -46,7 +46,7 @@ class Set extends Attribute
         return false;
     }
 
-    public function addValue($value)
+    public function addValue($value): void
     {
         if (! array_key_exists($value, $this->values)) {
             throw new AttributeException('This Value '. $value. ' is not in Values');
@@ -54,7 +54,7 @@ class Set extends Attribute
         array_push($this->value, $value);
     }
 
-    public function removeValue($value)
+    public function removeValue($value): void
     {
         if (! array_key_exists($value, $this->values)) {
             throw new AttributeException('This Value '. $value. ' is not in Values');
@@ -79,6 +79,10 @@ class Set extends Attribute
 
     /**
      * @inheritDoc
+     *
+     * @return array
+     *
+     * @psalm-return array<empty, empty>
      */
     protected function getDefault()
     {

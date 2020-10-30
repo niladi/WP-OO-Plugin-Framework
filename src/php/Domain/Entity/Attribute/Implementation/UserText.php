@@ -31,12 +31,12 @@ class UserText extends Text
         return $user->has_prop($this->userKey);
     }
 
-    public function getUserKey()
+    public function getUserKey(): string
     {
         return $this->userKey;
     }
 
-    public function uploadToUser(WP_User $user)
+    public function uploadToUser(WP_User $user): void
     {
         update_user_meta($user->ID, $this->userKey, $this->getValue());
     }

@@ -12,7 +12,11 @@ use WPPluginCore\Exception\NotSetInPostException;
 
 defined('ABSPATH') || exit;
 
-
+/**
+ * @template T
+ * @package WPPluginCore\Domain\Entity\Attribute\Abstraction
+ * @author Niklas Lakner <niklas.lakner@gmail.com>
+ */
 abstract class Attribute
 {
     /**
@@ -23,8 +27,9 @@ abstract class Attribute
      * @var string
      */
     protected string $key;
+    
     /**
-     * @var mixed
+     * @var ?T
      */
     protected $value;
 
@@ -37,7 +42,7 @@ abstract class Attribute
     public function __construct(string $key, string $label)
     {
         $this->key = $key;
-        $this->label    = $label;
+        $this->label = $label;
     }
 
 
@@ -50,10 +55,12 @@ abstract class Attribute
 
     /**
      * returns setted temp value
+     * 
+     * @return ?T
      */
     public function getValue()
     {
-        if (! isset($this->value)) {
+        if (is_null($this->value)) {
             try {
                 $this->setValue($this->getDefault());
             } catch (IllegalValueException $exception) {
@@ -66,14 +73,14 @@ abstract class Attribute
     /**
      * sets custom meta Value after validates it
      *
-     * @param mixed new LS_MI_ value
+     * @param ?T $value
      *
      * @throws IllegalValueException if the metavalue is not valid
      */
     public function setValue($value) : void
     {
         try {
-            $val = isset($value) ? (is_string($value) ?  $this->parseFromString($value) : $value) : $this->getDefault();
+            $val = is_string($value) ?  $this->parseFromString($value) : $value;
         } catch (ParserException $exception) {
             throw new IllegalValueException($exception->getMessage());
         }
@@ -81,7 +88,7 @@ abstract class Attribute
         if ($this->validateValue($val)) {
             $this->value = $val;
         } else {
-            throw new IllegalValueException(var_export($val). ': is not valid for ' . $this->key);
+            throw new IllegalValueException(': is not valid for ' . $this->key);
         }
     }
 
@@ -99,6 +106,8 @@ abstract class Attribute
 
     /**
      * it have to match the validate function
+     * 
+     * @return ?T
      */
     abstract protected function getDefault();
 
@@ -147,7 +156,7 @@ abstract class Attribute
     /**
      * Validates of the form of the value is correct
      *
-     * @param $value mixed is the the meta value you want to check
+     * @param ?T $value mixed is the the meta value you want to check
      *
      * @return bool true if is valid otherwise false
      */

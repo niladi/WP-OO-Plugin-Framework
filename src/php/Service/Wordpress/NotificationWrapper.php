@@ -5,6 +5,7 @@ namespace WPPluginCore\Service\Wordpress;
 defined('ABSPATH') || exit;
 
 use Psr\Log\LoggerInterface;
+use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
 use WPPluginCore\Domain\Helper\Notification;
 use WPPluginCore\Plugin;
 use WPPluginCore\Service\Abstraction\Service;
@@ -28,15 +29,16 @@ class NotificationWrapper extends Service
     private const KEY_OPTION_GROUP = 'notice_option';
     private const KEY_NOTICE_PERSISTENT = 'no_persistent';
     private const KEY_NOTICE_TEMP = 'no_temp';
-    
+
     public function __construct(LoggerInterface $logger)
     {
-        parent::__construct($logger);   
+        parent::__construct($logger);
+        $this->loaded = false;
         $this->tempNotices = array();
         $this->persistentNotices = array();
-        $this->loaded = false;
-        $this->logger->debug('__construct is executed');
     }
+    
+
 
     public function __destruct()
     {
@@ -62,6 +64,11 @@ class NotificationWrapper extends Service
         }
     }
 
+    /**
+     * @return Notification[]
+     *
+     * @psalm-return array<array-key, Notification>
+     */
     private static function getFromOption(string $optionKey) : array
     {
         $notices = get_option( $optionKey);
@@ -72,8 +79,12 @@ class NotificationWrapper extends Service
      * Undocumented function
      *
      * @param array $arr
+     *
      * @return Notification[]
+     *
      * @author Niklas Lakner niklas.lakner@gmail.com
+     *
+     * @psalm-return list<Notification>
      */
     private static function fromSerializedArray(array $arr) : array
     {
@@ -88,8 +99,12 @@ class NotificationWrapper extends Service
      * Undocumented function
      *
      * @param Notification[] $arr
+     *
      * @return array
+     *
      * @author Niklas Lakner niklas.lakner@gmail.com
+     *
+     * @psalm-return list<mixed>
      */
     private static function toSerializedArray(array $arr) : array
     {
@@ -111,7 +126,7 @@ class NotificationWrapper extends Service
         $this->load();
         array_push( $this->persistentNotices, $notification );
     }
-
+    
     public function addTemp(Notification $notification) : void 
     {
         $this->load();

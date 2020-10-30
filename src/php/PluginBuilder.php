@@ -22,7 +22,7 @@ class PluginBuilder
     private string $file;
     private string $url;
     private string $slug;
-
+    
     public function __construct(string $file,  string $url, string $slug)
     {
         $this->file = $file;
@@ -98,5 +98,4 @@ class PluginBuilder
             $containerBuilder->build()
         );
     }
-
 } 
