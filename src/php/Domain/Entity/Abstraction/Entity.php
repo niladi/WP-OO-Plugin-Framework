@@ -58,7 +58,7 @@ abstract class Entity
      *
      * @return string type as String
      */
-    abstract protected static function getIDIntType() : string;
+    abstract public static function getIDIntType() : string;
 
     /**
      * Returns the Database Table Name
