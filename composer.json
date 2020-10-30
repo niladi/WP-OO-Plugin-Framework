@@ -27,9 +27,9 @@
       "ext-pdo": "*",
       "ext-mbstring": "*",
       "monolog/monolog": "^2.1",
-        "php-di/php-di": "^6.2",
-        "doctrine/annotations": "^1.10",
-        "ocramius/proxy-manager": "^2.9"
+      "php-di/php-di": "^6.2",
+      "doctrine/annotations": "^1.10",
+      "ocramius/proxy-manager": "^2.9"
     },
     "require-dev": {
       "phpunitgen/console": "^1.3",
@@ -39,6 +39,6 @@
       "mockery/mockery": ">=0.7.2",
       "php-stubs/woocommerce-stubs": "^4.4",
       "php-stubs/wordpress-stubs": "^5.5",
-        "vimeo/psalm": "4.0.1"
+      "vimeo/psalm": "4.0.1"
     }
 }

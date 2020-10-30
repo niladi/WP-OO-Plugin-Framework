@@ -17,16 +17,16 @@ class MenuBuilder
     private string $slug;
     private string $pluginSlug;
     private string $label;
-    private View $view;
+    private ?View $view;
 
     private array $subMenuEntries = array();
 
-    public function __construct(string $pluginSlug, string $label, View $view )
+    public function __construct(string $pluginSlug )
     {
         $this->pluginSlug = $pluginSlug;
         $this->slug = $this->buildSlug('main');
-        $this->label = $label;
-        $this->view = $view;
+        $this->label = '';
+        $this->view = null;
     }
 
     public function addSubMenuEntry(string $label, string $key, View $view) : self
