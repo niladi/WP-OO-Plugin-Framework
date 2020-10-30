@@ -6,7 +6,11 @@ defined('ABSPATH') || exit;
 use WPPluginCore\Exception\AttributeException;
 use WPPluginCore\Domain\Entity\Attribute\Abstraction\Attribute;
 
-
+/**
+ * @extends Attribute<string>
+ * @package WPPluginCore\Domain\Entity\Attribute\Implementation
+ * @author Niklas Lakner <niklas.lakner@gmail.com>
+ */
 class Enum extends Attribute
 {
     private array $values;
@@ -22,17 +26,13 @@ class Enum extends Attribute
      */
     public function __construct(string $key, string $label, array $values)
     {
-        if (is_array($values)) {
-            parent::__construct($key, $label);
-            $this->values = $values;
-        } else {
-            throw new AttributeException('$states is not a array');
-        }
+        parent::__construct($key, $label);
+        $this->values = $values;
     }
 
     public function validateValue($value): bool
     {
-        return (array_key_exists($value, $this->values)) ? true : false;
+        return array_key_exists($value, $this->values) ? true : false;
     }
 
     public function getAdminHTML(): String
@@ -47,11 +47,6 @@ class Enum extends Attribute
         return $this->createTableInput($output);
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @return array-key
-     */
     protected function getDefault()
     {
         return array_keys($this->values)[0];

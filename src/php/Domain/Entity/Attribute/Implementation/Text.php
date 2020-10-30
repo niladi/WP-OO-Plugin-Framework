@@ -7,6 +7,11 @@ use WPPluginCore\Domain\Entity\Attribute\Abstraction\Attribute;
 
 defined('ABSPATH') || exit;
 
+/**
+ * @extends Attribute<string>
+ * @package WPPluginCore\Domain\Entity\Attribute\Implementation
+ * @author Niklas Lakner <niklas.lakner@gmail.com>
+ */
 class Text extends Attribute
 {
     public function validateValue($value): bool

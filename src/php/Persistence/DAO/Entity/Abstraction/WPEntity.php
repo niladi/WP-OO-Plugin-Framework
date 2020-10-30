@@ -23,6 +23,9 @@ use WPPluginCore\Domain\Entity\Abstraction\WPEntity as DomainWPEntity;
 
 /**
  * A more specific entity
+ * 
+ * @template T of DomainWPEntity
+ * @extends Entity<T>
  *
  * @author Niklas Lakner niklas.lakner@gmail.com
  */
@@ -33,7 +36,7 @@ abstract class WPEntity extends Entity
     /**
      * @param int $wpPostID
      *
-     * @return DomainWPEntity null if nothing is found
+     * @return ?T if nothing is found
      * @throws \WPPluginCore\Exception\AttributeException
      */
     public function readFromWPPostID(int $wpPostID) : ?DomainWPEntity

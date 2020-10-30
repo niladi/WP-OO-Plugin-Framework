@@ -5,6 +5,11 @@ namespace WPPluginCore\Domain\Entity\Attribute\Implementation;
 
 use WPPluginCore\Domain\Entity\Attribute\Abstraction\JSONAttribute;
 
+/**
+ * @extends JSONAttribute<array>
+ * @package WPPluginCore\Domain\Entity\Attribute\Implementation
+ * @author Niklas Lakner <niklas.lakner@gmail.com>
+ */
 class JSONArray extends JSONAttribute
 {
 

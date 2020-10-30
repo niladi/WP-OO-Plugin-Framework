@@ -28,6 +28,7 @@ abstract class API extends Endpoint
 
     public function __construct(string $namespace)
     {
+        parent::__construct();
         $this->endpoints = array();
         $this->namespace = $namespace;
         $this->addEndpoints();

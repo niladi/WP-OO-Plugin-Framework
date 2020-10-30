@@ -22,36 +22,36 @@ class Date
     public const MONTH_IN_SECONDS = 30 * self::DAY_IN_SECONDS;
 
 
-    public static function getFirstOfCurrentMonth(?DateTimeZone $timezone = null)
+    public static function getFirstOfCurrentMonth(?DateTimeZone $timezone = null): DateTime
     {
         return new DateTime(self::MONTH_FIRST_DAY, $timezone);
     }
 
-    public static function getLastOfCurrentMonth(?DateTimeZone $timezone = null)
+    public static function getLastOfCurrentMonth(?DateTimeZone $timezone = null): DateTime
     {
         return new DateTime(self::MONTH_LAST_DAY, $timezone);
     }
-    public static function getLastDay(?DateTimeZone $timezone = null)
+    public static function getLastDay(?DateTimeZone $timezone = null): DateTime
     {
         return new DateTime(self::LAST_DAY, $timezone);
     }
 
-    public static function getFirstDay(?DateTimeZone $timezone = null)
+    public static function getFirstDay(?DateTimeZone $timezone = null): DateTime
     {
         return new DateTime(self::FIRST_DAY, $timezone);
     }
 
-    public static function createDateTime($time = 'now', ?DateTimeZone $timezone = null)
+    public static function createDateTime(string $time = 'now', ?DateTimeZone $timezone = null): DateTime
     {
         return new DateTime($time, $timezone);
     }
 
-    public static function getLastDayOfMonth(int $time, ?DateTimeZone $timezone = null)
+    public static function getLastDayOfMonth(int $time, ?DateTimeZone $timezone = null) : DateTime
     {
         return new DateTime(date('m-t-Y', $time), $timezone);
     }
 
-    public static function getFirstDayOfMonth(int $time, ?DateTimeZone $timezone = null)
+    public static function getFirstDayOfMonth(int $time, ?DateTimeZone $timezone = null) : DateTime
     {
         return new DateTime(date('m-1-Y', $time), $timezone);
     }

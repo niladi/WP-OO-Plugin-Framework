@@ -29,7 +29,7 @@ abstract class Attribute
     protected string $key;
     
     /**
-     * @var ?T
+     * @psalm-var T
      */
     protected $value;
 
@@ -43,6 +43,7 @@ abstract class Attribute
     {
         $this->key = $key;
         $this->label = $label;
+        $this->value = $this->getDefault();
     }
 
 
@@ -56,7 +57,7 @@ abstract class Attribute
     /**
      * returns setted temp value
      * 
-     * @return ?T
+     * @psalm-return T
      */
     public function getValue()
     {
@@ -73,7 +74,7 @@ abstract class Attribute
     /**
      * sets custom meta Value after validates it
      *
-     * @param ?T $value
+     * @param T $value
      *
      * @throws IllegalValueException if the metavalue is not valid
      */
@@ -107,7 +108,7 @@ abstract class Attribute
     /**
      * it have to match the validate function
      * 
-     * @return ?T
+     * @psalm-return T
      */
     abstract protected function getDefault();
 
@@ -156,7 +157,7 @@ abstract class Attribute
     /**
      * Validates of the form of the value is correct
      *
-     * @param ?T $value mixed is the the meta value you want to check
+     * @param T $value mixed is the the meta value you want to check
      *
      * @return bool true if is valid otherwise false
      */

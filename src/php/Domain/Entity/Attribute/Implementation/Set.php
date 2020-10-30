@@ -6,11 +6,18 @@ defined('ABSPATH') || exit;
 use WPPluginCore\Logger;
 use WPPluginCore\Exception\AttributeException;
 use WPPluginCore\Domain\Entity\Attribute\Abstraction\Attribute;
+use WPPluginCore\Exception\IllegalArgumentException;
 
+/**
+ * @extends Attribute<array>
+ * 
+ * @package WPPluginCore\Domain\Entity\Attribute\Implementation
+ * @author Niklas Lakner <niklas.lakner@gmail.com>
+ */
 class Set extends Attribute
 {
     /**
-     * @var array|string[]
+     * @var string[]
      */
     private $values;
 
@@ -21,44 +28,37 @@ class Set extends Attribute
      * @param $label string label of the metadata
      * @param $values string[] states of the Metadate
      *
-     * @throws AttributeException if $states is not valid
      */
     public function __construct(string $key, string $label, array $values)
     {
-        if (is_array($values)) {
-            parent::__construct($key, $label);
-            $this->values = $values;
-        } else {
-            throw new AttributeException('$states is not a array');
-        }
+        parent::__construct($key, $label);
+        $this->values = $values;
     }
 
     public function validateValue($value): bool
     {
-        if (is_array($value)) {
-            foreach ($value as $val) {
-                if (! array_key_exists($val, $this->values)) {
-                    return false;
-                }
+        foreach ($value as $val) {
+            if (! array_key_exists($val, $this->values)) {
+                return false;
             }
-            return true;
         }
-        return false;
+        return true;
     }
 
-    public function addValue($value): void
+    public function addValue(string $value): void
     {
         if (! array_key_exists($value, $this->values)) {
-            throw new AttributeException('This Value '. $value. ' is not in Values');
+            throw new IllegalArgumentException('This Value '. $value. ' is not in Values');
         }
         array_push($this->value, $value);
     }
 
-    public function removeValue($value): void
+    public function removeValue(string $value): void
     {
         if (! array_key_exists($value, $this->values)) {
-            throw new AttributeException('This Value '. $value. ' is not in Values');
+            throw new IllegalArgumentException('This Value '. $value. ' is not in Values');
         }
+        $this->value = \array_filter($this->value, fn($val) => $value !== $val);
         // todo
     }
 
@@ -77,13 +77,6 @@ class Set extends Attribute
         return $this->createTableInput($output);
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @return array
-     *
-     * @psalm-return array<empty, empty>
-     */
     protected function getDefault()
     {
         return array();

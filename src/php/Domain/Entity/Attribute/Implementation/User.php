@@ -11,9 +11,9 @@ defined('ABSPATH') || exit;
 
 class User extends IDAttribute
 {
-    protected $role;
+    protected string $role;
 
-    public function __construct($key, $label, $role = 'everybody')
+    public function __construct(string $key,string $label,string $role = 'everybody')
     {
         parent::__construct($key, $label);
         $this->role = $role;

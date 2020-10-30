@@ -15,7 +15,7 @@ class UserText extends Text
      */
     private $userKey;
 
-    public function __construct($key, $label, $userKey)
+    public function __construct(string $key, string $label,string $userKey)
     {
         parent::__construct($key, $label);
         $this->userKey = $userKey;

@@ -87,8 +87,7 @@ class DBConnector
         $result = $con->query($sql);
 
         if (! isset($result) || !$result) {
-            $this->logger->error("On executing query something went wrong: ",  $con->errorInfo());
-            throw new QueryException("On executing query something went wrong: \n ". $con->errorInfo());
+            throw new QueryException("On executing query something went wrong: \n ".var_export($con->errorInfo(), true));
         }
 
         return $result;

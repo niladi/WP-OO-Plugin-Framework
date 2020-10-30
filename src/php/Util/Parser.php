@@ -14,11 +14,11 @@ class Parser
      *
      * @param $str string the to parsable string (lexical space)
      *
-     * @return float|int the value from the value space
+     * @return int the value from the value space
      *
      * @throws ParserException if it is not parsable
      */
-    public static function strToInt(string $str) 
+    public static function strToInt(string $str) : int
     {
         // sicherstellen, dass ein String uebergeben wurde und Leerzeichen am Anfang/Ende entfernen
         $str = trim(strval($str));
@@ -43,7 +43,7 @@ class Parser
             return $pre;
         } else {
             // Exponentenschreibweise, entsprechend (Teil vor e/E) * (10 hoch (Teil nach e/E)) rechnen
-            return $pre*pow(10, $post);
+            return \intval($pre*pow(10, $post));
         }
     }
     /**

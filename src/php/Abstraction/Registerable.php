@@ -18,7 +18,12 @@ defined('ABSPATH') || exit;
 abstract class Registerable implements IRegisterable
 {
 
-    protected bool $registered = false;
+    protected bool $registered;
+
+    public function __construct()
+    {
+        $this->registered = false;
+    }
 
     /**
      * @inheritDoc

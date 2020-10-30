@@ -22,7 +22,7 @@ class WPPostID extends IDAttribute
      * @param string $slug the slug of the wordpress post
      * @throws AttributeException if slug not exits
      */
-    public function __construct(string $key, $label, string $slug)
+    public function __construct(string $key, string $label, string $slug)
     {
         parent::__construct($key, $label);
         $this->slug = $slug;

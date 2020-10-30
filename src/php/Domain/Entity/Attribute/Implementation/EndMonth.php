@@ -27,14 +27,13 @@ class EndMonth extends DateAttribute
     public function loadFromPost() : void
     {
         if (isset($_POST[ $this->key ])) {
-            $this->setValue($_POST[ $this->key ] . '-31');
+            $this->setValue(Date::createDateTime($_POST[ $this->key ] . '-31'));
         } else {
             throw new \WPPluginCore\Exception\AttributeException('The Value of ' . $this->label . ' not set in POST variable');
         }
     }
-    /**
-     * @inheritDoc
-     */
+
+
     public function getDefault()
     {
         return Date::getLastDay();

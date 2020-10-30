@@ -109,7 +109,7 @@ class DBInit
         $db->exec($statement);
     }
 
-        /**
+    /**
      * Drops each table, (should only implemented for test purposes)
      *
      * @return bool if something went wrong it returns false
@@ -122,8 +122,7 @@ class DBInit
                 $this->dropTable($entityClass);
             }
         } catch (QueryException $queryException) {
-            $this->logger->error('Cant drop database', $queryException->getTrace());
-            return false;
+            throw new IllegalStateException('Cant drop database',0,  $queryException);
         }
         $this->initDB = false;
         return true;
@@ -131,13 +130,13 @@ class DBInit
     /**
      * Drops the table of an entity
      *
-     * @param string $entityClass
+     * @param class-string<Entity> $entityClass
      * @return void
      * 
      * @throws QueryException if something of the query went wrong
      * @author Niklas Lakner niklas.lakner@gmail.com
      */
-    private function dropTable(string $entityClass) : void
+    private function dropTable($entityClass) : void
     {
         $db = $this->dbConnector->getConnection();
         $statement = sprintf('DROP TABLE %s;', $entityClass::getTable());
@@ -158,7 +157,7 @@ class DBInit
             try {
                 $s .= sprintf('%s %s, ', $key, $entity->getAttribute($key)->getDBSetup());
             } catch (IllegalKeyException $e) {
-                $this->logger->error('Illegal state occurs in ' . __FILE__ . ' because getAttributesKeys returns an non valid key');
+                throw new IllegalStateException('Illegal state occurs in ' . __FILE__ . ' because getAttributesKeys returns an non valid key');
             }
         }
         $s .= sprintf('PRIMARY KEY (%s), ', $entity->getPrimaryKeysSerialized());

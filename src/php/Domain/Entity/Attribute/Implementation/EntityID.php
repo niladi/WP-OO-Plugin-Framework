@@ -28,7 +28,7 @@ class EntityID extends IDAttribute
     public function getAdminHTML(): String
     {
         return $this->createTableInput('
-			<input readonly type="number"  id="entity_id" name=' . $this->key . ' value=' . esc_attr($this->getValue()) . ' />
+			<input readonly type="number"  id="entity_id" name=' . $this->key . ' value=' . esc_attr(strval($this->getValue())) . ' />
 		');
     }
 }

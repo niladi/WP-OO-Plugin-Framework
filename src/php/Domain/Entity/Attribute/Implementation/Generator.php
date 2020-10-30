@@ -8,7 +8,13 @@ use WPPluginCore\Domain\Entity\Abstraction\WPEntity;
 
 defined('ABSPATH') || exit;
 
-
+/**
+ * @deprecated
+ * 
+ * @package WPPluginCore\Domain\Entity\Attribute\Implementation
+ * @author Niklas Lakner <niklas.lakner@gmail.com>
+ */
+/*
 class Generator extends Attribute
 {
     protected $create_function;
@@ -34,7 +40,7 @@ class Generator extends Attribute
 
     /**
      * @return true
-     */
+     *//*
     public function validateValue($value): bool
     {
         return true;
@@ -52,7 +58,7 @@ class Generator extends Attribute
      * @inheritDoc
      *
      * @return string
-     */
+     *//*
     protected function getDefault()
     {
         return '';
@@ -60,9 +66,9 @@ class Generator extends Attribute
 
     /**
      * @inheritDoc
-     */
+     *//*
     public function getDBSetup(): string
     {
         return 'TEXT';
     }
-}
+}*/

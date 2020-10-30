@@ -28,6 +28,10 @@ class PluginBuilder
         $this->file = $file;
         $this->url = $url;
         $this->slug = $slug;
+        $this->helper = array();
+        $this->endpoints = array();
+        $this->daos = array();
+        $this->services = array();
     }
 
     public function setServices(array $services) : self
@@ -57,12 +61,6 @@ class PluginBuilder
     public function setDAOs(array $daos) : self
     {
         $this->daos = $daos;
-        return $this;
-    }
-
-    public function setLabel(string $label) : self
-    {
-        $this->label = $label;
         return $this;
     }
 

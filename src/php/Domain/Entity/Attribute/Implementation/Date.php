@@ -9,6 +9,11 @@ use WPPluginCore\Exception\AttributeException;
 use \DateTime;
 defined('ABSPATH') || exit;
 
+/**
+ * @extends Attribute<DateTime>
+ * @package WPPluginCore\Domain\Entity\Attribute\Implementation
+ * @author Niklas Lakner <niklas.lakner@gmail.com>
+ */
 class Date extends Attribute
 {
     /**
@@ -75,8 +80,6 @@ class Date extends Attribute
 
     /**
      * @inheritDoc
-     *
-     * @return DateTime
      */
     public function getDefault()
     {

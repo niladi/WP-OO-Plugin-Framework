@@ -92,7 +92,7 @@ abstract class Entity
      * @throws IllegalValueException the value is not valid
      * @throws IllegalStateException if there are duplicate keys
      */
-    public function __construct(array $attributes = array())
+    public final function __construct(array $attributes = array())
     {
         try {
             $this->addAttributes();

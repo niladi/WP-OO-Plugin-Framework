@@ -29,16 +29,29 @@ use WPPluginCore\Domain\Entity\Abstraction\EntityValidator;
 use WPPluginCore\Exception\IllegalStateException;
 
 /**
+ * @template T of DomainEntity
  * 
  * @author
  */
 abstract class Entity 
 {
 
+    /**
+     * @var class-string<T>
+     */
     protected string $entityClass;
     protected DBConnector $dbConnector;
     protected LoggerInterface $logger;
 
+    /**
+     * 
+     * @param class-string<T> $entityClass 
+     * @param DBConnector $dbConnector 
+     * @param LoggerInterface $logger 
+     * @return void 
+     * @throws IllegalStateException 
+     * @author Niklas Lakner <niklas.lakner@gmail.com>
+     */
     public function __construct(string $entityClass,  DBConnector $dbConnector, LoggerInterface $logger)
     {
         if (!is_subclass_of($entityClass, DomainEntity::class)) {
@@ -52,13 +65,15 @@ abstract class Entity
      * Instanciate from DB (should only executed from database, because no errors are thrown)
      *
      * @param array $metaarr 
+     * 
+     * @return T
      */
-    final private function instanceFromDB(array $metaarr)  : DomainEntity
+    final private function instanceFromDB(array $metaarr)  
     {
         try {
             return ( $this->entityClass::init($metaarr));
         } catch (IllegalArgumentException $e) {
-            $this->logger->error('Database entry is corrupted: ' . $e->getMessage(), $metaarr);
+            throw new IllegalStateException('Database entry is corrupted: ' . \var_export($metaarr, \true), 0, $e);
         }
     }
 
@@ -68,7 +83,7 @@ abstract class Entity
      * @param DomainEntity $entity
      *
      * @return bool true if everything is
-     *
+     * @throws IllegalStateException if the entity or the database is corrupted
      */
     public function create(DomainEntity $entity) : bool
     {
@@ -82,16 +97,14 @@ abstract class Entity
                 "INSERT INTO $table ($keys) VALUES ($values)"
             );
         } catch (QueryException $exception) {
-            $this->logger->error('Can\'t create an entity: Error Message: ' . $exception->getMessage(), $arr);
-            return false;
+            throw new IllegalStateException('Can\'t create an entity', 0, $exception);
         }
 
         try {
             $id = Parser::strToInt($this->dbConnector->getConnection()->lastInsertId());
             $entity->setID($id);
         } catch (IllegalValueException|ParserException $e) {
-            $this->logger->error('The Value of the int is corrupted ' . $id, $e->getTrace());
-            die;
+            throw new IllegalStateException('The Value of the int is corrupted ', 0, $e);
         }
 
 
@@ -117,7 +130,7 @@ abstract class Entity
      *
      * @param int $id the entity which should deleted
      *
-     * @return DomainEntity
+     * @return ?T
      */
     public function read(int $id) : ?DomainEntity
     {
@@ -131,7 +144,7 @@ abstract class Entity
      * @param DomainEntity $entity
      * @param array $keys
      *
-     * @return DomainEntity
+     * @return ?T
      */
     public function readSingleByEntityKeys(DomainEntity $entity, array $keys) : ?DomainEntity
     {
@@ -142,7 +155,7 @@ abstract class Entity
      * @param array $arr
      * @param bool $single
      *
-     * @return DomainEntity|null
+     * @return ?T
      * @throws AttributeException
      * @throws QueryException
      */
@@ -155,7 +168,7 @@ abstract class Entity
      * @param string $key
      * @param $value
      *
-     * @return DomainEntity|null
+     * @return ?T
      * @throws QueryException
      */
     public function readSingleByKeyValue(string $key, int $value) : ?DomainEntity
@@ -170,7 +183,7 @@ abstract class Entity
      * @param DomainEntity $entity the enity from which the values should be getted
      * @param array $keys the keys that specifies the filter
      *
-     * @return DomainEntity[] the whole entities or null if nothing is found
+     * @return T[] the whole entities or null if nothing is found
      * @throws IllegalKeyException if the is one unvalid key
      * @throws QueryException if an error occurs on the query
      */
@@ -195,8 +208,10 @@ abstract class Entity
         return $this->readMultipleByEntityKeys($this->entityClass::init($arr), array_keys($arr));
     }
     /**
+     * @template TValue
+     * 
      * @param string $key
-     * @param $value
+     * @param TValue $value
      *
      * @return DomainEntity[]
      *
@@ -269,7 +284,7 @@ abstract class Entity
      *
      * @param string $statement the sql string
      *
-     * @return DomainEntity|null query result 
+     * @return ?T query result 
      * @throws QueryException
      */
     final public function querySingle(string $statement) : ?DomainEntity
@@ -281,11 +296,10 @@ abstract class Entity
     /**
      * @param string $statement
      *
-     * @return DomainEntity[]
      *
      * @throws QueryException
      *
-     * @psalm-return list<DomainEntity>
+     * @return T[]
      */
     final protected function queryMultiple(string $statement) : array
     {
